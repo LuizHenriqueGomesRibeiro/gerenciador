@@ -27,6 +27,7 @@ public class Servlet_inclusao_e_login_usuario extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// here will be the login validation
 		// if it don´t work: => doPost( ) with dispatcher
+		
 	}
 
 	/**
