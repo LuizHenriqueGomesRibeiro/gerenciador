@@ -16,19 +16,26 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h2 class="heading-section">Login #10</h2>
+					<h2 class="heading-section">Cadastro</h2>
 				</div>
 			</div>
 			<div class="row justify-content-center">
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
 						<h3 class="mb-4 text-center">${msg}</h3>
-						<form action="servletLogin" method="post" name="formulario_login" class="signin-form">
+						<form action="<%=request.getContextPath()%>/servletLogin" method="post" name="formulario_login" class="signin-form">
 						
+						    <input type="hidden" name="acao" id="acao" value="">
 							<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
 							
 							<div class="form-group">
 								<input type="text" class="form-control" placeholder="login" name="login">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="nome" name="nome">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="email" name="email">
 							</div>
 							<div class="form-group">
 								<input id="password-field" type="password" class="form-control" name="senha"
@@ -37,24 +44,9 @@
 									class="fa fa-fw fa-eye field-icon toggle-password"></span>
 							</div>
 							<div class="form-group">
-								<input class="form-control btn btn-primary submit px-3" type="submit" value="Entrar">
-							</div>
-							<div class="form-group d-md-flex">
-								<div class="w-50">
-									<label class="checkbox-wrap checkbox-primary">Me lembre<input type="checkbox" checked> <span
-										class="checkmark"></span>
-									</label>
-								</div>
-								<div class="w-50 text-md-right">
-									<a href="<%=request.getContextPath()%>/cadastro.jsp" style="color: #fff">Não tem uma conta?</a>
-								</div>
+								<input class="form-control btn btn-primary submit px-3" type="submit" value="Cadastrar-se">
 							</div>
 						</form>
-						<p class="w-100 text-center">&mdash; Me siga no: &mdash;</p>
-						<div class="social d-flex text-center">
-							<a href="#" class="px-2 py-2 mr-md-1 rounded"><span
-								class="ion-logo-facebook mr-2"></span> GitHub</a>
-						</div>
 					</div>
 				</div>
 			</div>

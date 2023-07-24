@@ -29,4 +29,14 @@
     <servlet-name>Servlet_inclusao_e_login_usuario</servlet-name>
     <url-pattern>/Servlet_inclusao_e_login_usuario</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servletLogin</display-name>
+    <servlet-name>servletLogin</servlet-name>
+    <servlet-class>Servlet.servletLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servletLogin</servlet-name>
+    <url-pattern>/servletLogin</url-pattern>
+  </servlet-mapping>
 </web-app>
