@@ -39,4 +39,14 @@
     <servlet-name>servletLogin</servlet-name>
     <url-pattern>/servletLogin</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servlet_cadastro_e_atualizacao_usuario</display-name>
+    <servlet-name>servlet_cadastro_e_atualizacao_usuario</servlet-name>
+    <servlet-class>Servlet.servlet_cadastro_e_atualizacao_usuario</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servlet_cadastro_e_atualizacao_usuario</servlet-name>
+    <url-pattern>/servlet_cadastro_e_atualizacao_usuario</url-pattern>
+  </servlet-mapping>
 </web-app>

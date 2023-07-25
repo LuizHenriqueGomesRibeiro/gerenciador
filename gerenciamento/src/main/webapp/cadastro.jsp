@@ -23,19 +23,22 @@
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
 						<h3 class="mb-4 text-center">${msg}</h3>
-						<form action="<%=request.getContextPath()%>/servletLogin" method="post" name="formulario_login" class="signin-form">
+						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_usuario" method="post" name="formulario_cadastro" class="signin-form">
 						
 						    <input type="hidden" name="acao" id="acao" value="">
+						    
 							<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
 							
+							<p class="w-100 text-center">${msg_login}</p>
 							<div class="form-group">
 								<input type="text" class="form-control" placeholder="login" name="login">
 							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="nome" name="nome">
-							</div>
+							<p class="w-100 text-center">${msg_email}</p>
 							<div class="form-group">
 								<input type="text" class="form-control" placeholder="email" name="email">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" placeholder="nome" name="nome">
 							</div>
 							<div class="form-group">
 								<input id="password-field" type="password" class="form-control" name="senha"

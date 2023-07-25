@@ -22,7 +22,7 @@
 			<div class="row justify-content-center">
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
-						<h3 class="mb-4 text-center">${msg}</h3>
+						<p class="w-100 text-center">${msg}</p>
 						<form action="servletLogin" method="post" name="formulario_login" class="signin-form">
 						
 							<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
