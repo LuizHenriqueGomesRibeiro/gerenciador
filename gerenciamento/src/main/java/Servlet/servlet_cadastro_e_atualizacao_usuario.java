@@ -70,8 +70,8 @@ public class servlet_cadastro_e_atualizacao_usuario extends HttpServlet {
 		}
 		else {
 			daoCadastroUsuario.gravarUsuario(login_cadastro);
-			request.setAttribute("msg", "Usuário cadastrado com sucesso");
-			RequestDispatcher despache = request.getRequestDispatcher("cadastro.jsp");
+			request.setAttribute("msg", "Tudo certo! Faça o login.");
+			RequestDispatcher despache = request.getRequestDispatcher("login.jsp");
 			despache.forward(request, response);
 		}
 		
