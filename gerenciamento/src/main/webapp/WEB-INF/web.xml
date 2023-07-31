@@ -49,4 +49,14 @@
     <servlet-name>servlet_cadastro_e_atualizacao_usuario</servlet-name>
     <url-pattern>/servlet_cadastro_e_atualizacao_usuario</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servlet_cadastro_e_atualizacao_produtos</display-name>
+    <servlet-name>servlet_cadastro_e_atualizacao_produtos</servlet-name>
+    <servlet-class>Servlet.servlet_cadastro_e_atualizacao_produtos</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servlet_cadastro_e_atualizacao_produtos</servlet-name>
+    <url-pattern>/servlet_cadastro_e_atualizacao_produtos</url-pattern>
+  </servlet-mapping>
 </web-app>

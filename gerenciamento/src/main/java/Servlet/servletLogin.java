@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Login;
+import model.ModelUsuarios;
 
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class servletLogin extends HttpServlet {
 		try {
 			if (login != null && !login.isEmpty() && senha != null && !senha.isEmpty()) {
 				
-				Login login_em_validacao = new Login();
+				ModelUsuarios login_em_validacao = new ModelUsuarios();
 				login_em_validacao.setSenha(senha);
 				login_em_validacao.setLogin(login);
 				

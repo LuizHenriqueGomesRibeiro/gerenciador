@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Login;
+import model.ModelUsuarios;
 
 import java.io.IOException;
 
@@ -45,7 +45,7 @@ public class servlet_cadastro_e_atualizacao_usuario extends HttpServlet {
 		String senha = request.getParameter("senha");
 		String nome = request.getParameter("nome");
 		
-		Login login_cadastro = new Login();
+		ModelUsuarios login_cadastro = new ModelUsuarios();
 		
 		login_cadastro.setLogin(login);
 		login_cadastro.setEmail(email);

@@ -1,10 +1,10 @@
 package model;
 
-public class Login {
+public class ModelUsuarios {
 	
 	private String login;
 	private String senha;
-	private Long id;
+	private int id;
 	private String nome;
 	private String email;
 
@@ -24,11 +24,11 @@ public class Login {
 		this.email = email;
 	}
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

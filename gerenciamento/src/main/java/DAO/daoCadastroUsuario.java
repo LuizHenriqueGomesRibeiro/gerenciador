@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import conexao.conexao;
-import model.Login;
+import model.ModelUsuarios;
 
 public class daoCadastroUsuario {
 	
@@ -15,9 +15,9 @@ public class daoCadastroUsuario {
 		connection = conexao.getConnection();
 	}
 	
-	public Login gravarUsuario(Login login) {
+	public ModelUsuarios gravarUsuario(ModelUsuarios login) {
 		try {
-			String sql = "INSERT INTO login(login, senha, nome, email) VALUES (?, ?, ?, ?);";
+			String sql = "INSERT INTO usuarios(login, senha, nome, email) VALUES (?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, login.getLogin());
 			statement.setString(2, login.getSenha());
@@ -39,7 +39,7 @@ public class daoCadastroUsuario {
 	public boolean validarEmail(String email) {
 
 		try {
-			String sql = "SELECT count(1) > 0 AS existe FROM login WHERE email = ?;";
+			String sql = "SELECT count(1) > 0 AS existe FROM usuarios WHERE email = ?;";
 
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, email);
@@ -58,7 +58,7 @@ public class daoCadastroUsuario {
 	public boolean validarLogin(String login) {
 
 		try {
-			String sql = "SELECT count(1) > 0 AS existe FROM login WHERE login = ?;";
+			String sql = "SELECT count(1) > 0 AS existe FROM usuarios WHERE login = ?;";
 
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, login);

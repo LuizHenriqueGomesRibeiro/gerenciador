@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import conexao.conexao;
-import model.Login;
+import model.ModelUsuarios;
 
 public class daoLogin {
 	private Connection connection;
@@ -15,12 +15,12 @@ public class daoLogin {
 		connection = conexao.getConnection();
 	}
 	
-	public boolean validarAutenticacao(Login login) throws SQLException {
-		String sql="SELECT*FROM login WHERE login = ? AND senha = ?";
+	public boolean validarAutenticacao(ModelUsuarios usuario) throws SQLException {
+		String sql="SELECT*FROM usuarios WHERE login = ? AND senha = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, login.getLogin());
-		statement.setString(2, login.getSenha());
+		statement.setString(1, usuario.getLogin());
+		statement.setString(2, usuario.getSenha());
 		ResultSet resultado = statement.executeQuery();
 		
 		if(resultado.next()) {
@@ -30,22 +30,22 @@ public class daoLogin {
 		return false;
 	}
 	
-	public Login consultaLogin(Login login) {
+	public ModelUsuarios consultaLogin(ModelUsuarios usuario) {
 		
 		try {
-			String sql = "SELECT*FROM login WHERE login = ?";
+			String sql = "SELECT*FROM usuarios WHERE login = ?";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, login.getLogin());
+			statement.setString(1, usuario.getLogin());
 			ResultSet resultado = statement.executeQuery();
 			
 			while(resultado.next()) {
-				login.setId(resultado.getLong("id"));
-				login.setLogin(resultado.getString("login"));
-				login.setSenha(resultado.getString("senha"));
+				usuario.setId(resultado.getInt("id"));
+				usuario.setLogin(resultado.getString("login"));
+				usuario.setSenha(resultado.getString("senha"));
 			}
 			
-			return login;
+			return usuario;
 			
 		} catch (Exception e) {
 			// TODO: handle exception
