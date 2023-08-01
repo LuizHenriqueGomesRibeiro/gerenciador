@@ -8,18 +8,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelProdutos;
-
 import java.io.IOException;
-
-import DAO.daoCadastroUsuario;
 import DAO.daoLogin;
 import DAO.daoProdutos;
 
 /**
  * Servlet implementation class servlet_cadastro_e_atualizacao_produtos
  */
-@MultipartConfig
-@WebServlet(urlPatterns = { "/servlet_cadastro_e_atualizacao_produtos","/principal/servlet_cadastro_e_atualizacao_produtos"})
 public class servlet_cadastro_e_atualizacao_produtos extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
