@@ -9,7 +9,6 @@
 	<name>gerenciamento</name>
 	<description>meu sistema de gerenciamento doméstico
 	</description>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.postgresql</groupId>

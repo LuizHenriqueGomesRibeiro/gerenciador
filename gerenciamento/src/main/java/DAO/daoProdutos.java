@@ -15,6 +15,13 @@ public class daoProdutos {
 	}
 	
 	public void gravarProduto(ModelProdutos modelProduto) {
+		
+		System.out.println("gravarProduto( ).");
+		System.out.println("modelProduto.getPreco(): " + modelProduto.getPreco());
+		System.out.println("modelProduto.getQuantidade(): " + modelProduto.getQuantidade());
+		System.out.println("modelProduto.getNome(): " + modelProduto.getNome());
+		System.out.println("modelProduto.getUsuario_pai_id(): " + modelProduto.getUsuario_pai_id());
+		
 		try {
 			String sql = "INSERT INTO produtos(preco, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?);";
 			

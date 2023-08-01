@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import conexao.conexao;
+import model.ModelLogin;
 import model.ModelUsuarios;
 
 public class daoLogin {
@@ -30,7 +31,7 @@ public class daoLogin {
 		return false;
 	}
 	
-	public ModelUsuarios consultaLogin(ModelUsuarios usuario) {
+public ModelUsuarios consultaLogin(ModelUsuarios usuario) {
 		
 		try {
 			String sql = "SELECT*FROM usuarios WHERE login = ?";
@@ -53,4 +54,31 @@ public class daoLogin {
 		}
 		return null;
 	}
+
+public ModelUsuarios consultaUsuarioLogadoId(int id) {
+
+	try {
+		String sql = "SELECT*FROM usuarios WHERE id = ?";
+		
+		ModelUsuarios modelUsuario = new ModelUsuarios();
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, id);
+		ResultSet resultado = statement.executeQuery();
+
+		while (resultado.next()) {
+			modelUsuario.setId(resultado.getInt("id"));
+			modelUsuario.setEmail(resultado.getString("email"));
+			modelUsuario.setLogin(resultado.getString("login"));
+			modelUsuario.setNome(resultado.getString("nome"));
+		}
+		return modelUsuario;
+
+	} catch (Exception e) {
+		// TODO: handle exception
+		e.printStackTrace();
+
+		return null;
+	}
+}
 }

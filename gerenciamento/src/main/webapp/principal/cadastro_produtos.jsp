@@ -20,11 +20,37 @@
 				<div class="container-fluid">
 					<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
 				</div>
-				<div style="position: relative; width: 80%; margin: auto;">
-					<a class="btn btn-primary" href="principal/cadastro_produtos.jsp" 
-					role="button" style="position: relative; width: 100%;">
-						Ir para produtos
-					</a>
+				<div style="position: relative; width: 100%;">
+					<form 
+						style="position: relative; width: 90%; margin: auto;"
+						action="<%=request.getContextPath()%>/servlet_produtos"
+						method="post"
+						name="formulario_cadastro_produtos" id="formulario"
+					>
+						<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
+						
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">Preço por unidade</label> 
+							<input class="form-control" id="preco" name="preco">
+							<div class="form-text">Preço por unidade</div>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">quantidade</label> 
+							<input class="form-control" id="quantidade" name="quantidade">
+							<div class="form-text">...............................</div>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">nome</label> 
+							<input class="form-control" id="nome" name="nome">
+							<div class="form-text">...............................</div>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">usuario_pai_id</label> 
+							<input class="form-control" id="usuario_pai_id" name="usuario_pai_id">
+							<div class="form-text">...............................</div>
+						</div>
+						<input type="submit" value="Entrar" class="btn btn-primary btn-user btn-block">
+					</form>
 				</div>
 			</div>
 			<footer class="sticky-footer bg-white">
@@ -64,4 +90,5 @@
 	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 	<script src="js/sb-admin-2.min.js"></script>
+	<body>
 </html>

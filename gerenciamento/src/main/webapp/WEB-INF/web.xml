@@ -11,26 +11,6 @@
   </welcome-file-list>
   <servlet>
     <description></description>
-    <display-name>servlet_inclusao_usuario</display-name>
-    <servlet-name>servlet_inclusao_usuario</servlet-name>
-    <servlet-class>Servlet.servlet_inclusao_usuario</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>servlet_inclusao_usuario</servlet-name>
-    <url-pattern>/servlet_inclusao_usuario</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>Servlet_inclusao_e_login_usuario</display-name>
-    <servlet-name>Servlet_inclusao_e_login_usuario</servlet-name>
-    <servlet-class>Servlet.Servlet_inclusao_e_login_usuario</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Servlet_inclusao_e_login_usuario</servlet-name>
-    <url-pattern>/Servlet_inclusao_e_login_usuario</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
     <display-name>servletLogin</display-name>
     <servlet-name>servletLogin</servlet-name>
     <servlet-class>Servlet.servletLogin</servlet-class>
@@ -58,5 +38,25 @@
   <servlet-mapping>
     <servlet-name>servlet_cadastro_e_atualizacao_produtos</servlet-name>
     <url-pattern>/servlet_cadastro_e_atualizacao_produtos</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servlet_cadastro_e_atualizacao_produto</display-name>
+    <servlet-name>servlet_cadastro_e_atualizacao_produto</servlet-name>
+    <servlet-class>Servlet.servlet_cadastro_e_atualizacao_produto</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servlet_cadastro_e_atualizacao_produto</servlet-name>
+    <url-pattern>/servlet_cadastro_e_atualizacao_produto</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servlet_produtos</display-name>
+    <servlet-name>servlet_produtos</servlet-name>
+    <servlet-class>Servlet.servlet_produtos</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servlet_produtos</servlet-name>
+    <url-pattern>/servlet_produtos</url-pattern>
   </servlet-mapping>
 </web-app>
