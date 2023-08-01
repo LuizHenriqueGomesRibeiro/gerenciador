@@ -15,7 +15,6 @@ import DAO.daoLogin;
 /**
  * Servlet implementation class servletLogin
  */
-@WebServlet(urlPatterns = { "/principal/ServletLogin"}) 
 public class servletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -58,7 +57,7 @@ public class servletLogin extends HttpServlet {
 				if(daoLogin.validarAutenticacao(login_em_validacao)) {
 					
 					if(url == null || url.equals("null")) {
-						url = "principal/principal.jsp";
+						url = "principal/teste.jsp";
 						
 						RequestDispatcher redirecionar = request.getRequestDispatcher(url);
 						redirecionar.forward(request, response);
