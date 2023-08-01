@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import conexao.conexao;
+import model.ModelLogin;
 import model.ModelUsuarios;
 
 public class daoLogin {
