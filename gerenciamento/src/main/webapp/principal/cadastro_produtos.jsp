@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,12 +14,16 @@
 </head>
 <body id="page-top">
 	<div id="wrapper">
-		<jsp:include page="includes/lateral_bar.jsp"></jsp:include>
 		<div id="content-wrapper" class="d-flex flex-column">
 			<div id="content">
 				<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+					<c:if test="${msg != '' || msg != null}">
+						<h1 class="h3 mb-4 text-gray-800">${msg}</h1>
+					</c:if>
+					<c:if test="${msg == '' || msg == null}">
+						<h1 class="h3 mb-4 text-gray-800">Cadastre um novo produto</h1>
+					</c:if>  
 				</div>
 				<div style="position: relative; width: 100%;">
 					<form 
@@ -45,11 +50,13 @@
 							<div class="form-text">...............................</div>
 						</div>
 						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">usuario_pai_id</label> 
-							<input class="form-control" id="usuario_pai_id" name="usuario_pai_id">
-							<div class="form-text">...............................</div>
+							<input 
+								class="form-control"  type="hidden"
+								id="usuario_pai_id" name="usuario_pai_id" 
+								value="${usuario.id}"
+							>
 						</div>
-						<input type="submit" value="Entrar" class="btn btn-primary btn-user btn-block">
+						<input type="submit" value="Cadastrar" class="btn btn-primary btn-user btn-block">
 					</form>
 				</div>
 			</div>

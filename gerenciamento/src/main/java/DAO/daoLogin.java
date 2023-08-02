@@ -54,6 +54,40 @@ public ModelUsuarios consultaLogin(ModelUsuarios usuario) {
 		return null;
 	}
 
+public ModelUsuarios consultaLoginString(String login) {
+	
+	try {
+		String sql = "SELECT*FROM usuarios WHERE login = ?";
+		
+		ModelUsuarios usuario = new ModelUsuarios();
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, login);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()) {
+			usuario.setId(resultado.getInt("id"));
+			usuario.setLogin(resultado.getString("login"));
+			usuario.setSenha(resultado.getString("senha"));
+			
+			System.out.println("--------------------------------------------------------------------");
+			System.out.println("Estamos dentro do método dao consultaLoginString");
+			System.out.println("id do usuário: " + usuario.getId());
+			System.out.println("login do usuário: " + usuario.getLogin());
+			System.out.println("senha do usuário: " + usuario.getSenha());
+			System.out.println("--------------------------------------------------------------------");
+
+		}
+		
+		return usuario;
+		
+	} catch (Exception e) {
+		// TODO: handle exception
+		e.printStackTrace();
+	}
+	return null;
+}
+
 public ModelUsuarios consultaUsuarioLogadoId(int id) {
 
 	try {

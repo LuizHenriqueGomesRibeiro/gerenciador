@@ -13,7 +13,6 @@
 </head>
 <body id="page-top">
 	<div id="wrapper">
-		<jsp:include page="includes/lateral_bar.jsp"></jsp:include>
 		<div id="content-wrapper" class="d-flex flex-column">
 			<div id="content">
 				<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
@@ -21,7 +20,7 @@
 					<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
 				</div>
 				<div style="position: relative; width: 80%; margin: auto;">
-					<a class="btn btn-primary" href="principal/cadastro_produtos.jsp" 
+					<a class="btn btn-primary" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=cadastrar" 
 					role="button" style="position: relative; width: 100%;">
 						Ir para produtos
 					</a>

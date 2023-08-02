@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.ModelUsuarios;
 
 import java.io.IOException;
@@ -44,9 +45,12 @@ public class servletLogin extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
 		String url = request.getParameter("url");
+		String login = request.getParameter("login");
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("login", login);
 
 		try {
 			if (login != null && !login.isEmpty() && senha != null && !senha.isEmpty()) {
