@@ -23,7 +23,7 @@
 				<div style="position: relative; width: 100%;">
 					<form 
 						style="position: relative; width: 90%; margin: auto;"
-						action="<%=request.getContextPath()%>/servlet_produtos"
+						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
 						method="post"
 						name="formulario_cadastro_produtos" id="formulario"
 					>
