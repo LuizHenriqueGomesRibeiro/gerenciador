@@ -20,9 +20,21 @@
 					<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
 				</div>
 				<div style="position: relative; width: 80%; margin: auto;">
-					<a class="btn btn-primary" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=cadastrar" 
-					role="button" style="position: relative; width: 100%;">
+					<a 
+						class="btn btn-primary" role="button"
+						href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=cadastrar" 
+					 	style="position: relative; width: 100%;"
+					 >
 						Ir para produtos
+					</a>
+				</div>
+				<div style="position: relative; width: 80%; margin: auto;">
+					<a 
+						class="btn btn-primary" role="button"
+						href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar" 
+					 	style="position: relative; width: 100%; top: 5px;"
+					 >
+						Ver lista de produtos
 					</a>
 				</div>
 			</div>

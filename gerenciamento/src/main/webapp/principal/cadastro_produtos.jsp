@@ -58,6 +58,15 @@
 						</div>
 						<input type="submit" value="Cadastrar" class="btn btn-primary btn-user btn-block">
 					</form>
+					<div style="position: relative; width: 90%; margin: auto;">
+					<a 
+						class="btn btn-primary" role="button"
+						href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar" 
+					 	style="position: relative; width: 100%; top: 5px;"
+					 >
+						Ver lista de produtos
+					</a>
+				</div>
 				</div>
 			</div>
 			<footer class="sticky-footer bg-white">

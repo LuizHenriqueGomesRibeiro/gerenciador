@@ -22,10 +22,6 @@ public class servlet_recuperacao_login extends HttpServlet implements Serializab
     	HttpSession session = request.getSession();
     	
     	String login = (String) session.getAttribute("login");
-    	
-		System.out.println("--------------------------------------------------------------------");
-    	System.out.println("We are inside the servlet_recuperacao_login and the user name is: " + login);
-		System.out.println("--------------------------------------------------------------------");
 
     	return daologin.consultaLoginString(login);
     }
