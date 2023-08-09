@@ -12,58 +12,60 @@
 rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 </head>
-<body style="overflow: hidden;">
-	<section class="vh-100">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-6 text-black">
-					<div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-						<div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-							<form style="width: 23rem;" action="servletLogin" method="post"
-								name="formulario_login" id="formulario">
-
-								<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
-
-								<div class="form-outline mb-4">
-									<input type="text" id="form2Example18"
-										class="form-control form-control-lg" placeholder="login"
-										name="login" id="login" /> <label class="form-label"
-										for="form2Example18">Login</label>
-								</div>
-								<div class="form-outline mb-4">
-									<input type="password" id="form2Example28" name="senha"
-										id="senha" placeholder="senha"
-										class="form-control form-control-lg" /> <label
-										class="form-label" for="form2Example28">Senha</label>
-								</div>
-								<div class="pt-1 mb-4">
-									<button class="btn btn-info btn-lg btn-block" type="submit">Entrar</button>
-								</div>
-								<p>
-									Não tem uma conta? 
-									<a href="<%=request.getContextPath()%>/cadastro.jsp" class="link-info">Cadastro</a>
-								</p>
-
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6 px-0 d-none d-sm-block" style="position: relative; left: 20px;">
-					<img
-						src="https://images.pexels.com/photos/459728/pexels-photo-459728.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-						alt="Login image" class="w-100 vh-100"
-						style="object-fit: cover; object-position: left;"
-					>
-				</div>
-			</div>
-		</div>
-	</section>
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	<script src="js/sb-admin-2.min.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery-3.7.0.js"></script>
+<body class="bg-gradient-primary">
+	<div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"> 
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">${msg}</h1>
+                                    </div>
+                                    <form action="servletLogin" method="post" name="formulario_login" class="signin-form" id="formulario">
+                                    
+                                    	<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
+                                    	
+                                        <div class="form-group">
+                                            <input class="form-control form-control-user" placeholder="login" name="login" id="login"
+												aria-describedby="emailHelp" style="margin-top:20%;">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
+												name="senha" id="senha" placeholder="senha">
+                                        </div>
+                                        <input type="submit" value="Entrar" class="btn btn-primary btn-user btn-block">
+                                        <hr>
+                                        <a href="index.html" class="btn btn-google btn-user btn-block">
+                                            <i class="fab fa-google fa-fw"></i> Login with Google
+                                        </a>
+                                        <a href="index.html"
+											class="btn btn-facebook btn-user btn-block">
+                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                        </a>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center" style="margin-bottom:20%;">
+                                        <a class="small" href="<%=request.getContextPath()%>/cadastro.jsp">Crie uma conta!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/sb-admin-2.min.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery-3.7.0.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.validate.js"></script>
-	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/validacao.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/validacao.js"></script>
 </body>
 </html>
