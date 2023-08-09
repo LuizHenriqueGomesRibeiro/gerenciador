@@ -18,7 +18,7 @@ rel="stylesheet">
 <body style="overflow: hidden;">
 	<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
 	<ul class="pagination" style="margin: -24px 0px -1px 0px;">
-		<li class="page-item"><button class="page-link" data-toggle="modal" data-target=".bd-example-modal-lg">Novo registro</button></li>
+		<li class="page-item"><button class="page-link" data-toggle="modal" data-target="#nui">Novo registro</button></li>
 		<li class="page-item"><button class="page-link">Índice =></button></li>
 		<%	
 		int totalPagina = (int) request.getAttribute("totalPagina");
@@ -53,7 +53,7 @@ rel="stylesheet">
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td style=" height: 30px; width: 40px;">
 							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" 
-							href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=ver&id=${ml.id}">Ver/alterar</a>
+							href="#" data-toggle="modal" data-target="#ui">Ver/alterar</a>
 						</td>
 						<td style="width: 40px;">
 							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p style="color: red;">Excluir</p></a>
@@ -62,6 +62,51 @@ rel="stylesheet">
 							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p>Configurações</p></a>
 						</td>
 					</tr>
+					<div class="modal fade bd-example-modal-lg" tabindex="-1" id="ui"
+						role="dialog" aria-labelledby="myLargeModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div style="margin: 20px;">
+									<form style="position: relative; width: 90%; margin: auto;"
+										action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
+										method="post" name="formulario_cadastro_produtos"
+										id="formulario">
+										<input type="hidden" value="atualizar" name="acao">
+										
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">Preço
+												por unidade</label> <input class="form-control" id="preco"
+												name="preco" value="${ml.preco}">
+											<div class="form-text">Preço por unidade</div>
+										</div>
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">quantidade</label>
+											<input class="form-control" id="quantidade" name="quantidade"
+												value="${ml.quantidade}">
+											<div class="form-text">...............................</div>
+										</div>
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">nome</label>
+											<input class="form-control" id="nome" name="nome"
+												value="${ml.nome}">
+											<div class="form-text">...............................</div>
+										</div>
+										<div class="mb-3">
+											<input class="form-control" id="id" name="id" value="${ml.id}">
+										</div>
+										<div class="mb-3">
+											<input class="form-control" id="usuario_pai_id"
+												name="usuario_pai_id" value="${usuario.id}">
+										</div>
+										<input type="submit" value="Submeter"
+											class="btn btn-primary btn-user btn-block"
+											style="margin-bottom: 20px;">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</c:forEach>
 			</tbody>
 		</table>
@@ -94,7 +139,7 @@ rel="stylesheet">
 	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 	<script src="js/sb-admin-2.min.js"></script>
-	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+	<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="nui"
 		aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
