@@ -45,8 +45,8 @@ rel="stylesheet">
 							name="id" value="${produto.id}">
 					</div>
 					<div class="mb-3">
-						<input class="form-control" type="hidden" id="id"
-							name="id" value="${usuario.id}">
+						<input class="form-control" type="hidden" id="id" name="id" value="${usuario.id}">
+							name="usuario_pai_id" value="${usuario.id}">
 					</div>
 					<input type="submit" value="Submeter"
 						class="btn btn-primary btn-user btn-block"

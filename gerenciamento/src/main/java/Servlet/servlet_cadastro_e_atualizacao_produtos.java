@@ -2,13 +2,10 @@ package Servlet;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelProdutos;
-import model.ModelUsuarios;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,7 +41,37 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			System.out.println(acao);
 			
-			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
+			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrar")) {
+				
+				String preco = request.getParameter("preco");
+				String quantidade = request.getParameter("quantidade");
+				String nome = request.getParameter("nome");
+				String usuario_pai_id = request.getParameter("usuario_pai_id");
+				
+				int preco_int = Integer.parseInt(preco);
+				int quantidade_int = Integer.parseInt(quantidade);
+				
+				ModelProdutos modelProduto = new ModelProdutos();
+				
+				modelProduto.setPreco(preco_int);
+				modelProduto.setQuantidade(quantidade_int);
+				modelProduto.setNome(nome);
+				modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
+				request.setAttribute("msg","Produto cadastrado com sucesso");
+				
+				daoproduto.gravarProduto(modelProduto);
+			
+				request.setAttribute("usuario", super.getUsuarioLogado(request));
+				
+				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
+				
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+				
+				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
+				despache.forward(request, response);	
+			}
+			else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				
@@ -65,9 +92,51 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
-				despache.forward(request, response);			
+				despache.forward(request, response);
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("ver")){
+				
+				String id = request.getParameter("id");
+				
+				ModelProdutos modelProduto = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
+				request.setAttribute("produto", modelProduto);
+				
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+				
+				RequestDispatcher despache = request.getRequestDispatcher("principal/atualizar_e_ver.jsp");
+				despache.forward(request, response);
 			}
-			
+			else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("atualizar")){
+				
+				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
+				
+				String preco = request.getParameter("preco");
+				String quantidade = request.getParameter("quantidade");
+				String nome = request.getParameter("nome");
+				String id = request.getParameter("id");
+				
+				System.out.println("nome atualizado: " + nome);
+				
+				int preco_int = Integer.parseInt(preco);
+				int quantidade_int = Integer.parseInt(quantidade);
+				Long id_int = Long.parseLong(id);
+				
+				ModelProdutos modelProduto = new ModelProdutos();
+				
+				modelProduto.setPreco(preco_int);
+				modelProduto.setQuantidade(quantidade_int);
+				modelProduto.setNome(nome);
+				modelProduto.setId(id_int);
+				
+				daoproduto.atualizarProduto(modelProduto);
+				
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+				
+				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
+				despache.forward(request, response);
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -79,36 +148,41 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			
 			String preco = request.getParameter("preco");
 			String quantidade = request.getParameter("quantidade");
 			String nome = request.getParameter("nome");
 			String usuario_pai_id = request.getParameter("usuario_pai_id");
+			String id = request.getParameter("id");
+			
+			//System.out.println(id);
 			
 			int preco_int = Integer.parseInt(preco);
 			int quantidade_int = Integer.parseInt(quantidade);
 			
+			
 			ModelProdutos modelProduto = new ModelProdutos();
 			
+			modelProduto.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
 			modelProduto.setPreco(preco_int);
 			modelProduto.setQuantidade(quantidade_int);
 			modelProduto.setNome(nome);
 			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
-			request.setAttribute("msg","Produto cadastrado com sucesso");
 			
 			if(modelProduto.isNovo()) {
+				System.out.println("O registro é novissímo");
 				daoproduto.gravarProduto(modelProduto);
 			}else {
-				
-				System.out.println("atualização rapaziada");
-				//daoproduto.atualizarProduto(modelProduto);
 				System.out.println("O registro não é novo");
-				
+				daoproduto.atualizarProduto(modelProduto);
 			}
-
-			daoproduto.gravarProduto(modelProduto);
-
+			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
+			
+			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
+			
+			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+			request.setAttribute("produtos", produtos);
+			
 			RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 			despache.forward(request, response);
 			

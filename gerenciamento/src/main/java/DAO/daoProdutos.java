@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import conexao.conexao;
 import model.ModelUsuarios;
 import model.ModelProdutos;
@@ -35,6 +34,55 @@ public class daoProdutos {
 			statement.setInt(4, usuario_pai_id.getId());
 			
 			statement.execute();
+			connection.commit();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+	
+	public ModelProdutos consultaProduto(int id, int userLogado) {
+
+		ModelProdutos modelProduto = new ModelProdutos();
+
+		try {
+			String sql = "SELECT*FROM produtos WHERE id = ? AND usuario_pai_id = ?";
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, id);
+			statement.setLong(2, userLogado);
+			ResultSet resultado = statement.executeQuery();
+
+			while (resultado.next()) {
+				modelProduto.setId(resultado.getLong("id"));
+				modelProduto.setNome(resultado.getString("nome"));
+				modelProduto.setPreco(resultado.getInt("preco"));
+				modelProduto.setQuantidade(resultado.getInt("quantidade"));
+			}
+			
+			return modelProduto;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public void atualizarProduto(ModelProdutos modelProduto) {
+
+		try {
+			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ? WHERE id = ?";
+			
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, modelProduto.getPreco());
+			statement.setInt(2, modelProduto.getQuantidade());
+			statement.setString(3, modelProduto.getNome());
+			statement.setLong(4, modelProduto.getId());
+
+			statement.executeUpdate();
 			connection.commit();
 
 		} catch (Exception e) {
@@ -111,7 +159,8 @@ public class daoProdutos {
 
 			retorno.add(modelProdutos);
 		}
-
+		
 		return retorno;
 	}
 }
+
