@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import conexao.conexao;
 import model.ModelUsuarios;
 import model.ModelProdutos;
@@ -44,6 +43,55 @@ public class daoProdutos {
 		}
 	}
 	
+	public ModelProdutos consultaProduto(int id, int userLogado) {
+
+		ModelProdutos modelProduto = new ModelProdutos();
+
+		try {
+			String sql = "SELECT*FROM produtos WHERE id = ? AND usuario_pai_id = ?";
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, id);
+			statement.setLong(2, userLogado);
+			ResultSet resultado = statement.executeQuery();
+
+			while (resultado.next()) {
+				modelProduto.setId(resultado.getLong("id"));
+				modelProduto.setNome(resultado.getString("nome"));
+				modelProduto.setPreco(resultado.getInt("preco"));
+				modelProduto.setQuantidade(resultado.getInt("quantidade"));
+			}
+			
+			return modelProduto;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public void atualizarProduto(ModelProdutos modelProduto) {
+
+		try {
+			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ? WHERE id = ?";
+			
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setInt(1, modelProduto.getPreco());
+			statement.setInt(2, modelProduto.getQuantidade());
+			statement.setString(3, modelProduto.getNome());
+			statement.setLong(4, modelProduto.getId());
+
+			statement.executeUpdate();
+			connection.commit();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+	
 	public List<ModelProdutos> listarProdutos(int id) throws SQLException {
 		
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
@@ -56,7 +104,7 @@ public class daoProdutos {
 		
 			ModelProdutos produtos = new ModelProdutos();
 			
-			produtos.setId(resultado.getInt("id"));
+			produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setPreco(resultado.getInt("preco"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
@@ -106,12 +154,12 @@ public class daoProdutos {
 
 			modelProdutos.setNome(resultado.getString("nome"));
 			modelProdutos.setPreco(resultado.getInt("preco"));
-			modelProdutos.setId(resultado.getInt("id"));
+			modelProdutos.setId(resultado.getLong("id"));
 			modelProdutos.setQuantidade(resultado.getInt("quantidade"));
 
 			retorno.add(modelProdutos);
 		}
-
+		
 		return retorno;
 	}
 }

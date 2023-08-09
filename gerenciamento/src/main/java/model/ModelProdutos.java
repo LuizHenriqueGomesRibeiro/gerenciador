@@ -4,9 +4,18 @@ public class ModelProdutos {
 	
 	private int quantidade;
 	private int preco;
-	private int id;
+	private Long id;
 	private String nome;
 	private ModelUsuarios usuario_pai_id;
+	
+	public boolean isNovo() {
+		if (this.id == null) {
+			return true;
+		} else if (this.id != null && this.id > 0) {
+			return false;
+		}
+		return id == null;
+	}
 	
 	public int getQuantidade() {
 		return quantidade;
@@ -20,10 +29,10 @@ public class ModelProdutos {
 	public void setPreco(int preco) {
 		this.preco = preco;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNome() {

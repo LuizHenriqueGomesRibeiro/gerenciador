@@ -12,11 +12,13 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
 rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
+<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-3.7.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.validate.js"></script>
 </head>
 <body style="overflow: hidden;">
 	<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
-	<ul class="pagination" style="margin: -24px 0px 23px 0px;">
-	<li class="page-item"><button class="page-link" data-toggle="modal" data-target=".bd-example-modal-lg">Novo registro</button></li>
+	<ul class="pagination" style="margin: -24px 0px -1px 0px;">
+		<li class="page-item"><button class="page-link" data-toggle="modal" data-target=".bd-example-modal-lg">Novo registro</button></li>
 		<li class="page-item"><button class="page-link">Índice =></button></li>
 		<%	
 		int totalPagina = (int) request.getAttribute("totalPagina");
@@ -32,8 +34,8 @@ rel="stylesheet">
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
 	</ul>
-	<div>
-		<table class="table table-hover table-sm" style="margin-top: -25px;">
+	<div style="overflow-y: scroll; height: 300px;">
+		<table class="table table-hover table-sm">
 			<thead>
 				<tr>
 					<th>Id</th>
@@ -45,10 +47,20 @@ rel="stylesheet">
 			<tbody>
 				<c:forEach items='${produtos}' var='ml'>
 					<tr>
-						<td style="height: 20px; margin: -5px;"><c:out value="${ml.id}"></c:out></td>
-						<td style="height: 20px; margin: -5px;"><c:out value="${ml.nome}"></c:out></td>
-						<td style="height: 20px; margin: -5px;"><c:out value="${ml.preco}"></c:out></td>
-						<td style="height: 20px; margin: -5px;"><c:out value="${ml.quantidade}"></c:out></td>
+						<td><c:out value="${ml.id}"></c:out></td>
+						<td><c:out value="${ml.nome}"></c:out></td>
+						<td><c:out value="${ml.preco}"></c:out></td>
+						<td><c:out value="${ml.quantidade}"></c:out></td>
+						<td style=" height: 30px; width: 40px;">
+							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" 
+							href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=ver&id=${ml.id}">Ver/alterar</a>
+						</td>
+						<td style="width: 40px;">
+							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p style="color: red;">Excluir</p></a>
+						</td>
+						<td style="width: 40px;">
+							<a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p>Configurações</p></a>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -89,7 +101,8 @@ rel="stylesheet">
 				<div style="margin: 20px;">
 					<form style="position: relative; width: 90%; margin: auto;"
 						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-						method="get" name="formulario_cadastro_produtos" id="formulario">
+						method="post" name="formulario_cadastro_produtos" id="formulario">
+						
 						<input type="hidden" value="cadastrar" name="acao">
 
 						<div class="mb-3">
@@ -107,11 +120,8 @@ rel="stylesheet">
 								class="form-control" id="nome" name="nome">
 							<div class="form-text">...............................</div>
 						</div>
-						<div class="mb-3">
-							<input class="form-control" type="hidden" id="usuario_pai_id"
-								name="usuario_pai_id" value="${usuario.id}">
-						</div>
-						<input type="submit" value="Cadastrar" class="btn btn-primary btn-user btn-block" style="margin-bottom: 20px;">
+						<input value="${usuario.id}" type="hidden" value="cadastrar" name="usuario_pai_id">
+						<input type="submit" value="Submeter" class="btn btn-primary btn-user btn-block" style="margin-bottom: 20px;">
 					</form>
 				</div>
 			</div>

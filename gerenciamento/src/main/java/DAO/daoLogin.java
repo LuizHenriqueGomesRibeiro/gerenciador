@@ -69,14 +69,6 @@ public ModelUsuarios consultaLoginString(String login) {
 			usuario.setId(resultado.getInt("id"));
 			usuario.setLogin(resultado.getString("login"));
 			usuario.setSenha(resultado.getString("senha"));
-			
-			System.out.println("--------------------------------------------------------------------");
-			System.out.println("Estamos dentro do método dao consultaLoginString");
-			System.out.println("id do usuário: " + usuario.getId());
-			System.out.println("login do usuário: " + usuario.getLogin());
-			System.out.println("senha do usuário: " + usuario.getSenha());
-			System.out.println("--------------------------------------------------------------------");
-
 		}
 		
 		return usuario;
