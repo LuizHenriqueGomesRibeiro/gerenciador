@@ -176,7 +176,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				daoproduto.gravarProduto(modelProduto);
 			}else {
 				System.out.println("O registro não é novo");
-				
+				daoproduto.atualizarProduto(modelProduto);
 			}
 			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));

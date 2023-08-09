@@ -88,7 +88,7 @@ public ModelUsuarios consultaUsuarioLogadoId(int id) {
 		ModelUsuarios modelUsuario = new ModelUsuarios();
 
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, id);
+		statement.setLong(1, id);
 		ResultSet resultado = statement.executeQuery();
 
 		while (resultado.next()) {
