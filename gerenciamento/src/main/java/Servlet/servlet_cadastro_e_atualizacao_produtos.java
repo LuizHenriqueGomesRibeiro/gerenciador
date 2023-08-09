@@ -102,6 +102,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 				System.out.println("atualização rapaziada");
 				//daoproduto.atualizarProduto(modelProduto);
+				System.out.println("O registro não é novo");
+				
 			}
 
 			daoproduto.gravarProduto(modelProduto);
