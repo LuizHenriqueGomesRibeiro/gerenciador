@@ -44,37 +44,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			System.out.println(acao);
 			
-			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrar")) {
-				
-				String preco = request.getParameter("preco");
-				String quantidade = request.getParameter("quantidade");
-				String nome = request.getParameter("nome");
-				String usuario_pai_id = request.getParameter("usuario_pai_id");
-				
-				int preco_int = Integer.parseInt(preco);
-				int quantidade_int = Integer.parseInt(quantidade);
-				
-				ModelProdutos modelProduto = new ModelProdutos();
-				
-				modelProduto.setPreco(preco_int);
-				modelProduto.setQuantidade(quantidade_int);
-				modelProduto.setNome(nome);
-				modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
-				request.setAttribute("msg","Produto cadastrado com sucesso");
-				
-				daoproduto.gravarProduto(modelProduto);
-			
-				request.setAttribute("usuario", super.getUsuarioLogado(request));
-				
-				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
-				request.setAttribute("produtos", produtos);
-				
-				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
-				despache.forward(request, response);	
-			}
-			else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
+			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				
@@ -129,7 +99,12 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			String usuario_pai_id = request.getParameter("usuario_pai_id");
 			String id = request.getParameter("id");
 			
-			//System.out.println(id);
+			System.out.println("Estamos dentro de servlet doPost");
+			System.out.println(id);
+			System.out.println(preco);
+			System.out.println(quantidade);
+			System.out.println(nome);
+			System.out.println(usuario_pai_id);
 			
 			int preco_int = Integer.parseInt(preco);
 			int quantidade_int = Integer.parseInt(quantidade);
