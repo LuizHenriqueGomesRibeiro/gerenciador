@@ -55,7 +55,7 @@ rel="stylesheet">
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;"
-							href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=ver&id=${ml.id}">Ver</a>
+							href="#" data-toggle="modal" data-target="#teste" id="buscar">Ver</a>
 						</td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p>Configurações</p></a>
@@ -100,7 +100,7 @@ rel="stylesheet">
 						</div>
 					</div>
 					<script type="text/javascript">
-					
+
 					jQuery(function() {
 						var buscar = jQuery("#buscar");
 
@@ -118,7 +118,7 @@ rel="stylesheet">
 									url: urlAction,
 									data: "&id=" + id + '&acao=ver',
 									success: function(json, textStatus, xhr) {
-
+										alert(json);
 										jQuery("#preencher").append('<input value=' + json[p].id + '>');
 									}
 								}).fail(function(xhr, status, errorThrown) {
