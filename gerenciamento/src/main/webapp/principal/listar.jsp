@@ -34,6 +34,7 @@ rel="stylesheet">
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
 	</ul>
+	<div id="json-content"></div>
 	<div style="overflow-y: scroll; height: 300px;">
 		<table class="table table-hover table-sm">
 			<thead>
@@ -47,6 +48,7 @@ rel="stylesheet">
 			<tbody>
 				<c:forEach items='${produtos}' var='ml'>
 					<tr>
+						<td><input type="hidden" class="form-control" id="buscarId" value="${ml.id}"></td>
 						<td><c:out value="${ml.id}"></c:out></td>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.preco}"></c:out></td>
@@ -55,9 +57,6 @@ rel="stylesheet">
 							style="margin: -6px 0px -6px 0px; height: 37px;"
 							href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=ver&id=${ml.id}">Ver</a>
 						</td>
-						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							data-toggle="modal" data-target=".ai"><p style="color: red;">Alterar</p></a></td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p>Configurações</p></a>
 						</td>
@@ -70,25 +69,25 @@ rel="stylesheet">
 								<div style="margin: 20px;">
 									<form style="position: relative; width: 90%; margin: auto;"
 										action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-										method="post" name="formulario_cadastro_produtos"
+										method="get" name="formulario_cadastro_produtos"
 										id="formulario">
-										<input type="hidden" value="cadastrar" name="acao">
+										<div class="mb-3" id="preencher">
+											<label for="exampleInputEmail1" class="form-label">Preço por unidade</label>
+											<div class="form-text">Preço por unidade</div>
+										</div>
 										<div class="mb-3">
 											<label for="exampleInputEmail1" class="form-label">Preço
-												por unidade</label> <input class="form-control" id="preco"
-												value="${ml.preco}" name="preco">
+												por unidade</label> <input class="form-control" id="preco" name="preco">
 											<div class="form-text">Preço por unidade</div>
 										</div>
 										<div class="mb-3">
 											<label for="exampleInputEmail1" class="form-label">quantidade</label>
-											<input class="form-control" id="quantidade" name="quantidade"
-												value="${ml.quantidade}">
+											<input class="form-control" id="quantidade" name="quantidade">
 											<div class="form-text">...............................</div>
 										</div>
 										<div class="mb-3">
 											<label for="exampleInputEmail1" class="form-label">nome</label>
-											<input class="form-control" id="nome" name="nome"
-												value="${ml.nome}">
+											<input class="form-control" id="nome" name="nome">
 											<div class="form-text">...............................</div>
 										</div>
 										<input value="${usuario.id}" type="hidden" value="cadastrar"
@@ -101,7 +100,33 @@ rel="stylesheet">
 						</div>
 					</div>
 					<script type="text/javascript">
-												
+					
+					jQuery(function() {
+						var buscar = jQuery("#buscar");
+
+						buscar.click(function() {
+
+							var id = document.getElementById('buscarId').value;
+
+							if (id != null && id != '' && id.trim() != '') {
+
+								var urlAction = document.getElementById('formulario').action;
+
+								jQuery.ajax({
+
+									method: "get",
+									url: urlAction,
+									data: "&id=" + id + '&acao=ver',
+									success: function(json, textStatus, xhr) {
+
+										jQuery("#preencher").append('<input value=' + json[p].id + '>');
+									}
+								}).fail(function(xhr, status, errorThrown) {
+									alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+								});
+							}
+						});
+					});	
 					</script>
 				</c:forEach>
 			</tbody>

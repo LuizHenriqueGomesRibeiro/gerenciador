@@ -116,6 +116,34 @@ public class daoProdutos {
 		return retorno;
 	}
 	
+	public List<ModelProdutos> buscarAjax(int id) throws SQLException {
+		
+		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
+		
+		String sql = "SELECT * FROM produtos WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+		
+			ModelProdutos produtos = new ModelProdutos();
+			
+			produtos.setId(resultado.getLong("id"));
+			produtos.setQuantidade(resultado.getInt("quantidade"));
+			produtos.setPreco(resultado.getInt("preco"));
+			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
+			produtos.setNome(resultado.getString("nome"));
+			
+			System.out.println("estamos dentro de buscarAjax");
+			System.out.println(resultado.getLong("id"));
+			System.out.println(produtos);
+			
+			retorno.add(produtos);
+		}
+		
+		return retorno;
+	}
+	
 	public int consultaProdutosPaginas(int usuario) throws Exception {
 
 		String sql = "SELECT count(1) AS total FROM produtos WHERE usuario_pai_id = ?";

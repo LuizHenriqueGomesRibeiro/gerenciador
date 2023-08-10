@@ -8,7 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.ModelProdutos;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
+
+import com.google.gson.Gson;
 
 import DAO.daoLogin;
 import DAO.daoProdutos;
@@ -98,44 +101,16 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 				String id = request.getParameter("id");
 				
-				ModelProdutos modelProduto = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
-				request.setAttribute("produto", modelProduto);
+				List<ModelProdutos> produto = daoproduto.buscarAjax(Integer.parseInt(id));
 				
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
-				request.setAttribute("produtos", produtos);
+				Gson gson = new Gson();
+				String json = gson.toJson(produto);
+				PrintWriter printWriter = response.getWriter();
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				printWriter.write(json);
+				printWriter.close();
 				
-				RequestDispatcher despache = request.getRequestDispatcher("principal/atualizar_e_ver.jsp");
-				despache.forward(request, response);
-			}
-			else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("atualizar")){
-				
-				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
-				String preco = request.getParameter("preco");
-				String quantidade = request.getParameter("quantidade");
-				String nome = request.getParameter("nome");
-				String id = request.getParameter("id");
-				
-				System.out.println("nome atualizado: " + nome);
-				
-				int preco_int = Integer.parseInt(preco);
-				int quantidade_int = Integer.parseInt(quantidade);
-				Long id_int = Long.parseLong(id);
-				
-				ModelProdutos modelProduto = new ModelProdutos();
-				
-				modelProduto.setPreco(preco_int);
-				modelProduto.setQuantidade(quantidade_int);
-				modelProduto.setNome(nome);
-				modelProduto.setId(id_int);
-				
-				daoproduto.atualizarProduto(modelProduto);
-				
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
-				request.setAttribute("produtos", produtos);
-				
-				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
-				despache.forward(request, response);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
