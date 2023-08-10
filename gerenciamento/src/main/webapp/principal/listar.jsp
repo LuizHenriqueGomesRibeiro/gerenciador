@@ -100,6 +100,9 @@ rel="stylesheet">
 							</div>
 						</div>
 					</div>
+					<script type="text/javascript">
+												
+					</script>
 				</c:forEach>
 			</tbody>
 		</table>
