@@ -12,8 +12,8 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
 rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
-<script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-3.7.0.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery-3.7.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.validate.js"></script>
 </head>
 <body style="overflow: hidden;">
 	<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
@@ -46,16 +46,16 @@ rel="stylesheet">
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items='${produtos}' var='ml'>
+				<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>
-						<td><input type="hidden" class="form-control" id="buscarId" value="${ml.id}"></td>
-						<td><c:out value="${ml.id}"></c:out></td>
+						<td id="buscarId" type="hidden"><c:out value="Índice: ${status.index} - Item: ${ml}"/></td>
+						<td id="buscarId"><c:out value="${ml.id}"></c:out></td>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.preco}"></c:out></td>
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;"
-							href="#" data-toggle="modal" data-target="#teste" id="buscar">Ver</a>
+							href="#" data-toggle="modal" data-target=".${ml}" id="buscar">Ver</a>
 						</td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"><p>Configurações</p></a>
@@ -71,25 +71,42 @@ rel="stylesheet">
 										action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
 										method="get" name="formulario_cadastro_produtos"
 										id="formulario">
-										<div class="mb-3" id="preencher">
-											<label for="exampleInputEmail1" class="form-label">Preço por unidade</label>
-											<div class="form-text">Preço por unidade</div>
-										</div>
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">Preço
-												por unidade</label> <input class="form-control" id="preco" name="preco">
-											<div class="form-text">Preço por unidade</div>
-										</div>
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">quantidade</label>
-											<input class="form-control" id="quantidade" name="quantidade">
-											<div class="form-text">...............................</div>
-										</div>
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">nome</label>
-											<input class="form-control" id="nome" name="nome">
-											<div class="form-text">...............................</div>
-										</div>
+										<c:forEach items="${produtos}" var="ml" varStatus="status">
+    									<c:if test="${status.index == 2}">
+        									<input class="form-control" id="nome" name="nome" value="${ml.nome}">
+    									</c:if>
+    									</c:forEach>
+										<c:forEach items="${produtos}" var="ml" varStatus="status">
+											<c:if test="${status.index == 2}">
+												<div class="mb-3">
+													<label for="exampleInputEmail1" class="form-label">Preço
+												por unidade</label>
+													<input class="form-control" id="preco"
+														name="preco" value="${ml.preco}">
+													<div class="form-text">...............................</div>
+												</div>
+											</c:if>
+										</c:forEach>
+										<c:forEach items="${produtos}" var="ml" varStatus="status">
+											<c:if test="${status.index == 2}">
+												<div class="mb-3">
+													<label for="exampleInputEmail1" class="form-label">quantidade</label>
+													<input class="form-control" id="quantidade"
+														name="quantidade" value="${ml.quantidade}">
+													<div class="form-text">...............................</div>
+												</div>
+											</c:if>
+										</c:forEach>
+										<c:forEach items="${produtos}" var="ml" varStatus="status">
+											<c:if test="${status.index == 2}">
+												<div class="mb-3">
+													<label for="exampleInputEmail1" class="form-label">nome</label>
+													<input class="form-control" id="nome"
+														name="nome" value="${ml.nome}">
+													<div class="form-text">...............................</div>
+												</div>
+											</c:if>
+										</c:forEach>
 										<input value="${usuario.id}" type="hidden" value="cadastrar"
 											name="usuario_pai_id"> <input type="submit"
 											value="Submeter" class="btn btn-primary btn-user btn-block"
