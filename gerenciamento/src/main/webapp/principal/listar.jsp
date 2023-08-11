@@ -53,7 +53,7 @@ rel="stylesheet">
 					<tr>		
 						<td><c:out value="${ml.id}"></c:out></td>
 						<td><c:out value="${ml.nome}"></c:out></td>
-						<td><c:out value="${ml.preco}"></c:out></td>
+						<td><c:out value="${ml.precoString}"></c:out></td>
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;"

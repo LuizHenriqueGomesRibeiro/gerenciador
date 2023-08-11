@@ -7,7 +7,16 @@ public class ModelProdutos {
 	private Long id;
 	private String nome;
 	private ModelUsuarios usuario_pai_id;
+	private String precoString;
 	
+	public String getPrecoString() {
+		return precoString;
+	}
+
+	public void setPrecoString(String precoString) {
+		this.precoString = precoString;
+	}
+
 	public boolean isNovo() {
 		if (this.id == null) {
 			return true;

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import conexao.conexao;
@@ -75,6 +77,7 @@ public class daoProdutos {
 			ResultSet resultado = statement.executeQuery();
 
 			while (resultado.next()) {
+
 				modelProduto.setId(resultado.getLong("id"));
 				modelProduto.setNome(resultado.getString("nome"));
 				modelProduto.setPreco(resultado.getInt("preco"));
@@ -122,10 +125,16 @@ public class daoProdutos {
 		while(resultado.next()){
 		
 			ModelProdutos produtos = new ModelProdutos();
+			NumberFormat format = NumberFormat.getInstance();
+
+	        format.setGroupingUsed(true);
+
+	        String numeroFormatado = format.format(resultado.getInt("preco"));
+	        System.out.println(numeroFormatado);
 			
 			produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
-			produtos.setPreco(resultado.getInt("preco"));
+			produtos.setPrecoString(numeroFormatado);
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
 			
@@ -135,21 +144,25 @@ public class daoProdutos {
 		return retorno;
 	}
 	
-	public int somaProdutos(int usuario_pai_id) throws Exception{
+	public String somaProdutos(int usuario_pai_id) throws Exception{
 		
 		String sql = "SELECT SUM(preco) FROM produtos WHERE usuario_pai_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, usuario_pai_id);
 		ResultSet resultado = statement.executeQuery();
-		
+		int soma = 0;
 		if (resultado.next()) {
-		    int soma = resultado.getInt(1);
-
-		    return soma;
+		    soma = resultado.getInt(1);
 		}
 		
-		return (Integer) null;
+        NumberFormat format = NumberFormat.getInstance();
+
+        format.setGroupingUsed(true);
+
+        String numeroFormatado = format.format(soma);
+		
+		return numeroFormatado;
 	}
 	
 	public int consultaProdutosPaginas(int usuario) throws Exception {
