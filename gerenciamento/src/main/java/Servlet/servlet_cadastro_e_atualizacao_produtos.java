@@ -48,6 +48,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				
+				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
+		
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
@@ -58,7 +60,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 				Integer offset = Integer.parseInt(request.getParameter("pagina"));
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
+				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
 				List<ModelProdutos> produtos = daoproduto.consultaProdutosOffset(super.getUsuarioLogado(request).getId(), offset);
 				request.setAttribute("produtos", produtos);
 				
@@ -67,19 +69,21 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 				despache.forward(request, response);
 				
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("ver")){
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("excluir")){
 				
 				String id = request.getParameter("id");
 				
-				List<ModelProdutos> produto = daoproduto.buscarAjax(Integer.parseInt(id));
+				daoproduto.excluirProduto(id);
+				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
+				request.setAttribute("usuario", super.getUsuarioLogado(request));
 				
-				Gson gson = new Gson();
-				String json = gson.toJson(produto);
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
-				printWriter.close();
+				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
+				
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+				
+				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
+				despache.forward(request, response);
 				
 			}
 		} catch (Exception e) {
@@ -127,7 +131,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			}
 			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
-			
+			request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
 			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 			
 			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());

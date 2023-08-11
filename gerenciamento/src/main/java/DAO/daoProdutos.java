@@ -43,6 +43,25 @@ public class daoProdutos {
 		}
 	}
 	
+	public void excluirProduto(String id) {
+
+		try {
+			String sql = "DELETE FROM produtos WHERE id = ?";
+			
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, Long.parseLong(id));
+			statement.executeUpdate();
+			
+			statement.execute();
+			connection.commit();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+	
 	public ModelProdutos consultaProduto(int id, int userLogado) {
 
 		ModelProdutos modelProduto = new ModelProdutos();
@@ -116,32 +135,21 @@ public class daoProdutos {
 		return retorno;
 	}
 	
-	public List<ModelProdutos> buscarAjax(int id) throws SQLException {
+	public int somaProdutos(int usuario_pai_id) throws Exception{
 		
-		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
+		String sql = "SELECT SUM(preco) FROM produtos WHERE usuario_pai_id = ?";
 		
-		String sql = "SELECT * FROM produtos WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, usuario_pai_id);
 		ResultSet resultado = statement.executeQuery();
 		
-		while(resultado.next()){
-		
-			ModelProdutos produtos = new ModelProdutos();
-			
-			produtos.setId(resultado.getLong("id"));
-			produtos.setQuantidade(resultado.getInt("quantidade"));
-			produtos.setPreco(resultado.getInt("preco"));
-			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
-			produtos.setNome(resultado.getString("nome"));
-			
-			System.out.println("estamos dentro de buscarAjax");
-			System.out.println(resultado.getLong("id"));
-			System.out.println(produtos);
-			
-			retorno.add(produtos);
+		if (resultado.next()) {
+		    int soma = resultado.getInt(1);
+
+		    return soma;
 		}
 		
-		return retorno;
+		return (Integer) null;
 	}
 	
 	public int consultaProdutosPaginas(int usuario) throws Exception {
