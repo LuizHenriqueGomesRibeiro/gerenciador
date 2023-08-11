@@ -8,7 +8,25 @@ public class ModelProdutos {
 	private String nome;
 	private ModelUsuarios usuario_pai_id;
 	private String precoString;
+	private int valorTotal;
+	private String valorTotalString;
 	
+	public String getValorTotalString() {
+		return valorTotalString;
+	}
+
+	public void setValorTotalString(String valorTotalString) {
+		this.valorTotalString = valorTotalString;
+	}
+
+	public int getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(int valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
 	public String getPrecoString() {
 		return precoString;
 	}

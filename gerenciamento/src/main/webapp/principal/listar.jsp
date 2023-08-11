@@ -39,10 +39,10 @@ rel="stylesheet">
 		<table class="table table-hover table-sm">
 			<thead>
 				<tr>
-					<th>Id</th>
 					<th>Nome</th>
 					<th>Preço</th>
 					<th>Quantidade</th>
+					<th>Preço total</th>
 					<th>Ver</th>
 					<th>Excluir</th>
 					<th>Configurações</th>
@@ -51,10 +51,10 @@ rel="stylesheet">
 			<tbody>
 				<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>		
-						<td><c:out value="${ml.id}"></c:out></td>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.precoString}"></c:out></td>
 						<td><c:out value="${ml.quantidade}"></c:out></td>
+						<td><c:out value="${ml.valorTotalString}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;"
 							href="#" data-toggle="modal" data-target=".ada${status.index}" id="buscar">Ver</a>

@@ -25,7 +25,7 @@ public class daoProdutos {
 	public void gravarProduto(ModelProdutos modelProduto) {
 
 		try {
-			String sql = "INSERT INTO produtos(preco, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?);";
+			String sql = "INSERT INTO produtos(preco, quantidade, nome, usuario_pai_id, valortotal) VALUES (?, ?, ?, ?, ?);";
 			
 			ModelUsuarios usuario_pai_id = modelProduto.getUsuario_pai_id();
 			
@@ -34,6 +34,7 @@ public class daoProdutos {
 			statement.setInt(2, modelProduto.getQuantidade());
 			statement.setString(3, modelProduto.getNome());
 			statement.setInt(4, usuario_pai_id.getId());
+			statement.setInt(5, modelProduto.getPreco()*modelProduto.getQuantidade());
 			
 			statement.execute();
 			connection.commit();
@@ -82,6 +83,7 @@ public class daoProdutos {
 				modelProduto.setNome(resultado.getString("nome"));
 				modelProduto.setPreco(resultado.getInt("preco"));
 				modelProduto.setQuantidade(resultado.getInt("quantidade"));
+				modelProduto.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
 			}
 			
 			return modelProduto;
@@ -96,13 +98,14 @@ public class daoProdutos {
 	public void atualizarProduto(ModelProdutos modelProduto) {
 
 		try {
-			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ? WHERE id = ?";
+			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ?, valortotal = ? WHERE id = ?";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setInt(1, modelProduto.getPreco());
 			statement.setInt(2, modelProduto.getQuantidade());
 			statement.setString(3, modelProduto.getNome());
-			statement.setLong(4, modelProduto.getId());
+			statement.setInt(4, modelProduto.getQuantidade()*modelProduto.getPreco());
+			statement.setLong(5, modelProduto.getId());
 
 			statement.executeUpdate();
 			connection.commit();
@@ -123,20 +126,25 @@ public class daoProdutos {
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()){
-		
+			
 			ModelProdutos produtos = new ModelProdutos();
 			NumberFormat format = NumberFormat.getInstance();
 
 	        format.setGroupingUsed(true);
 
-	        String numeroFormatado = format.format(resultado.getInt("preco"));
-	        System.out.println(numeroFormatado);
-			
+	        String precoFormatado = format.format(resultado.getInt("preco"));
+	        String precoFormatado00R$ = "R$"+precoFormatado + ",00";
+	        
+	        String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
+	        String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
+	        
 			produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
-			produtos.setPrecoString(numeroFormatado);
+			produtos.setPrecoString(precoFormatado00R$);
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
+			produtos.setValorTotal(resultado.getInt("quantidade")*resultado.getInt("preco"));
+			produtos.setValorTotalString(precoTotalFormatado00R$);
 			
 			retorno.add(produtos);
 		}
@@ -146,7 +154,7 @@ public class daoProdutos {
 	
 	public String somaProdutos(int usuario_pai_id) throws Exception{
 		
-		String sql = "SELECT SUM(preco) FROM produtos WHERE usuario_pai_id = ?";
+		String sql = "SELECT SUM(valortotal) FROM produtos WHERE usuario_pai_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, usuario_pai_id);
@@ -205,6 +213,7 @@ public class daoProdutos {
 			modelProdutos.setPreco(resultado.getInt("preco"));
 			modelProdutos.setId(resultado.getLong("id"));
 			modelProdutos.setQuantidade(resultado.getInt("quantidade"));
+			modelProdutos.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
 
 			retorno.add(modelProdutos);
 		}

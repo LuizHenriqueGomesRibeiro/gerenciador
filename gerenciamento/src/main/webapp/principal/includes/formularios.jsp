@@ -19,7 +19,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -71,7 +71,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -123,7 +123,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -175,7 +175,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -227,7 +227,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -279,7 +279,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -331,7 +331,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -383,7 +383,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -435,7 +435,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>
@@ -487,7 +487,7 @@
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
 									por unidade</label> <input class="form-control" id="preco" name="preco"
-									value="${ml.preco}">
+									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
 						</c:if>

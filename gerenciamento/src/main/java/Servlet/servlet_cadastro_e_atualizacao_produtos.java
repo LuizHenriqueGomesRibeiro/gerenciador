@@ -47,20 +47,22 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
-				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) +",00");
+				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+				request.setAttribute("soma", numero);
 		
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 				despache.forward(request, response);
-			}
-			else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")){
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")){
 				
 				Integer offset = Integer.parseInt(request.getParameter("pagina"));
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
+				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+				request.setAttribute("soma", numero);
+				
 				List<ModelProdutos> produtos = daoproduto.consultaProdutosOffset(super.getUsuarioLogado(request).getId(), offset);
 				request.setAttribute("produtos", produtos);
 				
@@ -74,7 +76,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				String id = request.getParameter("id");
 				
 				daoproduto.excluirProduto(id);
-				request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
+				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+				request.setAttribute("soma", numero);
 				request.setAttribute("usuario", super.getUsuarioLogado(request));
 				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
@@ -104,13 +107,13 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			String id = request.getParameter("id");
 			
 			System.out.println("Estamos dentro de servlet doPost");
-			System.out.println(id);
 			System.out.println(preco);
-			System.out.println(quantidade);
-			System.out.println(nome);
-			System.out.println(usuario_pai_id);
-			
-			int preco_int = Integer.parseInt(preco);
+			preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
+	        
+	        // Remove o símbolo "R$"
+	        String preco_R$ = preco.replace("R$", "");
+			System.out.println(preco_R$);
+			int preco_int = Integer.parseInt(preco_R$);
 			int quantidade_int = Integer.parseInt(quantidade);
 			
 			
@@ -131,7 +134,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			}
 			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
-			request.setAttribute("soma", daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()));
+			String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+			request.setAttribute("soma", numero);
 			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 			
 			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
