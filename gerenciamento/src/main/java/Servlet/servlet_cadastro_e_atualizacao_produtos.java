@@ -61,13 +61,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				Integer offset = Integer.parseInt(request.getParameter("pagina"));
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
-				request.setAttribute("soma", numero);
 				
 				List<ModelProdutos> produtos = daoproduto.consultaProdutosOffset(super.getUsuarioLogado(request).getId(), offset);
 				request.setAttribute("produtos", produtos);
-				
-				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
+				request.setAttribute("soma", numero);
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 				despache.forward(request, response);
 				
