@@ -61,10 +61,11 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				Integer offset = Integer.parseInt(request.getParameter("pagina"));
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
-				
+				request.setAttribute("soma", numero);
+				request.setAttribute("usuario", super.getUsuarioLogado(request));
 				List<ModelProdutos> produtos = daoproduto.consultaProdutosOffset(super.getUsuarioLogado(request).getId(), offset);
 				request.setAttribute("produtos", produtos);
-				request.setAttribute("soma", numero);
+				
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 				despache.forward(request, response);
 				
@@ -84,6 +85,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
 				despache.forward(request, response);
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("configuracoes")){
+				
+				System.out.println("aqui estamos");
 				
 			}
 		} catch (Exception e) {
@@ -106,9 +111,9 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			System.out.println("Estamos dentro de servlet doPost");
 			System.out.println(preco);
 			preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
-	        
-	        // Remove o símbolo "R$"
+			
 	        String preco_R$ = preco.replace("R$", "");
+	        preco_R$ = preco_R$.replaceAll("[^0-9]", "");
 			System.out.println(preco_R$);
 			int preco_int = Integer.parseInt(preco_R$);
 			int quantidade_int = Integer.parseInt(quantidade);

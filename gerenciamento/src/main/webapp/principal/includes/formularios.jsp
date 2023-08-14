@@ -18,7 +18,7 @@
 						<c:if test="${status.index eq 0}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -70,7 +70,7 @@
 						<c:if test="${status.index eq 1}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -122,7 +122,7 @@
 						<c:if test="${status.index eq 2}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -174,7 +174,7 @@
 						<c:if test="${status.index eq 3}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -223,10 +223,10 @@
 					method="post" name="formulario_cadastro_produtos" id="formulario">
 
 					<c:forEach items="${produtos}" var="ml" varStatus="status">
-						<c:if test="${status.index eq 0}">
+						<c:if test="${status.index eq 4}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -278,7 +278,7 @@
 						<c:if test="${status.index eq 5}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -330,7 +330,7 @@
 						<c:if test="${status.index eq 6}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -382,7 +382,7 @@
 						<c:if test="${status.index eq 7}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -434,7 +434,7 @@
 						<c:if test="${status.index eq 8}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>
@@ -486,7 +486,7 @@
 						<c:if test="${status.index eq 9}">
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Preço
-									por unidade</label> <input class="form-control" id="preco" name="preco"
+									por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)"
 									value="${ml.precoString}">
 								<div class="form-text">...............................</div>
 							</div>

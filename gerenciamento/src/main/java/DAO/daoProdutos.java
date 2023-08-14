@@ -207,13 +207,25 @@ public class daoProdutos {
 		ResultSet resultado = statement.executeQuery();
 
 		while (resultado.next()) {
+			
 			ModelProdutos modelProdutos = new ModelProdutos();
+			NumberFormat format = NumberFormat.getInstance();
+
+	        format.setGroupingUsed(true);
+	        
+			String precoFormatado = format.format(resultado.getInt("preco"));
+	        String precoFormatado00R$ = "R$"+precoFormatado + ",00";
+	        
+	        String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
+	        String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
 
 			modelProdutos.setNome(resultado.getString("nome"));
 			modelProdutos.setPreco(resultado.getInt("preco"));
 			modelProdutos.setId(resultado.getLong("id"));
 			modelProdutos.setQuantidade(resultado.getInt("quantidade"));
 			modelProdutos.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
+			modelProdutos.setPrecoString(precoFormatado00R$);
+			modelProdutos.setValorTotalString(precoTotalFormatado00R$);
 
 			retorno.add(modelProdutos);
 		}
