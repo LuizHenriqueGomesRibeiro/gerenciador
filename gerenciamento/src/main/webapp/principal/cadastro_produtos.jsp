@@ -1,110 +1,63 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
-<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-<link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>Como formatar campos do Formul·rio / M·scara - jQuery Mask</title>
+    <meta name="description" content="Aprenda a formatar m·scaras de forma muito simples e r·pida usando a biblioteca jQuery Mask">
+    <meta name="author" content="Prof. Anderson Luiz de Oliveira - https://www.blogson.com.br/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 </head>
-<body id="page-top">
-	<div id="wrapper">
-		<div id="content-wrapper" class="d-flex flex-column">
-			<div id="content">
-				<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
-				<div class="container-fluid">
-					<c:if test="${msg != '' || msg != null}">
-						<h1 class="h3 mb-4 text-gray-800">${msg}</h1>
-					</c:if>
-					<c:if test="${msg == '' || msg == null}">
-						<h1 class="h3 mb-4 text-gray-800">Cadastre um novo produto</h1>
-					</c:if>  
-				</div>
-				<div style="position: relative; width: 100%;">
-					<form 
-						style="position: relative; width: 90%; margin: auto;"
-						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-						method="post"
-						name="formulario_cadastro_produtos" id="formulario"
-					>
-						<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
-						
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">Pre√ßo por unidade</label> 
-							<input class="form-control" id="preco" name="preco">
-							<div class="form-text">Pre√ßo por unidade</div>
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">quantidade</label> 
-							<input class="form-control" id="quantidade" name="quantidade">
-							<div class="form-text">...............................</div>
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">nome</label> 
-							<input class="form-control" id="nome" name="nome">
-							<div class="form-text">...............................</div>
-						</div>
-						<div class="mb-3">
-							<input 
-								class="form-control"  type="hidden"
-								id="usuario_pai_id" name="usuario_pai_id" 
-								value="${usuario.id}"
-							>
-						</div>
-						<input type="submit" value="Cadastrar" class="btn btn-primary btn-user btn-block">
-					</form>
-					<div style="position: relative; width: 90%; margin: auto;">
-					<a 
-						class="btn btn-primary" role="button"
-						href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar" 
-					 	style="position: relative; width: 100%; top: 5px;"
-					 >
-						Ver lista de produtos
-					</a>
-				</div>
-				</div>
-			</div>
-			<footer class="sticky-footer bg-white">
-				<div class="container my-auto">
-					<div class="copyright text-center my-auto">
-						<span>Copyright &copy; Your Website 2020</span>
-					</div>
-				</div>
-			</footer>
-		</div>
-	</div>
-	<a class="scroll-to-top rounded" href="#page-top"> <i
-		class="fas fa-angle-up"></i>
-	</a>
-	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">√ó</span>
-					</button>
-				</div>
-				<div class="modal-body">Select "Logout" below if you are ready
-					to end your current session.</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	<script src="js/sb-admin-2.min.js"></script>
-	<body>
+
+<body>
+
+    <div class="container">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>CPF</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('000.000.000-00');">
+            </div>
+            <div class="form-group col-md-4">
+                <label>CNPJ</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('00.000.000/0000-00')">
+            </div>
+            <div class="form-group col-md-4">
+                <label>CEP</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('00.000-000')">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Altura / Peso</label>
+                <input type="text" class="form-control" maxlength="5" onkeypress="$(this).mask('90,00'), {reverse: true});">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Moeda / Dinheiro</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('R$ #.###.###.##0,00', {reverse: true});">
+            </div>
+            <div class="form-group col-md-4">
+                <label>Telefone</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('(00) 0000-00009')">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label>Data</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('00/00/0000')">
+            </div>
+                        <div class="form-group col-md-4">
+                <label>Hora</label>
+                <input type="text" class="form-control" onkeypress="$(this).mask('00h 00m')">
+            </div>
+        </div>
+    </div>
+</body>
 </html>

@@ -42,7 +42,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			
 			String acao = request.getParameter("acao");
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
-			System.out.println(acao);
 			
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
 
@@ -98,6 +97,18 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				response.setCharacterEncoding("UTF-8");
 				printWriter.write(json);
 				printWriter.close();
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
+
+				String id = request.getParameter("id");
+
+				ModelProdutos dadosJsonUser = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
+				Gson gson = new Gson();
+				String json = gson.toJson(dadosJsonUser);
+				PrintWriter printWriter = response.getWriter();
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				printWriter.write(json);
+				printWriter.close();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -116,13 +127,11 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			String usuario_pai_id = request.getParameter("usuario_pai_id");
 			String id = request.getParameter("id");
 			
-			System.out.println("Estamos dentro de servlet doPost");
-			System.out.println(preco);
 			preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
 			
 	        String preco_R$ = preco.replace("R$", "");
 	        preco_R$ = preco_R$.replaceAll("[^0-9]", "");
-			System.out.println(preco_R$);
+
 			int preco_int = Integer.parseInt(preco_R$);
 			int quantidade_int = Integer.parseInt(quantidade);
 			
@@ -136,10 +145,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
 			
 			if(modelProduto.isNovo()) {
-				System.out.println("O registro é novissímo");
 				daoproduto.gravarProduto(modelProduto);
 			}else {
-				System.out.println("O registro não é novo");
 				daoproduto.atualizarProduto(modelProduto);
 			}
 			

@@ -5,21 +5,19 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
-<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet"
-	type="text/css">
-<link
-	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-	rel="stylesheet">
+<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.maskMoney.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.maskMoney.js"></script>
-<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery.validate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 </head>
 <body style="overflow: hidden;">
 	<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
@@ -37,11 +35,9 @@
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
 		<li class="page-item"><button class="page-link">Buscar</button></li>
-		<li class="page-item"><button class="page-link">Gerar
-				relatório</button></li>
+		<li class="page-item"><button class="page-link">Gerar relatório</button></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
-		<li class="page-item"><button class="page-link">Refrescar
-				página</button></li>
+		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link"
 			href="principal/principal.jsp">Voltar</a></li>
 	</ul>
@@ -68,18 +64,55 @@
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							data-toggle="modal" data-target=".ada${status.index}" id="buscar">Ver</a>
-						</td>
+							data-toggle="modal" data-target=".ada" id="buscar" onclick="loadData(${ml.id})">Ver</a></td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
-							href="#" data-toggle="modal" data-target=".exc${status.index}"><p>Excluir</p></a>
+							href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a>
 						</td>
 						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" onclick="loadData(${ml.id})">Configurações</a>
+							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
+							id="configuracoes" onclick="loadData(${ml.id})">Configurações</a>
 						</td>
 					</tr>
-					<jsp:include page="includes/formularios.jsp"></jsp:include>
-					<jsp:include page="includes/formulariosExclusao.jsp"></jsp:include>
+					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
+						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog modal-lg 5">
+							<div class="modal-content">
+								<div style="margin: 20px;">
+									<form style="position: relative; width: 90%; margin: auto;"
+										action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
+										method="post" name="formulario_cadastro_produtos"
+										id="formulario">
+
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">Preço
+												por unidade</label> <input class="form-control" id="atualizacaoPreco" name="preco"
+												onkeypress="$(this).mask('R$ #.###.###.###,##', {reverse: true});">
+											<div class="form-text">...............................</div>
+										</div>
+										<div class="mb-3">
+											<input  type="hidden" class="form-control" id="atualizacaoId" name="id">
+										</div>
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">Quantidade
+											</label> <input class="form-control" id="atualizacaoQuantidade"
+												name="quantidade">
+											<div class="form-text">...............................</div>
+										</div>
+										<div class="mb-3">
+											<label for="exampleInputEmail1" class="form-label">Nome
+											</label> <input class="form-control" id="atualizacaoNome" name="nome">
+											<div class="form-text">...............................</div>
+										</div>
+										<input value="${usuario.id}" value="cadastrar" name="usuario_pai_id" type="hidden"> 
+										<input type="submit" value="Submeter" class="btn btn-primary btn-user btn-block"
+										style="margin-bottom: 20px;">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</c:forEach>
 			</tbody>
 		</table>
@@ -107,7 +140,8 @@
 					<input class="form-control" id="configuracoesNome" name="nome">
 				</div>
 				<div style="margin-top: 15px;" class="form-group">
-					<input class="form-control" id="configuracoesPreco" name="preco">
+					<input class="form-control" id="configuracoesPreco" name="preco"
+					onkeypress="$(this).mask('R$##.###.###,##', {reverse: true});">
 				</div>
 				<div style="margin-top: 15px;" class="form-group">
 					<input class="form-control" id="configuracoesQuantidade" name="quantidade">
@@ -142,10 +176,6 @@
 			</div>
 		</div>
 	</div>
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	<script src="js/sb-admin-2.min.js"></script>
 	<div class="modal fade bd-example-modal-lg ui" tabindex="-1"
 		role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -159,7 +189,8 @@
 
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Preço
-								por unidade</label> <input class="form-control" id="preco" name="preco" onkeyup="formatarDinheiro(this)">
+								por unidade</label> <input class="form-control" id="preco" name="preco"
+								onkeypress="$(this).mask('R$ #.###.###.###,##', {reverse: true});">
 							<div class="form-text">Preço por unidade</div>
 						</div>
 						<div class="mb-3">
@@ -181,19 +212,31 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal exc" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Exclusão de registros</h5>
+				</div>
+				<div class="modal-body">
+					<h5>Você tem certeza de que quer excluir este registro?</h5>
+				</div>
+				<form style="position: relative; width: 90%; margin: auto;"
+					action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
+					method="get" name="formulario_cadastro_produtos" id="formulario">
+
+					<input type="hidden" name="acao" id="acao" value="excluir">
+					<input type="hidden" name="id" id="excId">
+					<div style="width: 196px; position: relative; left: 50%; transform: translate(-50%, 0%); margin-bottom: 25px;">
+						<input type="submit" value="Excluir" class="btn btn-primary btn-lg"> 
+						<input type="button" value="Fechar" class="btn btn-danger btn-lg" data-dismiss="modal">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
-		
-		function formatarDinheiro(input) {
-			let valor = input.value.replace(/\D/g, "");
 
-			valor = (Number(valor) / 100).toLocaleString("pt-BR", {
-				style : "currency",
-				currency : "BRL",
-			});
-
-			input.value = valor;
-		}
-		
 		function loadData(id) {
 			jQuery("#telaConfiguracoes").show();
 			var urlAction = document.getElementById('formulario').action;
@@ -203,11 +246,32 @@
 				url : urlAction,
 				data : '&id=' + id + '&acao=configuracoes',
 				success : function(json, textStatus, xhr) {
-
+					
 					jQuery("#configuracoesNome").val(json.nome);
 					jQuery("#configuracoesPreco").val(json.preco);
 					jQuery("#configuracoesQuantidade").val(json.quantidade);
 					jQuery("#configuracoesId").val(json.id);
+					
+					jQuery("#atualizacaoId").val(json.id);
+					jQuery("#atualizacaoNome").val(json.nome);
+					jQuery("#atualizacaoPreco").val(json.preco);
+					jQuery("#atualizacaoQuantidade").val(json.quantidade);
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
+		
+		function excData(id) {
+			
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+
+				method : "get",
+				url : urlAction,
+				data : '&id=' + id + '&acao=exclusaoAjax',
+				success : function(json, textStatus, xhr) {
+					jQuery("#excId").val(json.id);
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
