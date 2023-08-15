@@ -4,9 +4,7 @@
 <head>
 <meta charset="utf-8">
 
-<div class="modal fade bd-example-modal-lg ada0" tabindex="-1"
-	id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
-	aria-hidden="true">
+<div class="modal fade bd-example-modal-lg ada0" tabindex="-1" id="teste" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg 5">
 		<div class="modal-content">
 			<div style="margin: 20px;">

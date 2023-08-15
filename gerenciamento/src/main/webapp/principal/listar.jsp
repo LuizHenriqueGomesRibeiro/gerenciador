@@ -75,7 +75,7 @@
 							href="#" data-toggle="modal" data-target=".exc${status.index}"><p>Excluir</p></a>
 						</td>
 						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" onclick="loadData()">Configurações</a>
+							style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" onclick="loadData(${ml.id})">Configurações</a>
 						</td>
 					</tr>
 					<jsp:include page="includes/formularios.jsp"></jsp:include>
@@ -99,12 +99,27 @@
 			</tr>
 		</tbody>
 	</table>
-	<div style="overflow-y: scroll; height: 250px; background-color: red; margin-top: -18px;" id="telaConfiguracoes">
-	
-	
+	<div style="overflow-y: scroll; height: 250px; margin-top: -12px;">
+		<div style="display: none; overflow-y: none; height: 250px; width: 300px; margin-top: 5px; margin-left: 10px;" id="telaConfiguracoes">
+			<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
+			method="post" name="formulario_cadastro_produtos" id="formulario">
+				<div class="form-group">
+					<input class="form-control" id="configuracoesNome" name="nome">
+				</div>
+				<div style="margin-top: 15px;" class="form-group">
+					<input class="form-control" id="configuracoesPreco" name="preco">
+				</div>
+				<div style="margin-top: 15px;" class="form-group">
+					<input class="form-control" id="configuracoesQuantidade" name="quantidade">
+				</div>
+				<input value="${usuario.id}" name="usuario_pai_id" type="hidden"> 
+				<input id="configuracoesId" name="id" type="hidden">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
 	</div>
-	<a class="scroll-to-top rounded" href="#page-top"> <i
-		class="fas fa-angle-up"></i>
+	<a class="scroll-to-top rounded" href="#page-top"> 
+		<i class="fas fa-angle-up"></i>
 	</a>
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -167,8 +182,6 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-	
-	jQuery("#telaConfiguracoes").hide();
 		
 		function formatarDinheiro(input) {
 			let valor = input.value.replace(/\D/g, "");
@@ -181,32 +194,24 @@
 			input.value = valor;
 		}
 		
-		
-		jQuery(function() {
+		function loadData(id) {
+			jQuery("#telaConfiguracoes").show();
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
 
-			var buscar = jQuery("#buscar");
+				method : "get",
+				url : urlAction,
+				data : '&id=' + id + '&acao=configuracoes',
+				success : function(json, textStatus, xhr) {
 
-			buscar.click(function() {
-
-				var nomeBusca = document.getElementById('nomeBusca').value;
-
-				if (nomeBusca != null && nomeBusca != '' && nomeBusca.trim() != '') {
-
-					var urlAction = document.getElementById('formulario').action;
-
-					jQuery.ajax({
-
-						method: "get",
-						url: urlAction,
-						data: "&nomeBusca=" + nomeBusca + '&acao=configuracoes',
-						success: function(json, textStatus, xhr) {
-							
-						}
-					}).fail(function(xhr, status, errorThrown) {
-						alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-					});
-				} 
+					jQuery("#configuracoesNome").val(json.nome);
+					jQuery("#configuracoesPreco").val(json.preco);
+					jQuery("#configuracoesQuantidade").val(json.quantidade);
+					jQuery("#configuracoesId").val(json.id);
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 			});
-		});
+		}
 	</script>
 </html>

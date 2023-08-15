@@ -87,9 +87,17 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				despache.forward(request, response);
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("configuracoes")){
-				
-				System.out.println("aqui estamos");
-				
+
+				String id = request.getParameter("id");
+
+				ModelProdutos dadosJsonUser = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
+				Gson gson = new Gson();
+				String json = gson.toJson(dadosJsonUser);
+				PrintWriter printWriter = response.getWriter();
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				printWriter.write(json);
+				printWriter.close();
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
