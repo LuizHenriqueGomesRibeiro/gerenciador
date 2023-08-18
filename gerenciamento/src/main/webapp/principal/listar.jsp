@@ -17,11 +17,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 </head>
 <body style="overflow: hidden;">
-	<jsp:include page="includes/barra_de_navegacao.jsp"></jsp:include>
-	<ul class="pagination" style="margin: -24px 0px -1px 0px;">
+	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 		<li class="page-item"><button class="page-link"
 				data-toggle="modal" data-target=".ui">Novo registro</button></li>
 		<li class="page-item"><button class="page-link">Índice
@@ -43,13 +43,14 @@
 	</ul>
 	<div id="json-content"></div>
 	<div style="overflow-y: scroll; height: 250px;">
-		<table class="table table-hover table-sm">
+		<table class="table table-striped table-sm">
 			<thead>
 				<tr>
 					<th>Nome</th>
-					<th>Preço</th>
-					<th>Quantidade</th>
-					<th>Preço total</th>
+					<!--<th>Preço</th>-->
+					<th>Quantidade em estoque</th>
+					<th>Quantidade pedida</th>
+					<!--<th>Preço total</th>-->
 					<th>Ver</th>
 					<th>Excluir</th>
 					<th>Configurações</th>
@@ -59,9 +60,10 @@
 				<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>
 						<td><c:out value="${ml.nome}"></c:out></td>
-						<td><c:out value="${ml.precoString}"></c:out></td>
+						<td><c:out value="${ml.nome}"></c:out></td>
+						<!--<td><c:out value="${ml.precoString}"></c:out></td> -->
 						<td><c:out value="${ml.quantidade}"></c:out></td>
-						<td><c:out value="${ml.valorTotalString}"></c:out></td>
+						<!--<td><c:out value="${ml.valorTotalString}"></c:out></td>-->
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
 							data-toggle="modal" data-target=".ada" id="buscar" onclick="loadData(${ml.id})">Ver</a></td>
@@ -71,7 +73,7 @@
 						</td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							id="configuracoes" onclick="loadData(${ml.id})">Configurações</a>
+							id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a>
 						</td>
 					</tr>
 					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
@@ -87,8 +89,7 @@
 
 										<div class="mb-3">
 											<label for="exampleInputEmail1" class="form-label">Preço
-												por unidade</label> <input class="form-control" id="atualizacaoPreco" name="preco"
-												onkeypress="$(this).mask('R$ #.###.###.###,##', {reverse: true});">
+												por unidade</label> <input class="form-control" id="atualizacaoPreco" name="preco">
 											<div class="form-text">...............................</div>
 										</div>
 										<div class="mb-3">
@@ -116,42 +117,71 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		<script type="text/javascript">
+			jQuery(function(){
+				jQuery("#buscar").click(function(){
+					jQuery("#atualizacaoPreco").focus();
+				});
+			});
+		</script>
 	</div>
-	<table class="table table-hover table-sm">
+	<table class="table table-striped table-sm">
 		<thead>
 			<tr>
 				<th>Soma dos valores</th>
-				<th>Nome</th>
-				<th>Preço</th>
-				<th>Quantidade</th>
+			</tr>
+			<tr>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td><c:out value="${soma}"></c:out></td>
 			</tr>
+			<tr>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
-	<div style="overflow-y: scroll; height: 250px; margin-top: -12px;">
-		<div style="display: none; overflow-y: none; height: 250px; width: 300px; margin-top: 5px; margin-left: 10px;" id="telaConfiguracoes">
-			<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-			method="post" name="formulario_cadastro_produtos" id="formulario">
-				<div class="form-group">
-					<input class="form-control" id="configuracoesNome" name="nome">
+	<div style="display: none; overflow-y: none;" id="tabelaFornecedores">
+		<div class="container" style="margin: -16px 0px 0px 0px;">
+			<div class="row">
+			<div style="width: 400px;">
+				<div class="col-sm">
+					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento" id="formulario">
+						<div class="form-group">
+							<label for="nomeFornecedor" class="form-label">Insira um novo fornecedor</label> 
+							<input class="form-control" id="nomeFornecedor" name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+						</div>
+						<input value="${usuario.id}" name="usuario_pai_id" type="hidden">
+						<input id="configuracoesId" name="id" type="hidden">
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
 				</div>
-				<div style="margin-top: 15px;" class="form-group">
-					<input class="form-control" id="configuracoesPreco" name="preco"
-					onkeypress="$(this).mask('R$##.###.###,##', {reverse: true});">
 				</div>
-				<div style="margin-top: 15px;" class="form-group">
-					<input class="form-control" id="configuracoesQuantidade" name="quantidade">
+				<div class="col-sm">
+					<table class="table table-striped table-sm">
+						<thead>
+							<tr>
+								<th>Nome</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><c:out value=""></c:out></td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-				<input value="${usuario.id}" name="usuario_pai_id" type="hidden"> 
-				<input id="configuracoesId" name="id" type="hidden">
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</form>
+			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		jQuery(function(){
+			jQuery("#configuracoes").click(function(){
+				jQuery("#configuracoesPreco").focus();
+			});
+		});
+		</script>
 	<a class="scroll-to-top rounded" href="#page-top"> 
 		<i class="fas fa-angle-up"></i>
 	</a>
@@ -190,7 +220,7 @@
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Preço
 								por unidade</label> <input class="form-control" id="preco" name="preco"
-								onkeypress="$(this).mask('R$ #.###.###.###,##', {reverse: true});">
+								>
 							<div class="form-text">Preço por unidade</div>
 						</div>
 						<div class="mb-3">
@@ -236,9 +266,30 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		
+		jQuery("#preco").maskMoney({
+			showSymbol : true,	
+			symbol : "R$",
+			decimal : ",",
+			thousands : "."
+		});
+		
+		jQuery("#configuracoesPreco").maskMoney({
+			showSymbol : true,	
+			symbol : "R$",
+			decimal : ",",
+			thousands : "."
+		});
+		
+		jQuery("#atualizacaoPreco").maskMoney({
+			showSymbol : true,	
+			symbol : "R$",
+			decimal : ",",
+			thousands : "."
+		});
 
 		function loadData(id) {
-			jQuery("#telaConfiguracoes").show();
+			jQuery("#tabelaFornecedores").show();
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
 
@@ -246,15 +297,12 @@
 				url : urlAction,
 				data : '&id=' + id + '&acao=configuracoes',
 				success : function(json, textStatus, xhr) {
-					
-					jQuery("#configuracoesNome").val(json.nome);
-					jQuery("#configuracoesPreco").val(json.preco);
-					jQuery("#configuracoesQuantidade").val(json.quantidade);
+			
 					jQuery("#configuracoesId").val(json.id);
 					
 					jQuery("#atualizacaoId").val(json.id);
 					jQuery("#atualizacaoNome").val(json.nome);
-					jQuery("#atualizacaoPreco").val(json.preco);
+					jQuery("#atualizacaoPreco").val(json.preco*100);
 					jQuery("#atualizacaoQuantidade").val(json.quantidade);
 				}
 			}).fail(function(xhr, status, errorThrown) {

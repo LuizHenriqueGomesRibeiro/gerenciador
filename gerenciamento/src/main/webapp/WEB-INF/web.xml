@@ -69,4 +69,14 @@
     <servlet-name>servlet_recuperacao_login</servlet-name>
     <url-pattern>/servlet_recuperacao_login</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>servletFornecimento</display-name>
+    <servlet-name>servletFornecimento</servlet-name>
+    <servlet-class>Servlet.servletFornecimento</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>servletFornecimento</servlet-name>
+    <url-pattern>/servletFornecimento</url-pattern>
+  </servlet-mapping>
 </web-app>

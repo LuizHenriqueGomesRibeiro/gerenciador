@@ -43,7 +43,6 @@ rel="stylesheet">
 									Não tem uma conta? 
 									<a href="<%=request.getContextPath()%>/cadastro.jsp" class="link-info">Cadastro</a>
 								</p>
-
 							</form>
 						</div>
 					</div>
