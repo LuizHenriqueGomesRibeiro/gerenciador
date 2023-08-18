@@ -3,8 +3,6 @@ package model;
 import java.util.Date;
 
 public class ModelPedidos {
-	private ModelUsuarios usuario_pai_id;
-	private ModelProdutos produto_pai_id;
 	private ModelFornecimento fornecedor_pai_id;
 	private Long id;
 	private Date dataPedido;
@@ -12,18 +10,6 @@ public class ModelPedidos {
 	private Long valor;
 	private Long valorTotal;
 	
-	public ModelUsuarios getUsuario_pai_id() {
-		return usuario_pai_id;
-	}
-	public void setUsuario_pai_id(ModelUsuarios usuario_pai_id) {
-		this.usuario_pai_id = usuario_pai_id;
-	}
-	public ModelProdutos getProduto_pai_id() {
-		return produto_pai_id;
-	}
-	public void setProduto_pai_id(ModelProdutos produto_pai_id) {
-		this.produto_pai_id = produto_pai_id;
-	}
 	public ModelFornecimento getFornecedor_pai_id() {
 		return fornecedor_pai_id;
 	}
