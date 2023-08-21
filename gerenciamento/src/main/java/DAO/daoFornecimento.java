@@ -2,8 +2,14 @@ package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import conexao.conexao;
+import model.ModelFornecimento;
 import model.ModelProdutos;
 
 public class daoFornecimento {
@@ -27,6 +33,26 @@ public class daoFornecimento {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-
+	}
+	
+	public List<ModelFornecimento> listarFornecedores(int id) throws SQLException {
+		
+		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
+		
+		String sql = "SELECT * FROM fornecedores WHERE produtos_pai_id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			
+			ModelFornecimento fornecedores = new ModelFornecimento();
+			
+			fornecedores.setId(resultado.getLong("id"));
+			fornecedores.setNome(resultado.getString("nome"));
+		
+			retorno.add(fornecedores);
+		}
+		
+		return retorno;
 	}
 }

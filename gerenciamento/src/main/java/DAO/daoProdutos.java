@@ -66,7 +66,7 @@ public class daoProdutos {
 	}
 	
 	public ModelProdutos consultaProduto(int id, int userLogado) {
-
+		
 		ModelProdutos modelProduto = new ModelProdutos();
 
 		try {

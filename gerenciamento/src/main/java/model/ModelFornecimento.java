@@ -2,14 +2,14 @@ package model;
 
 public class ModelFornecimento {
 	
-	private int nome;
+	private String nome;
 	private ModelProdutos produto_pai_id;
 	private Long id;
 	
-	public int getNome() {
+	public String getNome() {
 		return nome;
 	}
-	public void setNome(int nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 	public ModelProdutos getProduto_pai_id() {

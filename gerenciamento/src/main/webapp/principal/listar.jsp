@@ -66,7 +66,8 @@
 						<!--<td><c:out value="${ml.valorTotalString}"></c:out></td>-->
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							data-toggle="modal" data-target=".ada" id="buscar" onclick="loadData(${ml.id})">Ver</a></td>
+							data-toggle="modal" data-target=".ada" id="buscar" 
+							onclick="loadData(${ml.id})">Ver</a></td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
 							href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a>
@@ -147,12 +148,12 @@
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
-					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento" id="formulario">
+					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento"
+					id="formularioFornecimento">
 						<div class="form-group">
 							<label for="nomeFornecedor" class="form-label">Insira um novo fornecedor</label> 
 							<input class="form-control" id="nomeFornecedor" name="nomeFornecedor" placeholder="Nome do novo fornecedor">
 						</div>
-						<input value="${usuario.id}" name="usuario_pai_id" type="hidden">
 						<input id="configuracoesId" name="id" type="hidden">
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
@@ -165,11 +166,13 @@
 								<th>Nome</th>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><c:out value=""></c:out></td>
-							</tr>
-						</tbody>
+						<c:forEach items="${fornecedores}" var="lm">
+							<tbody>
+								<tr>
+									<td><c:out value=""></c:out></td>
+								</tr>
+							</tbody>
+						</c:forEach>
 					</table>
 				</div>
 			</div>

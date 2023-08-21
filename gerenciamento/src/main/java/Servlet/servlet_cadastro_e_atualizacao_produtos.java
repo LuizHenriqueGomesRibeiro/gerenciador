@@ -12,7 +12,9 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoProdutos;
 
@@ -24,6 +26,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	
 	daoLogin daologin = new daoLogin();
 	daoProdutos daoproduto = new daoProdutos();
+	daoFornecimento daoFornecimento = new daoFornecimento();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -97,6 +100,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				response.setCharacterEncoding("UTF-8");
 				printWriter.write(json);
 				printWriter.close();
+				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
 
 				String id = request.getParameter("id");
