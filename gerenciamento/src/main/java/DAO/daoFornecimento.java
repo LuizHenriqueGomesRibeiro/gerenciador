@@ -39,7 +39,7 @@ public class daoFornecimento {
 		
 		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
 		
-		String sql = "SELECT * FROM fornecedores WHERE produtos_pai_id = " + id;
+		String sql = "SELECT * FROM fornecimento WHERE produtos_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
@@ -49,7 +49,7 @@ public class daoFornecimento {
 			
 			fornecedores.setId(resultado.getLong("id"));
 			fornecedores.setNome(resultado.getString("nome"));
-		
+			
 			retorno.add(fornecedores);
 		}
 		

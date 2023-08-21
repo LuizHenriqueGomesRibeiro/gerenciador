@@ -85,7 +85,7 @@ public class daoProdutos {
 				modelProduto.setQuantidade(resultado.getInt("quantidade"));
 				modelProduto.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
 			}
-			
+
 			return modelProduto;
 
 		} catch (Exception e) {

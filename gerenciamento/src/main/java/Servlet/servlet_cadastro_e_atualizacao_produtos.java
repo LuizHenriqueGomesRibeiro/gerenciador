@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ModelFornecimento;
 import model.ModelProdutos;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import DAO.daoFornecimento;
@@ -90,16 +92,26 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("configuracoes")){
 
+				request.setAttribute("usuario", super.getUsuarioLogado(request));
+				
+				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
+				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+				request.setAttribute("soma", numero);
+		
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+
 				String id = request.getParameter("id");
 
-				ModelProdutos dadosJsonUser = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
+				ModelProdutos dadosJsonUser1 = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
+				Long idDadosJsonUser1 = dadosJsonUser1.getId();
+				List<ModelFornecimento> dadosJsonUser2 = daoFornecimento.listarFornecedores(Integer.parseInt(id));
 				Gson gson = new Gson();
-				String json = gson.toJson(dadosJsonUser);
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
-				printWriter.close();
+				String json1 = gson.toJson(idDadosJsonUser1);
+				String json2 = gson.toJson(dadosJsonUser2);
+				PrintWriter out = response.getWriter();
+			    out.print(json1 + "|" + json2);
+			    out.flush();
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
 

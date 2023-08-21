@@ -160,19 +160,17 @@
 				</div>
 				</div>
 				<div class="col-sm">
-					<table class="table table-striped table-sm">
+					<table class="table table-striped table-sm" id="listaFornecedores">
 						<thead>
 							<tr>
 								<th>Nome</th>
 							</tr>
 						</thead>
-						<c:forEach items="${fornecedores}" var="lm">
 							<tbody>
 								<tr>
-									<td><c:out value=""></c:out></td>
+									<td></td>
 								</tr>
 							</tbody>
-						</c:forEach>
 					</table>
 				</div>
 			</div>
@@ -299,14 +297,21 @@
 				method : "get",
 				url : urlAction,
 				data : '&id=' + id + '&acao=configuracoes',
-				success : function(json, textStatus, xhr) {
-			
-					jQuery("#configuracoesId").val(json.id);
-					
-					jQuery("#atualizacaoId").val(json.id);
-					jQuery("#atualizacaoNome").val(json.nome);
-					jQuery("#atualizacaoPreco").val(json.preco*100);
-					jQuery("#atualizacaoQuantidade").val(json.quantidade);
+				dataType: "text",
+				success : function(response){
+					var responseArray = response.split("|");
+			        var jsonLista1 = responseArray[0];
+			        var jsonLista2 = responseArray[1];
+			        alert(typeof jsonLista2);
+			        var jsonObj = JSON.parse(jsonLista2);
+			        alert(jsonObj);
+			        alert(typeof jsonObj); 
+			        alert(jsonObj[0]);
+			        jQuery("#configuracoesId").val(jsonLista1);
+			        for(var p = 0; p < jsonObj.length; p++){
+			        	
+			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+jsonObj[p]+'</td><td><button id="editar" type="button" class="btn btn-info">Ver</button></td></tr>');
+			        }
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
