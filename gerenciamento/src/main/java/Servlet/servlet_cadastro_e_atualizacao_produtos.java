@@ -104,10 +104,9 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				String id = request.getParameter("id");
 
 				ModelProdutos dadosJsonUser1 = daoproduto.consultaProduto(Integer.parseInt(id), super.getUsuarioLogado(request).getId());
-				Long idDadosJsonUser1 = dadosJsonUser1.getId();
 				List<ModelFornecimento> dadosJsonUser2 = daoFornecimento.listarFornecedores(Integer.parseInt(id));
 				Gson gson = new Gson();
-				String json1 = gson.toJson(idDadosJsonUser1);
+				String json1 = gson.toJson(dadosJsonUser1);
 				String json2 = gson.toJson(dadosJsonUser2);
 				PrintWriter out = response.getWriter();
 			    out.print(json1 + "|" + json2);

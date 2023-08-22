@@ -6,6 +6,7 @@ public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
 	private Long id;
 	private Date dataPedido;
+	private Date dataEntrega;
 	private Long quantidade;
 	private Long valor;
 	private Long valorTotal;
@@ -46,6 +47,10 @@ public class ModelPedidos {
 	public void setValorTotal(Long valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-	
-	
+	public Date getDataEntrega() {
+		return dataEntrega;
+	}
+	public void setDataEntrega(Date dataEntrega) {
+		this.dataEntrega = dataEntrega;
+	}
 }

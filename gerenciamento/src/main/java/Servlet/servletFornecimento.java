@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ModelFornecimento;
+import model.ModelPedidos;
 import model.ModelProdutos;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	private static final long serialVersionUID = 1L;
 	
 	daoLogin daologin = new daoLogin();
+	daoFornecimento daofornecimento = new daoFornecimento();
 	daoProdutos daoproduto = new daoProdutos();
        
     /**
@@ -37,9 +40,27 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String acao = request.getParameter("acao");
 		
-		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
+		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
 
-			System.out.println("estamos aqui.");
+			String fornecimento_pai_id = request.getParameter("fornecimento_pai_id");
+			String quantidade = request.getParameter("quantidade");
+			String valor = request.getParameter("valor");
+			String dataPedido = request.getParameter("dataPedido");
+			String dataEntrega = request.getParameter("dataEntrega");
+			
+			quantidade = quantidade.replaceAll("\\.", "");
+			String valor_R$ = valor.replace("R$", "");
+			valor_R$ = valor_R$.replaceAll("[^0-9]", "");
+			//é necessário pegar o id do produto para continuar com o insert pedido;
+			//ModelFornecimento modelFornecimento = daofornecimento.listarFornecedores();
+			
+			
+			
+			ModelPedidos modelPedidos = new ModelPedidos();
+			
+			
+			
+			//modelPedidos.setFornecedor_pai_id();
 			
 		}
 	}

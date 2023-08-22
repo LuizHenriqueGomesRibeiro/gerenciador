@@ -151,15 +151,18 @@
 					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento"
 					id="formularioFornecimento">
 						<div class="form-group">
-							<label for="nomeFornecedor" class="form-label">Insira um novo fornecedor</label> 
-							<input class="form-control" id="nomeFornecedor" name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+							<label for="nomeFornecedor" class="form-label">
+								<div id="insiraNomeFornecedor">
+								</div>
+							</label> 
+							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" name="nomeFornecedor" placeholder="Nome do novo fornecedor">
 						</div>
 						<input id="configuracoesId" name="id" type="hidden">
 						<button type="submit" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
 				</div>
-				<div class="col-sm">
+				<div style="overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -10px 0px 0px 0px;" class="col-sm">
 					<table class="table table-striped table-sm" id="listaFornecedores">
 						<thead>
 							<tr>
@@ -167,9 +170,7 @@
 							</tr>
 						</thead>
 							<tbody>
-								<tr>
-									<td></td>
-								</tr>
+								
 							</tbody>
 					</table>
 				</div>
@@ -220,8 +221,7 @@
 
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">Preço
-								por unidade</label> <input class="form-control" id="preco" name="preco"
-								>
+								por unidade</label> <input class="form-control" id="preco" name="preco">
 							<div class="form-text">Preço por unidade</div>
 						</div>
 						<div class="mb-3">
@@ -266,7 +266,49 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade bd-example-modal-lg dar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div style="padding: 0px 20px 20px 20px;">
+				<form action="<%=request.getContextPath()%>/servletFornecimento" method="get" name="formularioFornecimento" id="formularioFornecimento">
+					<div class="form-group">
+						<div id="capturarId"></div>
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputEmail1" class="form-label">quantidade</label>
+						<input class="form-control" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
+						<div class="form-text">...............................</div>
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputEmail1" class="form-label">valor</label>
+						<input class="form-control" id="valor" name="valor">
+						<div class="form-text">...............................</div>
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
+						<input class="form-control" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')">
+						<div class="form-text">...............................</div>
+					</div>
+					<div class="mb-3">
+						<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
+						<input class="form-control" id="dataEntrega" name="dataEntrega" onkeypress="$(this).mask('00/00/0000')">
+						<div class="form-text">...............................</div>
+					</div>
+					<input type="hidden" name="acao" value="incluirPedido">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				</div>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
+	
+		jQuery("#valor").maskMoney({
+			showSymbol : true,	
+			symbol : "R$",
+			decimal : ",",
+			thousands : "."
+		});
 		
 		jQuery("#preco").maskMoney({
 			showSymbol : true,	
@@ -299,18 +341,25 @@
 				data : '&id=' + id + '&acao=configuracoes',
 				dataType: "text",
 				success : function(response){
+					
 					var responseArray = response.split("|");
 			        var jsonLista1 = responseArray[0];
 			        var jsonLista2 = responseArray[1];
-			        alert(typeof jsonLista2);
+
 			        var jsonObj = JSON.parse(jsonLista2);
-			        alert(jsonObj);
-			        alert(typeof jsonObj); 
-			        alert(jsonObj[0]);
-			        jQuery("#configuracoesId").val(jsonLista1);
+			        
+			        var objeto = JSON.parse(jsonLista1);
+			        var objetoNovamenteId = JSON.stringify(objeto.id);
+			        var objetoNovamenteNome = JSON.stringify(objeto.nome);
+			        
+			        jQuery("#insiraNomeFornecedor > p").remove();
+			        jQuery("#configuracoesId").val(objetoNovamenteId);
+			        jQuery('#listaFornecedores > tbody > tr').remove();
+			        
+			        jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objetoNovamenteNome + '</p>');
+			        
 			        for(var p = 0; p < jsonObj.length; p++){
-			        	
-			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+jsonObj[p]+'</td><td><button id="editar" type="button" class="btn btn-info">Ver</button></td></tr>');
+			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome) +'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="loadPedido('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
 			        }
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -318,6 +367,13 @@
 			});
 		}
 		
+		function loadPedido(id) {
+			
+			jQuery("#capturarId > input").remove();
+			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id' value="+id+">");
+			
+		}
+			
 		function excData(id) {
 			
 			var urlAction = document.getElementById('formulario').action;
