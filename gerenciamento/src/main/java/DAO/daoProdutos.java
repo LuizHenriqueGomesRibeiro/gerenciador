@@ -33,7 +33,7 @@ public class daoProdutos {
 			statement.setInt(1, modelProduto.getPreco());
 			statement.setInt(2, modelProduto.getQuantidade());
 			statement.setString(3, modelProduto.getNome());
-			statement.setInt(4, usuario_pai_id.getId());
+			statement.setLong(4, usuario_pai_id.getId());
 			statement.setInt(5, modelProduto.getPreco()*modelProduto.getQuantidade());
 			
 			statement.execute();

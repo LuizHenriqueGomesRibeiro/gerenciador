@@ -20,12 +20,14 @@ public class daoFornecimento {
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id) {
+	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, Long tempoentrega, Long valor_R$Long) {
 		try {
-			String sql = "INSERT INTO fornecimento(nome, produtos_pai_id) VALUES (?, ?);";
+			String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES (?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, nome);
 			statement.setLong(2, produtos_pai_id.getId());
+			statement.setLong(3, tempoentrega);
+			statement.setLong(4, valor_R$Long);
 			statement.execute();
 			connection.commit();
 
@@ -49,10 +51,44 @@ public class daoFornecimento {
 			
 			fornecedores.setId(resultado.getLong("id"));
 			fornecedores.setNome(resultado.getString("nome"));
+			fornecedores.setTempoentrega(resultado.getLong("tempoentrega"));
+			fornecedores.setValor(resultado.getLong("valor"));
 			
 			retorno.add(fornecedores);
 		}
 		
 		return retorno;
+	}
+	
+public ModelFornecimento consultaFornecedor(int id, int produtoId, int usuarioId) {
+		
+		ModelFornecimento modelFornecimento = new ModelFornecimento();
+
+		try {
+			String sql = "SELECT*FROM fornecimento WHERE id = ? AND produtos_pai_id = ?";
+
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, id);
+			statement.setLong(2, produtoId);
+			ResultSet resultado = statement.executeQuery();
+
+			while (resultado.next()) {
+				
+				daoProdutos daoprodutos = new daoProdutos();
+
+				modelFornecimento.setId(resultado.getLong("id"));
+				modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
+				modelFornecimento.setNome(resultado.getString("nome"));
+				modelFornecimento.setValor(resultado.getLong("valor"));
+				modelFornecimento.setProduto_pai_id(daoprodutos.consultaProduto(produtoId, usuarioId));		
+			}
+
+			return modelFornecimento;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

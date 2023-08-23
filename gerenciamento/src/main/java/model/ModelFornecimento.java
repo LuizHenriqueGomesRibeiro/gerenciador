@@ -1,11 +1,28 @@
 package model;
 
+import java.util.Date;
+
 public class ModelFornecimento {
 	
 	private String nome;
 	private ModelProdutos produto_pai_id;
 	private Long id;
+	private Long tempoentrega;
+	private Long valor;
 	
+	
+	public Long getValor() {
+		return valor;
+	}
+	public void setValor(Long valor) {
+		this.valor = valor;
+	}
+	public Long getTempoentrega() {
+		return tempoentrega;
+	}
+	public void setTempoentrega(Long tempoentrega) {
+		this.tempoentrega = tempoentrega;
+	}
 	public String getNome() {
 		return nome;
 	}
@@ -24,5 +41,4 @@ public class ModelFornecimento {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
 }

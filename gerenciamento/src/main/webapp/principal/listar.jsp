@@ -19,6 +19,7 @@
 <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body style="overflow: hidden;">
 	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
@@ -151,11 +152,21 @@
 					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento"
 					id="formularioFornecimento">
 						<div class="form-group">
-							<label for="nomeFornecedor" class="form-label">
-								<div id="insiraNomeFornecedor">
-								</div>
+							<div id="insiraNomeFornecedor"></div>
+							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" 
+							name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+						</div>
+						<div class="form-group">
+							<label for="tempoentrega" class="form-label">
 							</label> 
-							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="tempoentrega" 
+							name="tempoentrega" placeholder="tempo de entrega (em dias)">
+						</div>
+						<div class="form-group">
+							<label for="valor" class="form-label">
+							</label> 
+							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="valor" 
+							name="valor" placeholder="valor" onkeypress="$(this).mask('00/00/0000')">
 						</div>
 						<input id="configuracoesId" name="id" type="hidden">
 						<button type="submit" class="btn btn-primary">Submit</button>
@@ -167,6 +178,8 @@
 						<thead>
 							<tr>
 								<th>Nome</th>
+								<th>Tempo de entrega</th>
+								<th>Valor</th>
 							</tr>
 						</thead>
 							<tbody>
@@ -220,8 +233,8 @@
 						<input type="hidden" value="cadastrar" name="acao">
 
 						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">Preço
-								por unidade</label> <input class="form-control" id="preco" name="preco">
+							<label for="exampleInputEmail1" class="form-label">Preço por unidade</label> 
+							<input class="form-control" id="preco" name="preco">
 							<div class="form-text">Preço por unidade</div>
 						</div>
 						<div class="mb-3">
@@ -280,21 +293,18 @@
 						<div class="form-text">...............................</div>
 					</div>
 					<div class="mb-3">
-						<label for="exampleInputEmail1" class="form-label">valor</label>
-						<input class="form-control" id="valor" name="valor">
-						<div class="form-text">...............................</div>
-					</div>
-					<div class="mb-3">
+					<!-- aqui teremos um api -->
 						<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
-						<input class="form-control" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')">
-						<div class="form-text">...............................</div>
-					</div>
-					<div class="mb-3">
-						<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
-						<input class="form-control" id="dataEntrega" name="dataEntrega" onkeypress="$(this).mask('00/00/0000')">
+						<input class="form-control" id="dataPedido" name="dataPedido" 
+						onkeypress="$(this).mask('00/00/0000')">
 						<div class="form-text">...............................</div>
 					</div>
 					<input type="hidden" name="acao" value="incluirPedido">
+					<div id="produtoIdIncluir">
+						
+					</div>
+					<div id="capturarId">
+					</div>
 					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 				</div>
@@ -302,6 +312,24 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+	
+	function dataAtual() {
+		  var input = document.getElementById('dataPedido');
+		  var dataAtual = new Date();
+		  var dia = dataAtual.getDate();
+		  var mes = dataAtual.getMonth() + 1;
+		  var ano = dataAtual.getFullYear();
+
+		  if (dia < 10) {
+		    dia = '0' + dia;
+		  }
+
+		  if (mes < 10) {
+		    mes = '0' + mes;
+		  }
+
+		  input.value = dia + '/' + mes + '/' + ano;
+		};
 	
 		jQuery("#valor").maskMoney({
 			showSymbol : true,	
@@ -345,7 +373,7 @@
 					var responseArray = response.split("|");
 			        var jsonLista1 = responseArray[0];
 			        var jsonLista2 = responseArray[1];
-
+					
 			        var jsonObj = JSON.parse(jsonLista2);
 			        
 			        var objeto = JSON.parse(jsonLista1);
@@ -355,11 +383,18 @@
 			        jQuery("#insiraNomeFornecedor > p").remove();
 			        jQuery("#configuracoesId").val(objetoNovamenteId);
 			        jQuery('#listaFornecedores > tbody > tr').remove();
+			        jQuery('#produtoIdIncluir > input').remove();
 			        
 			        jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objetoNovamenteNome + '</p>');
+			        jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="idProduto" value="'+objetoNovamenteId+'">');
 			        
 			        for(var p = 0; p < jsonObj.length; p++){
-			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome) +'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="loadPedido('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
+			        	
+			        	const valorNumerico = parseFloat(JSON.stringify(jsonObj[p].valor)); 
+			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
+			        	const tempoentregaDias = JSON.stringify(jsonObj[p].tempoentrega) + " dias";
+			        	
+			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome)+'</td><td>'+tempoentregaDias+'</td><td>'+valorMonetario+'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="dataAtual()" onclick="loadPedido('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
 			        }
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -371,7 +406,6 @@
 			
 			jQuery("#capturarId > input").remove();
 			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id' value="+id+">");
-			
 		}
 			
 		function excData(id) {
