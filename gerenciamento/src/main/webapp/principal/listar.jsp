@@ -25,8 +25,7 @@
 	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 		<li class="page-item"><button class="page-link"
 				data-toggle="modal" data-target=".ui">Novo registro</button></li>
-		<li class="page-item"><button class="page-link">Índice
-				=></button></li>
+		<li class="page-item"><button class="page-link">Índice=></button></li>
 		<%	
 		int totalPagina = (int) request.getAttribute("totalPagina");
 		for (int p = 0; p < totalPagina; p++) {
@@ -300,11 +299,8 @@
 						<div class="form-text">...............................</div>
 					</div>
 					<input type="hidden" name="acao" value="incluirPedido">
-					<div id="produtoIdIncluir">
-						
-					</div>
-					<div id="capturarId">
-					</div>
+					<div id="produtoIdIncluir"></div>
+					<div id="capturarId"></div>
 					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 				</div>
@@ -312,6 +308,11 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+	
+	function funcoes(id){
+		dataAtual();
+		loadPedido(id);
+	}
 	
 	function dataAtual() {
 		  var input = document.getElementById('dataPedido');
@@ -394,7 +395,7 @@
 			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
 			        	const tempoentregaDias = JSON.stringify(jsonObj[p].tempoentrega) + " dias";
 			        	
-			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome)+'</td><td>'+tempoentregaDias+'</td><td>'+valorMonetario+'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="dataAtual()" onclick="loadPedido('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
+			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome)+'</td><td>'+tempoentregaDias+'</td><td>'+valorMonetario+'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="funcoes('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
 			        }
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -403,8 +404,6 @@
 		}
 		
 		function loadPedido(id) {
-			
-			jQuery("#capturarId > input").remove();
 			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id' value="+id+">");
 		}
 			

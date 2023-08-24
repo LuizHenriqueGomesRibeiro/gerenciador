@@ -5,8 +5,8 @@ import java.util.Date;
 public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
 	private Long id;
-	private Date dataPedido;
-	private Date dataEntrega;
+	private String datapedido;
+	private String dataentrega;
 	private Long quantidade;
 	private Long valor;
 	private Long valorTotal;
@@ -23,11 +23,11 @@ public class ModelPedidos {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Date getDataPedido() {
-		return dataPedido;
+	public String getDataPedido() {
+		return datapedido;
 	}
-	public void setDataPedido(Date dataPedido) {
-		this.dataPedido = dataPedido;
+	public void setDataPedido(String dataPedido) {
+		this.datapedido = dataPedido;
 	}
 	public Long getQuantidade() {
 		return quantidade;
@@ -47,10 +47,10 @@ public class ModelPedidos {
 	public void setValorTotal(Long valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-	public Date getDataEntrega() {
-		return dataEntrega;
+	public String getDataEntrega() {
+		return dataentrega;
 	}
-	public void setDataEntrega(Date dataEntrega) {
-		this.dataEntrega = dataEntrega;
+	public void setDataEntrega(String dataEntrega) {
+		this.dataentrega = dataEntrega;
 	}
 }

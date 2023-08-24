@@ -10,6 +10,14 @@ import model.ModelPedidos;
 import model.ModelProdutos;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 
 import DAO.daoFornecimento;
@@ -48,17 +56,33 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String idProduto = request.getParameter("idProduto");
 			int idProdutoLong = Integer.parseInt(idProduto);
 			int fornecimento_pai_id_int = Integer.parseInt(fornecimento_pai_id);
-			System.out.println(fornecimento_pai_id);
-			System.out.println(quantidade);
-			System.out.println(dataPedido);
-			System.out.println(idProduto);
-			
-			quantidade = quantidade.replaceAll("\\.", "");
-			//é necessário pegar o id do produto para continuar com o insert pedido;
+
 			try {
+				
+				dataPedido = dataPedido.replaceAll("\\/", "-");
+				
+				ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, idProdutoLong, super.getUsuarioLogado(request).getId());
+				
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+				LocalDate data = LocalDate.parse(dataPedido, formatter);
+				
+				long quantidadeDiasAdicionais = fornecedor.getTempoentrega();
+				data = data.plusDays(quantidadeDiasAdicionais);
+
+				String dataEntrega = data.format(formatter);
+				dataEntrega = dataEntrega.replaceAll("\\-", "/");
+				System.out.println(dataEntrega);
+				
+				quantidade = quantidade.replaceAll("\\.", "");
+				Long quantidade_int = Long.parseLong(quantidade);
+				
 				ModelFornecimento modelFornecimento = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, idProdutoLong, super.getUsuarioLogado(request).getId());
 				ModelPedidos modelPedidos = new ModelPedidos();
-				System.out.println(modelFornecimento);
+				modelPedidos.setFornecedor_pai_id(modelFornecimento);
+				modelPedidos.setQuantidade(quantidade_int);
+				modelPedidos.setDataPedido(dataPedido);
+				modelPedidos.setDataEntrega(dataEntrega);
+				
 				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
