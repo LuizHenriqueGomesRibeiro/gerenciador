@@ -59,6 +59,9 @@
 			<tbody>
 				<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>
+						<c:if test="${ml.quantidadePedida == null}">
+							<td>0</td>
+						</c:if>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<!--<td><c:out value="${ml.precoString}"></c:out></td> -->
@@ -231,16 +234,6 @@
 
 						<input type="hidden" value="cadastrar" name="acao">
 
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">Preço por unidade</label> 
-							<input class="form-control" id="preco" name="preco">
-							<div class="form-text">Preço por unidade</div>
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">quantidade</label>
-							<input class="form-control" id="quantidade" name="quantidade">
-							<div class="form-text">...............................</div>
-						</div>
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">nome</label> <input
 								class="form-control" id="nome" name="nome">
@@ -422,5 +415,7 @@
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 			});
 		}
+		
+		
 	</script>
 </html>

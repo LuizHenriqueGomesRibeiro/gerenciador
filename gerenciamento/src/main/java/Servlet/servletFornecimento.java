@@ -22,6 +22,7 @@ import java.util.List;
 
 import DAO.daoFornecimento;
 import DAO.daoLogin;
+import DAO.daoPedidos;
 import DAO.daoProdutos;
 
 /**
@@ -33,6 +34,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	daoLogin daologin = new daoLogin();
 	daoFornecimento daofornecimento = new daoFornecimento();
 	daoProdutos daoproduto = new daoProdutos();
+	daoPedidos pedido = new daoPedidos();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -54,8 +56,8 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String quantidade = request.getParameter("quantidade");
 			String dataPedido = request.getParameter("dataPedido");
 			String idProduto = request.getParameter("idProduto");
-			int idProdutoLong = Integer.parseInt(idProduto);
-			int fornecimento_pai_id_int = Integer.parseInt(fornecimento_pai_id);
+			Long idProdutoLong = Long.parseLong(idProduto);
+			Long fornecimento_pai_id_int = Long.parseLong(fornecimento_pai_id);
 
 			try {
 				
@@ -71,7 +73,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 
 				String dataEntrega = data.format(formatter);
 				dataEntrega = dataEntrega.replaceAll("\\-", "/");
-				System.out.println(dataEntrega);
+				dataPedido = dataPedido.replaceAll("\\-", "/");
 				
 				quantidade = quantidade.replaceAll("\\.", "");
 				Long quantidade_int = Long.parseLong(quantidade);
@@ -82,7 +84,9 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				modelPedidos.setQuantidade(quantidade_int);
 				modelPedidos.setDataPedido(dataPedido);
 				modelPedidos.setDataEntrega(dataEntrega);
+				modelPedidos.setValor(modelFornecimento.getValor());
 				
+				pedido.gravarPedido(modelPedidos, super.getUsuarioLogado(request).getId());
 				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";

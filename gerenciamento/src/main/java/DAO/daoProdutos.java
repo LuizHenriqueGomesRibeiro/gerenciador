@@ -65,7 +65,7 @@ public class daoProdutos {
 		}
 	}
 	
-	public ModelProdutos consultaProduto(int id, int userLogado) {
+	public ModelProdutos consultaProduto(Long id, int userLogado) {
 		
 		ModelProdutos modelProduto = new ModelProdutos();
 

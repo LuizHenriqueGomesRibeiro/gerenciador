@@ -15,13 +15,14 @@ public class daoPedidos {
 		connection = conexao.getConnection();
 	}
 	
-	public ModelPedidos gravarPedido(ModelPedidos pedido, int fornecimento_pai_id, int id_produto, int id_usuario) {
+	public ModelPedidos gravarPedido(ModelPedidos pedido, int id_usuario) {
 		try {
 			String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega) VALUES (?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
 			daoFornecimento daofornecimento = new daoFornecimento();
-			ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id, id_produto, id_usuario);
+			Long id_preduto = pedido.getFornecedor_pai_id().getProduto_pai_id().getId();
+			ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(pedido.getFornecedor_pai_id().getId(), id_preduto, id_usuario);
 			
 			statement.setString(1, pedido.getDataPedido());
 			statement.setLong(2, pedido.getQuantidade());
@@ -40,8 +41,9 @@ public class daoPedidos {
 			
 			return null;
 		}
-
 	}
+	
+	
 	
 	
 }

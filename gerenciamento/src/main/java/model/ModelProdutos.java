@@ -10,31 +10,46 @@ public class ModelProdutos {
 	private String precoString;
 	private int valorTotal;
 	private String valorTotalString;
+	private String dataentrega;
+	private int quantidadePedida;
+	private String quantidadePedidaString;
 	
+	public int getQuantidadePedida() {
+		return quantidadePedida;
+	}
+	public void setQuantidadePedida(int quantidadePedida) {
+		this.quantidadePedida = quantidadePedida;
+	}
+	public String getQuantidadePedidaString() {
+		return quantidadePedidaString;
+	}
+	public void setQuantidadePedidaString(String quantidadePedidaString) {
+		this.quantidadePedidaString = quantidadePedidaString;
+	}
+	public String getDataentrega() {
+		return dataentrega;
+	}
+	public void setDataentrega(String dataentrega) {
+		this.dataentrega = dataentrega;
+	}
 	public String getValorTotalString() {
 		return valorTotalString;
 	}
-
 	public void setValorTotalString(String valorTotalString) {
 		this.valorTotalString = valorTotalString;
 	}
-
 	public int getValorTotal() {
 		return valorTotal;
 	}
-
 	public void setValorTotal(int valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-
 	public String getPrecoString() {
 		return precoString;
 	}
-
 	public void setPrecoString(String precoString) {
 		this.precoString = precoString;
 	}
-
 	public boolean isNovo() {
 		if (this.id == null) {
 			return true;
@@ -43,7 +58,6 @@ public class ModelProdutos {
 		}
 		return id == null;
 	}
-	
 	public int getQuantidade() {
 		return quantidade;
 	}

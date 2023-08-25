@@ -60,7 +60,7 @@ public class daoFornecimento {
 		return retorno;
 	}
 	
-public ModelFornecimento consultaFornecedor(int id, int produtoId, int usuarioId) {
+public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuarioId) {
 		
 		ModelFornecimento modelFornecimento = new ModelFornecimento();
 

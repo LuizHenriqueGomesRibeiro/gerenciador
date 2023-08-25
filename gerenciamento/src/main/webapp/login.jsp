@@ -33,7 +33,7 @@ rel="stylesheet">
 								<div class="form-outline mb-4">
 									<input type="password" id="form2Example28" name="senha"
 										id="senha" placeholder="senha"
-										class="form-control form-control-lg" /> <label
+										class="form-control form-control-lg"/> <label
 										class="form-label" for="form2Example28">Senha</label>
 								</div>
 								<div class="pt-1 mb-4">
