@@ -136,26 +136,20 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			String preco = request.getParameter("preco");
-			String quantidade = request.getParameter("quantidade");
 			String nome = request.getParameter("nome");
 			String usuario_pai_id = request.getParameter("usuario_pai_id");
-			String id = request.getParameter("id");
 			
-			preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
+			//preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
 			
-	        String preco_R$ = preco.replace("R$", "");
-	        preco_R$ = preco_R$.replaceAll("[^0-9]", "");
+	        //String preco_R$ = preco.replace("R$", "");
+	        //preco_R$ = preco_R$.replaceAll("[^0-9]", "");
 
-			int preco_int = Integer.parseInt(preco_R$);
-			int quantidade_int = Integer.parseInt(quantidade);
-			
+			//int preco_int = Integer.parseInt(preco_R$);
+			//int quantidade_int = Integer.parseInt(quantidade);
 			
 			ModelProdutos modelProduto = new ModelProdutos();
 			
-			modelProduto.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
-			modelProduto.setPreco(preco_int);
-			modelProduto.setQuantidade(quantidade_int);
+			//modelProduto.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
 			modelProduto.setNome(nome);
 			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
 			
@@ -166,8 +160,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			}
 			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
-			String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
-			request.setAttribute("soma", numero);
+			//String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+			//request.setAttribute("soma", numero);
 			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 			
 			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());

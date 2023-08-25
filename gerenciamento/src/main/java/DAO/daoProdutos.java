@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import conexao.conexao;
 import model.ModelUsuarios;
+import model.ModelFornecimento;
 import model.ModelProdutos;
 
 public class daoProdutos {
@@ -25,16 +26,13 @@ public class daoProdutos {
 	public void gravarProduto(ModelProdutos modelProduto) {
 
 		try {
-			String sql = "INSERT INTO produtos(preco, quantidade, nome, usuario_pai_id, valortotal) VALUES (?, ?, ?, ?, ?);";
+			String sql = "INSERT INTO produtos(nome, usuario_pai_id) VALUES (?, ?);";
 			
 			ModelUsuarios usuario_pai_id = modelProduto.getUsuario_pai_id();
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setInt(1, modelProduto.getPreco());
-			statement.setInt(2, modelProduto.getQuantidade());
-			statement.setString(3, modelProduto.getNome());
-			statement.setLong(4, usuario_pai_id.getId());
-			statement.setInt(5, modelProduto.getPreco()*modelProduto.getQuantidade());
+			statement.setString(1, modelProduto.getNome());
+			statement.setLong(2, usuario_pai_id.getId());
 			
 			statement.execute();
 			connection.commit();
@@ -128,23 +126,33 @@ public class daoProdutos {
 		while(resultado.next()){
 			
 			ModelProdutos produtos = new ModelProdutos();
-			NumberFormat format = NumberFormat.getInstance();
-
-	        format.setGroupingUsed(true);
-
-	        String precoFormatado = format.format(resultado.getInt("preco"));
-	        String precoFormatado00R$ = "R$"+precoFormatado + ",00";
+			//daoProdutos daoprodutos = new daoProdutos();
+			//daoFornecimento fornecimento = new daoFornecimento();
+			daoPedidos pedido = new daoPedidos();
+			
+			//NumberFormat format = NumberFormat.getInstance();
+	        //format.setGroupingUsed(true);
 	        
-	        String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
-	        String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
+	        //String precoFormatado = format.format(resultado.getInt("preco"));
+	        //String precoFormatado00R$ = "R$"+precoFormatado + ",00";
+	        
+	        //String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
+	        //String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
 	        
 			produtos.setId(resultado.getLong("id"));
-			produtos.setQuantidade(resultado.getInt("quantidade"));
-			produtos.setPrecoString(precoFormatado00R$);
+			
+			int quantidade = pedido.somaQuantidade(resultado.getLong("id"));
+			String quantidadeString = String.valueOf(quantidade);
+			DecimalFormat formato = new DecimalFormat("#,###");
+	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
+			
+			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
+			//produtos.setPrecoString(precoFormatado00R$);
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
-			produtos.setValorTotal(resultado.getInt("quantidade")*resultado.getInt("preco"));
-			produtos.setValorTotalString(precoTotalFormatado00R$);
+			produtos.setQuantidadePedidaString(quantidadeStringFormatado);
+			//produtos.setValorTotal();
+			//produtos.setValorTotalString();
 			
 			retorno.add(produtos);
 		}

@@ -60,7 +60,7 @@ public class daoFornecimento {
 		return retorno;
 	}
 	
-public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuarioId) {
+	public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuarioId) {
 		
 		ModelFornecimento modelFornecimento = new ModelFornecimento();
 
@@ -90,5 +90,5 @@ public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuario
 			e.printStackTrace();
 		}
 		return null;
-	}
+	}	
 }
