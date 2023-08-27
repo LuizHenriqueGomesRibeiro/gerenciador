@@ -157,7 +157,7 @@
 		</tbody>
 	</table>
 	<div style="display: none; overflow-y: none;" id="tabelaFornecedores">
-		<div class="container" style="margin: -16px 0px 0px 0px;">
+		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
@@ -181,12 +181,12 @@
 							name="valor" placeholder="valor" onkeypress="$(this).mask('00/00/0000')">
 						</div>
 						<input id="configuracoesId" name="id" type="hidden">
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
 				</div>
 				<div style="overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -10px 0px 0px 0px;" class="col-sm">
-					<table class="table table-striped table-sm" id="listaFornecedores">
+					<table style="" class="table table-striped table-sm" id="listaFornecedores">
 						<thead>
 							<tr>
 								<th>Nome</th>
@@ -315,6 +315,37 @@
 	function funcoes(id){
 		dataAtual();
 		loadPedido(id);
+	}
+	
+	function funcoes2(){
+		
+		var id = document.getElementById('configuracoesId').value;
+		
+		adicionarFornecedor();
+		loadData(id);
+	}
+	
+	function adicionarFornecedor() {
+		
+		var urlAction = document.getElementById('formularioFornecimento').action;
+		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
+		var tempoentrega = document.getElementById('tempoentrega').value;
+		var valor = document.getElementById('valor').value;
+		var id = document.getElementById('configuracoesId').value;
+		
+		jQuery.ajax({
+
+			method : "post",
+			url : urlAction,
+			data : '&nomeFornecedor='+nomeFornecedor+'&tempoentrega='+tempoentrega+'&valor='+valor+'&id='+id,
+			success : function(json, textStatus, xhr) {
+				jQuery('#nomeFornecedor').val('');
+				jQuery('#tempoentrega').val('');
+				jQuery('#valor').val('');
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
 	}
 	
 	function dataAtual() {

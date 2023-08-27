@@ -158,7 +158,7 @@ public class daoProdutos {
 			produtos.setNome(resultado.getString("nome"));
 			produtos.setQuantidadePedidaString(quantidadeStringFormatado);
 			produtos.setValorTotalString(precoFormatado00R$);
-			
+
 			retorno.add(produtos);
 		}
 		
