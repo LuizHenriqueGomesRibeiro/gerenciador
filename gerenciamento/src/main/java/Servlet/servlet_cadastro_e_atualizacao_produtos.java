@@ -160,8 +160,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			}
 			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
-			//String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
-			//request.setAttribute("soma", numero);
+			String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
+			request.setAttribute("soma", numero);
 			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 			
 			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());

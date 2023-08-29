@@ -145,16 +145,32 @@ public class daoProdutos {
 			String quantidadeString = String.valueOf(quantidade);
 			DecimalFormat formato = new DecimalFormat("#,###");
 	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
-			
+	        
+	        int valor = pedido.somaValores(resultado.getLong("id"));
+	        
+	        if(valor == 0) {
+	        	produtos.setValorTotalString("Sem valores");
+	        }else {
+	        	
+	        	NumberFormat format = NumberFormat.getInstance();
+	        	format.setGroupingUsed(true);
+	        
+	        	String precoFormatado = format.format(valor);
+	        	String precoFormatado00R$ = "R$" + precoFormatado + ",00";
+	        	
+	        	produtos.setValorTotalString(precoFormatado00R$);
+	        }
+	        
+	        if(quantidade == 0) {
+	        	produtos.setQuantidadePedidaString("Sem quantidades");
+	        }else {
+	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado);
+	        }
+	       
 			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
-			//produtos.setPrecoString(precoFormatado00R$);
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
-			produtos.setQuantidadePedidaString(quantidadeStringFormatado);
-			//produtos.setValorTotal();
-			//produtos.setValorTotalString();
-			//produtos.setValorTotalString(precoFormatado00R$);
-			
+
 			retorno.add(produtos);
 		}
 		
@@ -163,7 +179,7 @@ public class daoProdutos {
 	
 	public String somaProdutos(int usuario_pai_id) throws Exception{
 		
-		String sql = "SELECT SUM(valortotal) FROM produtos WHERE usuario_pai_id = ?";
+		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, usuario_pai_id);
@@ -217,29 +233,45 @@ public class daoProdutos {
 
 		while (resultado.next()) {
 			
-			ModelProdutos modelProdutos = new ModelProdutos();
-			NumberFormat format = NumberFormat.getInstance();
-
-	        format.setGroupingUsed(true);
+			ModelProdutos produtos = new ModelProdutos();
+			daoPedidos pedido = new daoPedidos();
 	        
-			String precoFormatado = format.format(resultado.getInt("preco"));
-	        String precoFormatado00R$ = "R$"+precoFormatado + ",00";
+			produtos.setId(resultado.getLong("id"));
+			
+			int quantidade = pedido.somaQuantidade(resultado.getLong("id"));
+			String quantidadeString = String.valueOf(quantidade);
+			DecimalFormat formato = new DecimalFormat("#,###");
+	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
 	        
-	        String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
-	        String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
+	        int valor = pedido.somaValores(resultado.getLong("id"));
+	        
+	        if(valor == 0) {
+	        	produtos.setValorTotalString("Sem valores");
+	        }else {
+	        	
+	        	NumberFormat format = NumberFormat.getInstance();
+	        	format.setGroupingUsed(true);
+	        
+	        	String precoFormatado = format.format(valor);
+	        	String precoFormatado00R$ = "R$" + precoFormatado + ",00";
+	        	
+	        	produtos.setValorTotalString(precoFormatado00R$);
+	        }
+	        
+	        if(quantidade == 0) {
+	        	produtos.setQuantidadePedidaString("Sem quantidades");
+	        }else {
+	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado);
+	        }
+	       
+			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
+			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(usuario));
+			produtos.setNome(resultado.getString("nome"));
 
-			modelProdutos.setNome(resultado.getString("nome"));
-			modelProdutos.setPreco(resultado.getInt("preco"));
-			modelProdutos.setId(resultado.getLong("id"));
-			modelProdutos.setQuantidade(resultado.getInt("quantidade"));
-			modelProdutos.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
-			modelProdutos.setPrecoString(precoFormatado00R$);
-			modelProdutos.setValorTotalString(precoTotalFormatado00R$);
-
-			retorno.add(modelProdutos);
+			retorno.add(produtos);
 		}
 		
 		return retorno;
 	}
-}
+}	
 

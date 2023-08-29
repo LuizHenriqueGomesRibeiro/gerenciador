@@ -79,13 +79,4 @@
     <servlet-name>servletFornecimento</servlet-name>
     <url-pattern>/servletFornecimento</url-pattern>
   </servlet-mapping>
-  <filter>
-    <display-name>filterAutenticar</display-name>
-    <filter-name>filterAutenticar</filter-name>
-    <filter-class>filter.filterAutenticar</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>filterAutenticar</filter-name>
-    <url-pattern>/filterAutenticar</url-pattern>
-  </filter-mapping>
 </web-app>

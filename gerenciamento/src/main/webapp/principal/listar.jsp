@@ -59,24 +59,9 @@
 				<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>
 						<td><c:out value="${ml.nome}"></c:out></td>
-						<c:if test="${empty ml.quantidadePedidaString}">
-							<td>Sem pedidos</td>
-						</c:if>
-						<c:if test="${not empty ml.quantidadePedidaString}">
-							<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
-						</c:if>
-						<c:if test="${empty valorTotalString}">
-							<td>Sem valores</td>
-						</c:if>
-						<c:if test="${not empty valorTotalString}">
-							<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						</c:if>
-						<c:if test="${empty dataentrega}">
-							<td>Sem datas</td>
-						</c:if>
-						<c:if test="${not empty dataentrega}">
-							<td><c:out value="${ml.dataentrega}"></c:out></td>
-						</c:if>
+						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
+						<td><c:out value="${ml.valorTotalString}"></c:out></td>
+						<td><c:out value="${ml.dataentrega}"></c:out></td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
 							data-toggle="modal" data-target=".ada" id="buscar" 
@@ -157,7 +142,7 @@
 		</tbody>
 	</table>
 	<div style="display: none; overflow-y: none;" id="tabelaFornecedores">
-		<div class="container" style="margin: -16px 0px 0px 0px;">
+		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
@@ -181,12 +166,12 @@
 							name="valor" placeholder="valor" onkeypress="$(this).mask('00/00/0000')">
 						</div>
 						<input id="configuracoesId" name="id" type="hidden">
-						<button type="submit" class="btn btn-primary">Submit</button>
+						<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
 					</form>
 				</div>
 				</div>
 				<div style="overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -10px 0px 0px 0px;" class="col-sm">
-					<table class="table table-striped table-sm" id="listaFornecedores">
+					<table style="" class="table table-striped table-sm" id="listaFornecedores">
 						<thead>
 							<tr>
 								<th>Nome</th>
@@ -315,6 +300,37 @@
 	function funcoes(id){
 		dataAtual();
 		loadPedido(id);
+	}
+	
+	function funcoes2(){
+		
+		var id = document.getElementById('configuracoesId').value;
+		
+		adicionarFornecedor();
+		loadData(id);
+	}
+	
+	function adicionarFornecedor() {
+		
+		var urlAction = document.getElementById('formularioFornecimento').action;
+		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
+		var tempoentrega = document.getElementById('tempoentrega').value;
+		var valor = document.getElementById('valor').value;
+		var id = document.getElementById('configuracoesId').value;
+		
+		jQuery.ajax({
+
+			method : "post",
+			url : urlAction,
+			data : '&nomeFornecedor='+nomeFornecedor+'&tempoentrega='+tempoentrega+'&valor='+valor+'&id='+id,
+			success : function(json, textStatus, xhr) {
+				jQuery('#nomeFornecedor').val('');
+				jQuery('#tempoentrega').val('');
+				jQuery('#valor').val('');
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
 	}
 	
 	function dataAtual() {

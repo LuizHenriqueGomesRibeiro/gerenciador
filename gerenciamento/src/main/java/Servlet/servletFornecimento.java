@@ -123,7 +123,6 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	        valor_R$ = valor_R$.replaceAll("[^0-9]", "");
 
 			Long valor_R$Long = Long.parseLong(valor_R$);
-			System.out.println(valor_R$Long);
 			ModelProdutos modelProdutos = new ModelProdutos();
 			modelProdutos.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
 			
