@@ -60,7 +60,7 @@ public class servletLogin extends HttpServlet {
 				login_em_validacao.setLogin(login);
 				
 				if(daoLogin.validarAutenticacao(login_em_validacao)) {
-					
+
 					if(url == null || url.equals("null")) {
 						url = "principal/principal.jsp";
 						

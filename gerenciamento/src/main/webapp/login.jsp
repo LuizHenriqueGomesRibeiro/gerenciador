@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
 <meta name="author" content="">
-<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="<%=request.getContextPath()%>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
 rel="stylesheet">
-<link href="css/sb-admin-2.min.css" rel="stylesheet">
+<link href="<%=request.getContextPath()%>/css/sb-admin-2.min.css" rel="stylesheet">
 </head>
 <body style="overflow: hidden;">
 	<section class="vh-100">
@@ -39,6 +39,7 @@ rel="stylesheet">
 								<div class="pt-1 mb-4">
 									<button class="btn btn-info btn-lg btn-block" type="submit">Entrar</button>
 								</div>
+								<p>${msg}</p>
 								<p>
 									Não tem uma conta? 
 									<a href="<%=request.getContextPath()%>/cadastro.jsp" class="link-info">Cadastro</a>
@@ -56,10 +57,10 @@ rel="stylesheet">
 			</div>
 		</div>
 	</section>
-	<script src="vendor/jquery/jquery.min.js"></script>
-	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-	<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-	<script src="js/sb-admin-2.min.js"></script>
+	<script src="<%=request.getContextPath() %>/vendor/jquery/jquery.min.js"></script>
+	<script src="<%=request.getContextPath() %>/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="<%=request.getContextPath() %>/vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script src="<%=request.getContextPath() %>/js/sb-admin-2.min.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery-3.7.0.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.validate.js"></script>
 	<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/validacao.js"></script>
