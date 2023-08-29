@@ -145,19 +145,14 @@ public class daoProdutos {
 			String quantidadeString = String.valueOf(quantidade);
 			DecimalFormat formato = new DecimalFormat("#,###");
 	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
-	        
-	        int valor = pedido.somaValores(resultado.getLong("id"));
-	        NumberFormat format = NumberFormat.getInstance();
-	        format.setGroupingUsed(true);
-	        
-	        String precoFormatado = format.format(valor);
-	        String precoFormatado00R$ = "R$" + precoFormatado + ",00";
 			
 			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
+			//produtos.setPrecoString(precoFormatado00R$);
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
 			produtos.setQuantidadePedidaString(quantidadeStringFormatado);
-			produtos.setValorTotalString(precoFormatado00R$);
+			//produtos.setValorTotal();
+			//produtos.setValorTotalString();
 			
 			retorno.add(produtos);
 		}
@@ -167,7 +162,7 @@ public class daoProdutos {
 	
 	public String somaProdutos(int usuario_pai_id) throws Exception{
 		
-		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ?";
+		String sql = "SELECT SUM(valortotal) FROM produtos WHERE usuario_pai_id = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, usuario_pai_id);

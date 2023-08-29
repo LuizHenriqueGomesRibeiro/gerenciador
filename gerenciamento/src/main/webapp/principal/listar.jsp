@@ -65,10 +65,10 @@
 						<c:if test="${not empty ml.quantidadePedidaString}">
 							<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						</c:if>
-						<c:if test="${empty ml.valorTotalString}">
+						<c:if test="${empty valorTotalString}">
 							<td>Sem valores</td>
 						</c:if>
-						<c:if test="${not empty ml.valorTotalString}">
+						<c:if test="${not empty valorTotalString}">
 							<td><c:out value="${ml.valorTotalString}"></c:out></td>
 						</c:if>
 						<c:if test="${empty dataentrega}">
