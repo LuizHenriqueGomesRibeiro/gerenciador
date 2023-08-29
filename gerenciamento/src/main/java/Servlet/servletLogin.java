@@ -16,7 +16,7 @@ import DAO.daoLogin;
 /**
  * Servlet implementation class servletLogin
  */
-@WebServlet(urlPatterns = { "/principal/ServletLogin"}) 
+@WebServlet(urlPatterns = { "/principal/servletLogin"}) 
 public class servletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	

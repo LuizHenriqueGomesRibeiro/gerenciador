@@ -79,4 +79,13 @@
     <servlet-name>servletFornecimento</servlet-name>
     <url-pattern>/servletFornecimento</url-pattern>
   </servlet-mapping>
+  <filter>
+    <display-name>doFilter</display-name>
+    <filter-name>doFilter</filter-name>
+    <filter-class>filter.doFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>doFilter</filter-name>
+    <url-pattern>/doFilter</url-pattern>
+  </filter-mapping>
 </web-app>
