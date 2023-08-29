@@ -153,6 +153,7 @@ public class daoProdutos {
 			produtos.setQuantidadePedidaString(quantidadeStringFormatado);
 			//produtos.setValorTotal();
 			//produtos.setValorTotalString();
+			//produtos.setValorTotalString(precoFormatado00R$);
 			
 			retorno.add(produtos);
 		}
