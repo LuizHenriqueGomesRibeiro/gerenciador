@@ -55,6 +55,7 @@ public class daoPedidos {
 		ResultSet resultado = statement.executeQuery();
 			
 		resultado.next();
+		System.out.println(resultado.getInt("soma"));
 		
 		return resultado.getInt("soma");
 	}
