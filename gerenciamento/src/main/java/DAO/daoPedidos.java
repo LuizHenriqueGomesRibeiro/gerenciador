@@ -4,10 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import conexao.conexao;
 import model.ModelFornecimento;
 import model.ModelPedidos;
+import model.ModelProdutos;
 import model.ModelUsuarios;
 
 public class daoPedidos {
@@ -69,5 +74,25 @@ public class daoPedidos {
 		resultado.next();
 		
 		return resultado.getInt("soma");
+	}
+	
+public List<ModelPedidos> listarPedidos(Long id) throws SQLException {
+		
+		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+		
+		String sql = "SELECT * FROM pedidos WHERE produtos_pai_id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+	        ModelPedidos pedidos = new ModelPedidos();
+	        
+	        pedidos.setDataEntrega(resultado.getString("dataentrega"));
+	        pedidos.setDataPedido(resultado.getString("datapedido"));
+	        
+			retorno.add(pedidos);
+		}
+		
+		return retorno;
 	}
 }

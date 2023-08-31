@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelFornecimento;
+import model.ModelPedidos;
 import model.ModelProdutos;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import DAO.daoFornecimento;
 import DAO.daoLogin;
+import DAO.daoPedidos;
 import DAO.daoProdutos;
 
 /**
@@ -29,6 +31,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	daoLogin daologin = new daoLogin();
 	daoProdutos daoproduto = new daoProdutos();
 	daoFornecimento daoFornecimento = new daoFornecimento();
+	daoPedidos daopedidos = new daoPedidos();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -124,6 +127,20 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				response.setCharacterEncoding("UTF-8");
 				printWriter.write(json);
 				printWriter.close();
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
+
+				String id = request.getParameter("id");
+				
+				List<ModelPedidos> pedidos = daopedidos.listarPedidos(Long.parseLong(id));
+				Gson gson = new Gson();
+				String json = gson.toJson(pedidos);
+				PrintWriter printWriter = response.getWriter();
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				printWriter.write(json);
+				printWriter.close();
+				
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

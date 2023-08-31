@@ -50,7 +50,6 @@
 					<th>Quantidade pedida</th>
 					<th>Valor total dos pedidos</th>
 					<th>Datas de entrega</th>
-					<th>Ver</th>
 					<th>Excluir</th>
 					<th>Configurações</th>
 				</tr>
@@ -61,11 +60,9 @@
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						<td><c:out value="${ml.dataentrega}"></c:out></td>
-						<td style="height: 30px; width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							data-toggle="modal" data-target=".ada" id="buscar" 
-							onclick="loadData(${ml.id})">Ver</a></td>
+						<td style="height: 30px; width: 150px;"><a class="page-link"
+							style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" href="#"
+							id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
 						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
 							href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a>
@@ -295,7 +292,53 @@
 			</div>
 		</div>
 	</div>
+	<div id="tabelaHistoricoPedidos" style="width: 100%; overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -27px 0px 0px -16px;" class="col-sm">
+		<table style="width: 100%;" class="table table-striped table-sm">
+			<thead>
+				<tr>
+					<th>Data de entrega</th>
+					<th>Data do pedido</th>
+					<th>Confirmar entrega</th>
+					<th>Cancelar entrega</th>
+				</tr>
+			</thead>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
 	<script type="text/javascript">
+	
+	jQuery("#tabelaHistoricoPedidos").hide();
+	
+	function loadPedidos(id){
+		jQuery("#tabelaFornecedores").hide();
+		jQuery("#tabelaHistoricoPedidos").show();
+		
+		var urlAction = document.getElementById('formulario').action;
+		jQuery.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : '&id='+ id + '&acao=historioPedidos',
+			success : function(json, textStatus, xhr) {
+				for(var p = 0; p < json.length; p++){	
+					var string = JSON.stringify(json[p].dataentrega);
+					var substrings = string.split('"');
+					var novaString = substrings.join('');
+					var string2 = JSON.stringify(json[p].datapedido);
+					var substrings2 = string2.split('"');
+					var novaString2 = substrings2.join('');
+					jQuery('#tabelaHistoricoPedidos > table > tbody')
+						.append('<tr><td>' + novaString + 
+							'</td><td>' + novaString2 + 
+							'</td><td><a href="#">Confirmar entrega</a></td><td><a href="#">Cancelar entrega</a></td></tr>');
+				}
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
 	
 	function funcoes(id){
 		dataAtual();
@@ -381,6 +424,7 @@
 
 		function loadData(id) {
 			jQuery("#tabelaFornecedores").show();
+			jQuery("#tabelaHistoricoPedidos").hide();
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
 
