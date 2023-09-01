@@ -164,7 +164,7 @@ public class daoProdutos {
 	        if(quantidade == 0) {
 	        	produtos.setQuantidadePedidaString("Sem quantidades");
 	        }else {
-	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado);
+	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado + " unidades");
 	        }
 	       
 			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));

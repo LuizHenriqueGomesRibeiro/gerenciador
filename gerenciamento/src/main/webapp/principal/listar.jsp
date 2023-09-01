@@ -63,8 +63,7 @@
 						<td style="height: 30px; width: 150px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" href="#"
 							id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
 							href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a>
 						</td>
 						<td style="width: 40px;"><a class="page-link"
@@ -309,6 +308,37 @@
 	</div>
 	<script type="text/javascript">
 	
+	function loadPedidoIdConfirmar(id1, id2){
+		var urlAction = document.getElementById('formulario').action;
+		jQuery.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : '&id='+ id1 + '&acao=confirmarPedido',
+			success : function(json, textStatus, xhr) {
+				loadPedidos(id2);	
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
+	
+	function loadPedidoIdCancelar(id1, id2){
+		var urlAction = document.getElementById('formulario').action;
+		jQuery.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : '&id='+ id1 + '&acao=cancelarPedido',
+			success : function(json, textStatus, xhr) {
+				loadPedidos(id2);				
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
+	
+	
 	jQuery("#tabelaHistoricoPedidos").hide();
 	
 	function loadPedidos(id){
@@ -322,6 +352,8 @@
 			url : urlAction,
 			data : '&id='+ id + '&acao=historioPedidos',
 			success : function(json, textStatus, xhr) {
+				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();
+				
 				for(var p = 0; p < json.length; p++){	
 					var string = JSON.stringify(json[p].dataentrega);
 					var substrings = string.split('"');
@@ -332,7 +364,7 @@
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
 						.append('<tr><td>' + novaString + 
 							'</td><td>' + novaString2 + 
-							'</td><td><a href="#">Confirmar entrega</a></td><td><a href="#">Cancelar entrega</a></td></tr>');
+							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(json[p].id)+','+id+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(json[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
 				}
 			}
 		}).fail(function(xhr, status, errorThrown) {

@@ -76,7 +76,7 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
-public List<ModelPedidos> listarPedidos(Long id) throws SQLException {
+	public List<ModelPedidos> listarPedidos(Long id) throws SQLException {
 		
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		
@@ -89,10 +89,37 @@ public List<ModelPedidos> listarPedidos(Long id) throws SQLException {
 	        
 	        pedidos.setDataEntrega(resultado.getString("dataentrega"));
 	        pedidos.setDataPedido(resultado.getString("datapedido"));
+	        pedidos.setId(resultado.getLong("id"));
 	        
 			retorno.add(pedidos);
 		}
 		
 		return retorno;
+	}
+	
+	public ModelPedidos buscarPedido(Long id) throws SQLException {
+		
+		ModelPedidos pedido = new ModelPedidos();
+		
+		String sql = "SELECT * FROM pedidos WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			pedido.setDataEntrega(resultado.getString("dataentrega"));
+	        pedido.setDataPedido(resultado.getString("datapedido"));
+	        pedido.setId(resultado.getLong("id"));
+		}
+		return pedido;	
+	}
+	
+	public void excluirPedido(Long id) throws SQLException {
+		
+		String sql = "DELETE FROM pedidos WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		
+		statement.execute();
+		connection.commit();
 	}
 }

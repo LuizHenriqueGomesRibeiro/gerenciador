@@ -53,4 +53,11 @@ public class ModelPedidos {
 	public void setDataEntrega(String dataEntrega) {
 		this.dataentrega = dataEntrega;
 	}
+	@Override
+	public String toString() {
+		return "ModelPedidos [fornecedor_pai_id=" + fornecedor_pai_id + ", id=" + id + ", datapedido=" + datapedido
+				+ ", dataentrega=" + dataentrega + ", quantidade=" + quantidade + ", valor=" + valor + ", valorTotal="
+				+ valorTotal + "]";
+	}
+	
 }

@@ -52,6 +52,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
+				
+				
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
@@ -141,6 +143,18 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				printWriter.write(json);
 				printWriter.close();
 				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
+
+				String id = request.getParameter("id");
+
+				ModelPedidos pedidos = daopedidos.buscarPedido(Long.parseLong(id));
+				daopedidos.excluirPedido(Long.parseLong(id));
+				
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
+
+				String id = request.getParameter("id");
+				
+				daopedidos.excluirPedido(Long.parseLong(id));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -154,7 +168,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 		
 		try {
 			String nome = request.getParameter("nome");
-			String usuario_pai_id = request.getParameter("usuario_pai_id");
 			
 			//preco = preco.replaceAll("\\.", "").replaceAll("\\,00", "");
 			
@@ -168,7 +181,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			
 			//modelProduto.setId(id != null && !id.isEmpty() ? Long.parseLong(id) : null);
 			modelProduto.setNome(nome);
-			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(Integer.parseInt(usuario_pai_id)));
+			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(super.getUsuarioLogado(request).getId()));
 			
 			if(modelProduto.isNovo()) {
 				daoproduto.gravarProduto(modelProduto);
