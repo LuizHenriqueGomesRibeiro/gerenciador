@@ -147,9 +147,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 
 				String id = request.getParameter("id");
 
-				ModelPedidos pedidos = daopedidos.buscarPedido(Long.parseLong(id));
 				daopedidos.excluirPedido(Long.parseLong(id));
-				
+
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 
 				String id = request.getParameter("id");

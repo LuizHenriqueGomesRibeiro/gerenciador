@@ -60,16 +60,9 @@
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						<td style="height: 30px; width: 150px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" href="#"
-							id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
-							href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a>
-						</td>
-						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#"
-							id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a>
-						</td>
+						<td style="height: 30px; width: 150px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a></td>
 					</tr>
 					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
 						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -316,7 +309,7 @@
 			url : urlAction,
 			data : '&id='+ id1 + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
-				loadPedidos(id2);	
+	
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
