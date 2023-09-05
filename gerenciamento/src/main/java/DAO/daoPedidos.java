@@ -89,6 +89,7 @@ public class daoPedidos {
 	        
 	        pedidos.setDataEntrega(resultado.getString("dataentrega"));
 	        pedidos.setDataPedido(resultado.getString("datapedido"));
+	        pedidos.setQuantidade(resultado.getLong("quantidade"));
 	        pedidos.setId(resultado.getLong("id"));
 	        
 			retorno.add(pedidos);

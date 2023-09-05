@@ -52,13 +52,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
-				
-				
 
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
 				request.setAttribute("soma", numero);
-		
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
@@ -86,9 +83,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
 				request.setAttribute("soma", numero);
 				request.setAttribute("usuario", super.getUsuarioLogado(request));
-				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
-				
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
@@ -144,8 +139,18 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				printWriter.close();
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-
+			
 				String id = request.getParameter("id");
+				String id_produto = request.getParameter("id_produto");
+				String quantidade = request.getParameter("quantidade");
+				System.out.println(id_produto);
+				System.out.println(quantidade);
+				
+				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
+				System.out.println(produto.getNome());
+				
+				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
+				System.out.println(produto.getQuantidade());
 
 				daopedidos.excluirPedido(Long.parseLong(id));
 

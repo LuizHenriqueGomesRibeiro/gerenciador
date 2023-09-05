@@ -273,5 +273,19 @@ public class daoProdutos {
 		
 		return retorno;
 	}
+	
+	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {
+		String sql = "UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		
+		ModelProdutos produto = new ModelProdutos();
+		statement.setInt(1, quantidade);
+		statement.setInt(2, id);
+		
+		statement.executeUpdate();
+		connection.commit();
+		
+		return produto;
+	}
 }	
 

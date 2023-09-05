@@ -34,7 +34,7 @@
 		}
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><button class="page-link">Buscar</button></li>
+		<li class="page-item"><button class="page-link"><a href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar">Ir para caixa</a></button></li>
 		<li class="page-item"><button class="page-link">Gerar relatório</button></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
@@ -60,9 +60,12 @@
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						<td style="height: 30px; width: 150px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" href="#" data-toggle="modal" data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a></td>
+						<td style="height: 30px; width: 150px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" 
+							href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" href="#" data-toggle="modal" 
+							data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" 
+							onclick="loadData(${ml.id})">Fornecedores</a></td>
 					</tr>
 					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
 						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -168,8 +171,7 @@
 								<th>Valor</th>
 							</tr>
 						</thead>
-							<tbody>
-								
+							<tbody>	
 							</tbody>
 					</table>
 				</div>
@@ -301,15 +303,15 @@
 	</div>
 	<script type="text/javascript">
 	
-	function loadPedidoIdConfirmar(id1, id2){
+	function loadPedidoIdConfirmar(id1, id2, quantidade){
 		var urlAction = document.getElementById('formulario').action;
 		jQuery.ajax({
 
 			method : "get",
 			url : urlAction,
-			data : '&id='+ id1 + '&acao=confirmarPedido',
+			data : '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
-	
+				loadPedidos(id2);	
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
@@ -354,10 +356,11 @@
 					var string2 = JSON.stringify(json[p].datapedido);
 					var substrings2 = string2.split('"');
 					var novaString2 = substrings2.join('');
+					alert(JSON.stringify(json[p].quantidade));
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
 						.append('<tr><td>' + novaString + 
 							'</td><td>' + novaString2 + 
-							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(json[p].id)+','+id+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(json[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
+							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(json[p].id)+','+id+','+JSON.stringify(json[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(json[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
 				}
 			}
 		}).fail(function(xhr, status, errorThrown) {
