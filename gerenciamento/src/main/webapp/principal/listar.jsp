@@ -34,7 +34,7 @@
 		}
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><button class="page-link"><a href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar">Ir para caixa</a></button></li>
+		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button class="page-link">Ir para caixa</button></a></li>
 		<li class="page-item"><button class="page-link">Gerar relatório</button></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
@@ -280,7 +280,7 @@
 					<input type="hidden" name="acao" value="incluirPedido">
 					<div id="produtoIdIncluir"></div>
 					<div id="capturarId"></div>
-					<button type="submit" class="btn btn-primary">Submit</button>
+					<button type="button" onclick="pedido()" class="btn btn-primary">Submit</button>
 				</form>
 				</div>
 			</div>
@@ -303,15 +303,35 @@
 	</div>
 	<script type="text/javascript">
 	
+	function pedido(){
+		var urlAction = document.getElementById('formularioFornecimento').action;
+		var quantidade = document.getElementById('quantidade').value;
+		var dataPedido = document.getElementById('dataPedido').value;
+		var idProduto = document.getElementById('idProduto').value;
+		var id_fornecedor = document.getElementById('id_fornecedor').value;
+		
+		jQuery.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : '&idProduto='+ idProduto + '&dataPedido=' + dataPedido + '&quantidade=' + quantidade + '&fornecimento_pai_id=' + id_fornecedor + '&acao=incluirPedido',
+			success : function(json, textStatus, xhr) {
+				location.reload();
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
+	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
-		var urlAction = document.getElementById('formulario').action;
+		var urlAction = document.getElementById('formularioFornecimento').action;
 		jQuery.ajax({
 
 			method : "get",
 			url : urlAction,
 			data : '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
-				loadPedidos(id2);	
+				location.reload();
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
@@ -319,14 +339,14 @@
 	}
 	
 	function loadPedidoIdCancelar(id1, id2){
-		var urlAction = document.getElementById('formulario').action;
+		var urlAction = document.getElementById('formularioFornecimento').action;
 		jQuery.ajax({
 
 			method : "get",
 			url : urlAction,
 			data : '&id='+ id1 + '&acao=cancelarPedido',
 			success : function(json, textStatus, xhr) {
-				loadPedidos(id2);				
+				location.reload();
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
@@ -347,8 +367,7 @@
 			url : urlAction,
 			data : '&id='+ id + '&acao=historioPedidos',
 			success : function(json, textStatus, xhr) {
-				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();
-				
+				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
 				for(var p = 0; p < json.length; p++){	
 					var string = JSON.stringify(json[p].dataentrega);
 					var substrings = string.split('"');
@@ -356,7 +375,6 @@
 					var string2 = JSON.stringify(json[p].datapedido);
 					var substrings2 = string2.split('"');
 					var novaString2 = substrings2.join('');
-					alert(JSON.stringify(json[p].quantidade));
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
 						.append('<tr><td>' + novaString + 
 							'</td><td>' + novaString2 + 
@@ -495,7 +513,7 @@
 		}
 		
 		function loadPedido(id) {
-			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id' value="+id+">");
+			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id_fornecedor' value="+id+">");
 		}
 			
 		function excData(id) {

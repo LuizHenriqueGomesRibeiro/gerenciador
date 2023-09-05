@@ -11,6 +11,7 @@ import model.ModelProdutos;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	daoFornecimento daofornecimento = new daoFornecimento();
 	daoProdutos daoproduto = new daoProdutos();
 	daoPedidos pedido = new daoPedidos();
+	daoPedidos daopedidos = new daoPedidos();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -78,13 +80,12 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				quantidade = quantidade.replaceAll("\\.", "");
 				Long quantidade_int = Long.parseLong(quantidade);
 				
-				ModelFornecimento modelFornecimento = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, idProdutoLong, super.getUsuarioLogado(request).getId());
 				ModelPedidos modelPedidos = new ModelPedidos();
-				modelPedidos.setFornecedor_pai_id(modelFornecimento);
+				modelPedidos.setFornecedor_pai_id(fornecedor);
 				modelPedidos.setQuantidade(quantidade_int);
 				modelPedidos.setDataPedido(dataPedido);
 				modelPedidos.setDataEntrega(dataEntrega);
-				modelPedidos.setValor(modelFornecimento.getValor());
+				modelPedidos.setValor(fornecedor.getValor());
 				
 				pedido.gravarPedido(modelPedidos, super.getUsuarioLogado(request).getId());
 				
@@ -102,6 +103,40 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
+			String id = request.getParameter("id");
+			String id_produto = request.getParameter("id_produto");
+			String quantidade = request.getParameter("quantidade");
+			
+			try {
+				daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
+				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
+				daopedidos.excluirPedido(Long.parseLong(id));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
+			String id = request.getParameter("id");
+			
+			try {
+				daopedidos.excluirPedido(Long.parseLong(id));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 	}
 

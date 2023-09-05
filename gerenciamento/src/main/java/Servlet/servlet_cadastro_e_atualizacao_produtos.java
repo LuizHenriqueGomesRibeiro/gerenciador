@@ -143,17 +143,11 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				String id = request.getParameter("id");
 				String id_produto = request.getParameter("id_produto");
 				String quantidade = request.getParameter("quantidade");
-				System.out.println(id_produto);
-				System.out.println(quantidade);
 				
-				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
-				System.out.println(produto.getNome());
-				
+				daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
-				System.out.println(produto.getQuantidade());
-
 				daopedidos.excluirPedido(Long.parseLong(id));
-
+				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 
 				String id = request.getParameter("id");

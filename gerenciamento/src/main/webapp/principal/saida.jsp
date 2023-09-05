@@ -32,7 +32,7 @@
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link"
-			href="principal/principal.jsp">Voltar</a></li>
+			href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></li>
 	</ul>
 	<div id="json-content"></div>
 	<div style="overflow-y: scroll; height: 250px;">
@@ -40,33 +40,38 @@
 			<thead>
 				<tr>
 					<th>Nome</th>
-					<th>Quantidade pedida</th>
+					<th>Quantidade em caixa</th>
 					<th>Valor total dos pedidos</th>
 					<th>Datas de entrega</th>
 					<th>Ver</th>
-					<th>Excluir</th>
-					<th>Configurações</th>
+					<th>Saída</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>generico</td>
-					<td>generico</td>
-					<td>generico</td>
-					<td>generico</td>
-					<td style="height: 30px; width: 40px;"><a class="page-link"
-						style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Ver</a></td>
-					<td style="width: 40px;"><a class="page-link"
-						style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
-						href="#"><p>Excluir</p></a></td>
-					<td style="width: 40px;"><a class="page-link"
-						style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Fornecedores</a>
-					</td>
-				</tr>
+				<c:forEach items="${produtos}" var="ml" varStatus="status">
+					<tr>
+						<td><c:out value="${ml.nome}"></c:out></td>
+						<td><c:out value="${ml.quantidade}"></c:out></td>
+						<td>generico</td>
+						<td>generico</td>
+						<td style="height: 30px; width: 40px;"><a class="page-link"
+							style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
+						<td onclick="saida(${ml.id})" style="width: 40px;"><a class="page-link"
+							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
+							href="#"><p>Vender</p></a></td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
 	<a class="scroll-to-top rounded" href="#page-top"> 
 		<i class="fas fa-angle-up"></i>
 	</a>
+	<script type="text/javascript">
+		function saida(id){
+			alert("Id do produto: " + id);
+		}
+	
+	
+	</script>
 </html>

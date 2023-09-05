@@ -26,13 +26,15 @@ public class daoProdutos {
 	public void gravarProduto(ModelProdutos modelProduto) {
 
 		try {
-			String sql = "INSERT INTO produtos(nome, usuario_pai_id) VALUES (?, ?);";
+			String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade) VALUES (?, ?, ?);";
 			
 			ModelUsuarios usuario_pai_id = modelProduto.getUsuario_pai_id();
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, modelProduto.getNome());
 			statement.setLong(2, usuario_pai_id.getId());
+			int a = 0;
+			statement.setInt(3, a);
 			
 			statement.execute();
 			connection.commit();
@@ -167,7 +169,7 @@ public class daoProdutos {
 	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado + " unidades");
 	        }
 	       
-			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
+			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
 
@@ -275,6 +277,8 @@ public class daoProdutos {
 	}
 	
 	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {
+		System.out.println(quantidade);
+		System.out.println(id);
 		String sql = "UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
