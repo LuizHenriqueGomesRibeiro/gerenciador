@@ -56,9 +56,40 @@
 						<td>generico</td>
 						<td style="height: 30px; width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
-						<td onclick="saida(${ml.id})" style="width: 40px;"><a class="page-link"
+						<td style="width: 40px;"><a class="page-link"
 							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
-							href="#"><p>Vender</p></a></td>
+							href="#" data-toggle="modal" data-target="#exampleModal"><p>Vender</p></a></td>
+						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Saída de estoque</h5>
+										<button type="button" class="close" data-dismiss="modal"
+											aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
+											<div class="mb-3">
+												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
+												*Deve ser inferior ou igual à quantidade em caixa: ${ml.quantidade} unidades</label>
+												<input class="form-control" id="quantidadeHidden"
+													name="quantidadeHidden" value="${ml.quantidade}" type="hidden">
+												<input class="form-control" id="quantidade"
+													name="quantidade" value="${ml.quantidade}"
+													onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
+												<div class="form-text">...............................</div>
+											</div>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary" onclick="pedido(${ml.id})">Save changes</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -68,10 +99,35 @@
 		<i class="fas fa-angle-up"></i>
 	</a>
 	<script type="text/javascript">
-		function saida(id){
-			alert("Id do produto: " + id);
-		}
 	
+		const input = document.getElementById("quantidade");
+		const numeroMaximo = document.getElementById("quantidadeHidden").value;
+	
+		input.addEventListener("input", validarNumero);
+	
+		function validarNumero(event) {
+		  	const valorInput = Number(event.target.value);
+	
+		  	if (valorInput > numeroMaximo) {
+		    	event.target.value = numeroMaximo;
+		  	}
+		}
+		
+		function pedido(id){
+			var urlAction = document.getElementById('formularioSaida').action;
+			var quantidade = document.getElementById('quantidade').value;
+			
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&idProduto='+ id + '&quantidade=' + quantidade + '&acao=vender',
+				success : function(json, textStatus, xhr) {
+					location.reload();
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
 	
 	</script>
 </html>

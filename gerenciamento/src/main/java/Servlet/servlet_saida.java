@@ -54,6 +54,28 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 			RequestDispatcher despache = request.getRequestDispatcher("principal/saida.jsp");
 			despache.forward(request, response);
+			
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
+			String id = request.getParameter("idProduto");
+			String quantidade = request.getParameter("quantidade");
+			int quantidadeInt = Integer.parseInt(quantidade);
+			int quantidadeIntInversa = -quantidadeInt;
+			
+			try {
+				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id), quantidadeIntInversa);
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				request.setAttribute("produtos", produtos);
+				
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

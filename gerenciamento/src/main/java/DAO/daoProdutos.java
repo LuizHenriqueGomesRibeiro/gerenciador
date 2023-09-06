@@ -277,8 +277,6 @@ public class daoProdutos {
 	}
 	
 	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {
-		System.out.println(quantidade);
-		System.out.println(id);
 		String sql = "UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
