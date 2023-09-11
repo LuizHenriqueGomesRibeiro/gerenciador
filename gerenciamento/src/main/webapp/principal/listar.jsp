@@ -35,11 +35,10 @@
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
 		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button class="page-link">Ir para caixa</button></a></li>
-		<li class="page-item"><button class="page-link">Gerar relatório</button></li>
+		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class="page-link">Ir para relatórios</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		<li class="page-item"><a class="page-link"
-			href="principal/principal.jsp">Voltar</a></li>
+		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
 	</ul>
 	<div id="json-content"></div>
 	<div style="overflow-y: scroll; height: 250px;">
@@ -396,7 +395,7 @@
 		var id = document.getElementById('configuracoesId').value;
 		
 		adicionarFornecedor();
-		loadData(id);
+		loadData(id); 
 	}
 	
 	function adicionarFornecedor() {
@@ -411,7 +410,7 @@
 
 			method : "post",
 			url : urlAction,
-			data : '&nomeFornecedor='+nomeFornecedor+'&tempoentrega='+tempoentrega+'&valor='+valor+'&id='+id,
+			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id=' + id,
 			success : function(json, textStatus, xhr) {
 				jQuery('#nomeFornecedor').val('');
 				jQuery('#tempoentrega').val('');
@@ -496,7 +495,7 @@
 			        jQuery('#produtoIdIncluir > input').remove();
 			        
 			        jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objetoNovamenteNome + '</p>');
-			        jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="idProduto" value="'+objetoNovamenteId+'">');
+			        jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="idProduto" value="' + objetoNovamenteId + '">');
 			        
 			        for(var p = 0; p < jsonObj.length; p++){
 			        	

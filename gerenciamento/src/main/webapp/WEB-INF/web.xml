@@ -79,4 +79,14 @@
     <servlet-name>servletFornecimento</servlet-name>
     <url-pattern>/servletFornecimento</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServletRelatorios</display-name>
+    <servlet-name>ServletRelatorios</servlet-name>
+    <servlet-class>Servlet.ServletRelatorios</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletRelatorios</servlet-name>
+    <url-pattern>/ServletRelatorios</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -120,7 +120,6 @@ public class daoProdutos {
 	public List<ModelProdutos> listarProdutos(int id) throws SQLException {
 		
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
-		
 		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " LIMIT 10";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
@@ -272,7 +271,6 @@ public class daoProdutos {
 
 			retorno.add(produtos);
 		}
-		
 		return retorno;
 	}
 	

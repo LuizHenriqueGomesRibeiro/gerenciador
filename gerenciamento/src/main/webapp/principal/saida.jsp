@@ -23,16 +23,12 @@
 </head>
 <body style="overflow: hidden;">
 	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-		<li class="page-item"><button class="page-link"
-				data-toggle="modal" data-target=".ui">Novo registro</button></li>
 		<li class="page-item"><button class="page-link">Índice=></button></li>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><button class="page-link">Buscar</button></li>
-		<li class="page-item"><button class="page-link">Gerar relatório</button></li>
+		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class="page-link">Ir para relatórios</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		<li class="page-item"><a class="page-link"
-			href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></li>
+		<li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></li>
 	</ul>
 	<div id="json-content"></div>
 	<div style="overflow-y: scroll; height: 250px;">

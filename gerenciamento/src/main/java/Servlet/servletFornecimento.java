@@ -96,9 +96,6 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
-				RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");
-				despache.forward(request, response);
-				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -107,36 +104,29 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String id = request.getParameter("id");
 			String id_produto = request.getParameter("id_produto");
 			String quantidade = request.getParameter("quantidade");
-			
+			int status = 2;
 			try {
 				daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
-				daopedidos.excluirPedido(Long.parseLong(id));
+				daopedidos.mudarStatus(Integer.parseInt(id), status);
+				//daopedidos.excluirPedido(Long.parseLong(id));
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 			String id = request.getParameter("id");
-			
 			try {
-				daopedidos.excluirPedido(Long.parseLong(id));
+				int status = 1;
+				daopedidos.mudarStatus(Integer.parseInt(id), status);
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
 

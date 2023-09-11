@@ -24,13 +24,13 @@ public class daoPedidos {
 	
 	public ModelPedidos gravarPedido(ModelPedidos pedido, int id_usuario) {
 		try {
-			String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+			String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
 			daoFornecimento daofornecimento = new daoFornecimento();
 			Long id_preduto = pedido.getFornecedor_pai_id().getProduto_pai_id().getId();
 			ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(pedido.getFornecedor_pai_id().getId(), id_preduto, id_usuario);
-			
+			int a = 0;
 			statement.setString(1, pedido.getDataPedido());
 			statement.setLong(2, pedido.getQuantidade());
 			statement.setLong(3, pedido.getValor());
@@ -39,6 +39,7 @@ public class daoPedidos {
 			statement.setString(6, pedido.getDataEntrega());
 			statement.setLong(7, fornecedor.getProduto_pai_id().getId());
 			statement.setLong(8, id_usuario);
+			statement.setInt(9, a);
 			statement.execute();
 			connection.commit();
 			
@@ -53,10 +54,12 @@ public class daoPedidos {
 	}
 	
 	public int somaQuantidade(Long produtoId) throws SQLException {
-		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = ?";
+		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = ? AND status = ?";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setLong(1, produtoId);
+		int status = 0;
+		statement.setInt(2, status);
 		ResultSet resultado = statement.executeQuery();
 			
 		resultado.next();
@@ -65,10 +68,12 @@ public class daoPedidos {
 	}	
 	
 	public int somaValores(Long produtoId) throws SQLException {
-		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = ?";
+		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = ? AND status = ?";
 
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setLong(1, produtoId);
+		int status = 0;
+		statement.setInt(2, status);
 		ResultSet resultado = statement.executeQuery();
 			
 		resultado.next();
@@ -80,8 +85,10 @@ public class daoPedidos {
 		
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		
-		String sql = "SELECT * FROM pedidos WHERE produtos_pai_id = " + id;
+		String sql = "SELECT * FROM pedidos WHERE status = ? AND produtos_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
+		int status = 0;
+		statement.setLong(1, status);
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()){
@@ -96,6 +103,17 @@ public class daoPedidos {
 		}
 		
 		return retorno;
+	}
+	
+	public void mudarStatus(int id, int status) throws SQLException{
+		String sql = "UPDATE pedidos SET status = ? WHERE id = ?";
+		
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, status);
+		statement.setInt(2, id);
+
+		statement.executeUpdate();
+		connection.commit();
 	}
 	
 	public ModelPedidos buscarPedido(Long id) throws SQLException {
