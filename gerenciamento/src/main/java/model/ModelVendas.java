@@ -1,0 +1,40 @@
+package model;
+
+public class ModelVendas {
+	private int id;
+	private ModelProdutos produto_pai;
+	private String dataentrega;
+	private int valortotal;
+	private int quantidade;
+	
+	public int getQuantidade() {
+		return quantidade;
+	}
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public ModelProdutos getProduto_pai() {
+		return produto_pai;
+	}
+	public void setProduto_pai(ModelProdutos produto_pai) {
+		this.produto_pai = produto_pai;
+	}
+	public String getDataentrega() {
+		return dataentrega;
+	}
+	public void setDataentrega(String dataentrega) {
+		this.dataentrega = dataentrega;
+	}
+	public int getValortotal() {
+		return valortotal;
+	}
+	public void setValortotal(int valortotal) {
+		this.valortotal = valortotal;
+	}
+}

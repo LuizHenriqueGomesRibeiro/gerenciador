@@ -6,13 +6,21 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ModelVendas;
+
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import DAO.daoVendas;
 
 /**
  * Servlet implementation class ServletRelatorios
  */
-public class ServletRelatorios extends HttpServlet {
+public class ServletRelatorios extends servlet_recuperacao_login{
 	private static final long serialVersionUID = 1L;
+	
+	daoVendas daoVendas = new daoVendas();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -33,7 +41,16 @@ public class ServletRelatorios extends HttpServlet {
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
 			
-			
+			try {
+				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
+				System.out.println(vendas);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
 			

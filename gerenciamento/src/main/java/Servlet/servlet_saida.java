@@ -9,15 +9,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.ModelProdutos;
 import model.ModelUsuarios;
+import model.ModelVendas;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
+import DAO.daoVendas;
 
 /**
  * Servlet implementation class servletLogin
@@ -30,6 +34,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoProdutos daoproduto = new daoProdutos();
 	daoFornecimento daoFornecimento = new daoFornecimento();
 	daoPedidos daopedidos = new daoPedidos();
+	daoVendas vendas = new daoVendas();
 	
 	public servlet_saida() {
         super();
@@ -61,8 +66,19 @@ public class servlet_saida extends servlet_recuperacao_login{
 			int quantidadeInt = Integer.parseInt(quantidade);
 			int quantidadeIntInversa = -quantidadeInt;
 			
+			LocalDate dataAtual = LocalDate.now();
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	        String dataFormatada = dataAtual.format(formatter);			
+			
 			try {
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id), quantidadeIntInversa);
+				ModelVendas venda = new ModelVendas();
+				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
+				venda.setProduto_pai(produto);
+				venda.setQuantidade(quantidadeInt);
+				venda.setDataentrega(dataFormatada);
+				venda.setQuantidade(quantidadeInt);
+				vendas.gravarVenda(venda);
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
@@ -80,8 +96,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		
+			
 	}
 
 }
