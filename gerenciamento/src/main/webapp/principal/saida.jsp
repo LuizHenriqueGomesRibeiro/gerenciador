@@ -50,10 +50,8 @@
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td>generico</td>
 						<td>generico</td>
-						<td style="height: 30px; width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
-						<td style="width: 40px;"><a class="page-link"
-							style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
+						<td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
 							href="#" data-toggle="modal" data-target="#exampleModal"><p>Vender</p></a></td>
 						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
@@ -70,12 +68,11 @@
 											<div class="mb-3">
 												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
 												*Deve ser inferior ou igual à quantidade em caixa: ${ml.quantidade} unidades</label>
-												<input class="form-control" id="quantidadeHidden"
-													name="quantidadeHidden" value="${ml.quantidade}" type="hidden">
-												<input class="form-control" id="quantidade"
-													name="quantidade" value="${ml.quantidade}"
+												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" value="${ml.quantidade}" type="hidden">
+												<input class="form-control" id="quantidade" name="quantidade" value="${ml.quantidade}"
 													onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
-												<div class="form-text">...............................</div>
+													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
+												<input class="form-control" id="valor" name="valor">
 											</div>
 										</form>
 									</div>
@@ -112,11 +109,12 @@
 		function pedido(id){
 			var urlAction = document.getElementById('formularioSaida').action;
 			var quantidade = document.getElementById('quantidade').value;
+			var valor = document.getElementById('valor').value;
 			
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&idProduto='+ id + '&quantidade=' + quantidade + '&acao=vender',
+				data : '&valor=' + valor + '&idProduto=' + id + '&quantidade=' + quantidade + '&acao=vender',
 				success : function(json, textStatus, xhr) {
 					location.reload();
 				}
@@ -124,6 +122,13 @@
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 			});
 		}
+		
+		jQuery("#valor").maskMoney({
+			showSymbol : true,	
+			symbol : "R$",
+			decimal : ",",
+			thousands : "."
+		});
 	
 	</script>
 </html>

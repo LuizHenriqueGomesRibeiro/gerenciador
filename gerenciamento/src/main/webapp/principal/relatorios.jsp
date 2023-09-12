@@ -33,22 +33,63 @@
 	</ul>
 	<h1>Área de geração de relatórios</h1>
 	<a style="text-decoration: none" class="page-link" onclick="gerarVendas()" href="#">Gerar relatório de vendas</a>
-	<a style="text-decoration: none" class="page-link" href="<%=request.getContextPath()%>/ServletRelatorios?acao=entradas">Gerar relatório de entradas</a>
+	<a style="text-decoration: none" class="page-link" onclick="gerarEntradas()" href="#">Gerar relatório de entradas</a>
 	<a style="text-decoration: none" class="page-link" href="<%=request.getContextPath()%>/ServletRelatorios?acao=pedidos">Gerar relatório de pedidos</a>
 	<a style="text-decoration: none" class="page-link" href="<%=request.getContextPath()%>/ServletRelatorios?acao=cancelamentos">Gerar relatório de cancelamentos</a>
 	<div style="display: none;">
 		<form action="<%=request.getContextPath()%>/ServletRelatorios" method="get" name="formularioFantasma" id="formularioFantasma"></form>
 	</div>
+	<div>
+		<div id="imprimirRelatorio" style="width: 100%; overflow-y: scroll; overflow-x: none; height: 350px; position: relative; margin: -2px 0px 0px -16px;" class="col-sm">
+			<table style="width: 100%;" class="table table-striped table-sm">
+				<tbody></tbody>
+			</table>
+		</div>
+	</div>
 	<script type="text/javascript">
 	
+		jQuery("#imprimirRelatorio").hide();
+	
 		function gerarVendas(){
+			jQuery("#imprimirRelatorio").show();
 			var urlAction = document.getElementById('formularioFantasma').action;
 			jQuery.ajax({
-
 				method : "get",
 				url : urlAction,
 				data : '&acao=vendas',
 				success : function(json, textStatus, xhr) {
+					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
+					jQuery("#imprimirRelatorio > table > thead").remove();
+					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data da venda</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
+					for(var p = 0; p < json.length; p++){
+						var string = JSON.stringify(json[p].dataentrega);
+						var substrings = string.split('"');
+						var novaString = substrings.join('');
+						var string2 = JSON.stringify(json[p].nome);
+						var substrings2 = string2.split('"');
+						var novaString2 = substrings2.join('');
+						const valorNumerico = parseFloat(JSON.stringify(json[p].valortotal)); 
+			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
+						jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+JSON.stringify(json[p].quantidade)+"</td></tr>");
+					}
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Error');
+			});
+		}
+		
+		function gerarEntradas(){
+			jQuery("#imprimirRelatorio").show();
+			var urlAction = document.getElementById('formularioFantasma').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=entradas',
+				success : function(json, textStatus, xhr) {
+					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
+					for(var p = 0; p < json.length; p++){
+												
+					}
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Error');

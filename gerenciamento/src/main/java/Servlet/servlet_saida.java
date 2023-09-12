@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.ModelFornecimento;
 import model.ModelProdutos;
 import model.ModelUsuarios;
 import model.ModelVendas;
@@ -62,6 +63,13 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
 			String id = request.getParameter("idProduto");
+			String valor = request.getParameter("valor");
+			valor = valor.replaceAll("\\.", "").replaceAll("\\,00", "");
+			
+	        String valor_R$ = valor.replace("R$", "");
+	        valor_R$ = valor_R$.replaceAll("[^0-9]", "");
+
+			int valor_R$Long = Integer.parseInt(valor_R$);
 			String quantidade = request.getParameter("quantidade");
 			int quantidadeInt = Integer.parseInt(quantidade);
 			int quantidadeIntInversa = -quantidadeInt;
@@ -74,10 +82,11 @@ public class servlet_saida extends servlet_recuperacao_login{
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id), quantidadeIntInversa);
 				ModelVendas venda = new ModelVendas();
 				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
+				//ModelFornecimento fornecimento = daoFornecimento.consultaFornecedor(null, Long.parseLong(id), super.getUsuarioLogado(request).getId());
 				venda.setProduto_pai(produto);
 				venda.setQuantidade(quantidadeInt);
 				venda.setDataentrega(dataFormatada);
-				venda.setQuantidade(quantidadeInt);
+				venda.setValortotal(valor_R$Long);
 				vendas.gravarVenda(venda);
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);

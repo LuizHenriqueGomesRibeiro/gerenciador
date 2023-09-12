@@ -6,7 +6,14 @@ public class ModelVendas {
 	private String dataentrega;
 	private int valortotal;
 	private int quantidade;
+	private String nome;
 	
+	public String getNome() {
+		return nome;
+	}
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 	public int getQuantidade() {
 		return quantidade;
 	}

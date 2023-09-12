@@ -9,8 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.ModelVendas;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
+
+import com.google.gson.Gson;
 
 import DAO.daoVendas;
 
@@ -43,7 +46,14 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 			try {
 				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				System.out.println(vendas);
+				Gson gson = new Gson();
+				String json = gson.toJson(vendas);
+				PrintWriter printWriter = response.getWriter();
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				printWriter.write(json);
+				printWriter.close();
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
