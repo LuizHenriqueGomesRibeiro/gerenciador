@@ -69,8 +69,7 @@
 												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
 												*Deve ser inferior ou igual à quantidade em caixa: ${ml.quantidade} unidades</label>
 												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" value="${ml.quantidade}" type="hidden">
-												<input class="form-control" id="quantidade" name="quantidade" value="${ml.quantidade}"
-													onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
+												<input class="form-control" id="quantidade" name="quantidade" value="${ml.quantidade}">
 													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
 												<input class="form-control" id="valor" name="valor">
 											</div>

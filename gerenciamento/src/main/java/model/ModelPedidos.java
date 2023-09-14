@@ -1,16 +1,29 @@
 package model;
 
-import java.util.Date;
-
 public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
 	private Long id;
 	private String datapedido;
+	private String datacancelamento;
 	private String dataentrega;
 	private Long quantidade;
 	private Long valor;
 	private Long valorTotal;
+	private String nome;
 	
+	@Override
+	public String toString() {
+		return "ModelPedidos [fornecedor_pai_id=" + fornecedor_pai_id + ", id=" + id + ", datapedido=" + datapedido
+			+ ", datacancelamento=" + datacancelamento + ", dataentrega=" + dataentrega + ", quantidade="
+			+ quantidade + ", valor=" + valor + ", valorTotal=" + valorTotal + ", nome=" + nome + "]";
+	}
+	
+	public String getDatacancelamento() {
+		return datacancelamento;
+	}
+	public void setDatacancelamento(String datacancelamento) {
+		this.datacancelamento = datacancelamento;
+	}
 	public ModelFornecimento getFornecedor_pai_id() {
 		return fornecedor_pai_id;
 	}
@@ -23,11 +36,17 @@ public class ModelPedidos {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDataPedido() {
+	public String getDatapedido() {
 		return datapedido;
 	}
-	public void setDataPedido(String dataPedido) {
-		this.datapedido = dataPedido;
+	public void setDatapedido(String datapedido) {
+		this.datapedido = datapedido;
+	}
+	public String getDataentrega() {
+		return dataentrega;
+	}
+	public void setDataentrega(String dataentrega) {
+		this.dataentrega = dataentrega;
 	}
 	public Long getQuantidade() {
 		return quantidade;
@@ -47,17 +66,10 @@ public class ModelPedidos {
 	public void setValorTotal(Long valorTotal) {
 		this.valorTotal = valorTotal;
 	}
-	public String getDataEntrega() {
-		return dataentrega;
+	public String getNome() {
+		return nome;
 	}
-	public void setDataEntrega(String dataEntrega) {
-		this.dataentrega = dataEntrega;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
-	@Override
-	public String toString() {
-		return "ModelPedidos [fornecedor_pai_id=" + fornecedor_pai_id + ", id=" + id + ", datapedido=" + datapedido
-				+ ", dataentrega=" + dataentrega + ", quantidade=" + quantidade + ", valor=" + valor + ", valorTotal="
-				+ valorTotal + "]";
-	}
-	
 }

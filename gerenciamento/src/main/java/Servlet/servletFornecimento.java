@@ -83,9 +83,10 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				ModelPedidos modelPedidos = new ModelPedidos();
 				modelPedidos.setFornecedor_pai_id(fornecedor);
 				modelPedidos.setQuantidade(quantidade_int);
-				modelPedidos.setDataPedido(dataPedido);
-				modelPedidos.setDataEntrega(dataEntrega);
+				modelPedidos.setDatapedido(dataPedido);
+				modelPedidos.setDataentrega(dataEntrega);
 				modelPedidos.setValor(fornecedor.getValor());
+				modelPedidos.setNome(daoproduto.consultaProduto(idProdutoLong, super.getUsuarioLogado(request).getId()).getNome());
 				
 				pedido.gravarPedido(modelPedidos, super.getUsuarioLogado(request).getId());
 				
@@ -106,9 +107,10 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String quantidade = request.getParameter("quantidade");
 			int status = 2;
 			try {
-				daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
+				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
 				daopedidos.mudarStatus(Integer.parseInt(id), status);
+				//entrada.setValortotal(produto);
 				//daopedidos.excluirPedido(Long.parseLong(id));
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -122,6 +124,10 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			try {
 				int status = 1;
 				daopedidos.mudarStatus(Integer.parseInt(id), status);
+				LocalDate dataAtual = LocalDate.now();
+		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		        String dataFormatada = dataAtual.format(formatter);	
+				daopedidos.gravarCancelamento(dataFormatada, Long.parseLong(id));
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {

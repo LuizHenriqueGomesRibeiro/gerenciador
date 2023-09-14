@@ -34,8 +34,8 @@
 	<h1>Área de geração de relatórios</h1>
 	<a style="text-decoration: none" class="page-link" onclick="gerarVendas()" href="#">Gerar relatório de vendas</a>
 	<a style="text-decoration: none" class="page-link" onclick="gerarEntradas()" href="#">Gerar relatório de entradas</a>
-	<a style="text-decoration: none" class="page-link" href="<%=request.getContextPath()%>/ServletRelatorios?acao=pedidos">Gerar relatório de pedidos</a>
-	<a style="text-decoration: none" class="page-link" href="<%=request.getContextPath()%>/ServletRelatorios?acao=cancelamentos">Gerar relatório de cancelamentos</a>
+	<a style="text-decoration: none" class="page-link" onclick="gerarPedidos()" href="#">Gerar relatório de pedidos</a>
+	<a style="text-decoration: none" class="page-link" onclick="gerarCancelamentos()" href="#">Gerar relatório de cancelamentos</a>
 	<div style="display: none;">
 		<form action="<%=request.getContextPath()%>/ServletRelatorios" method="get" name="formularioFantasma" id="formularioFantasma"></form>
 	</div>
@@ -45,6 +45,9 @@
 				<tbody></tbody>
 			</table>
 		</div>
+		<div id="botao">
+		</div>
+		<p>${relatorio}</p>
 	</div>
 	<script type="text/javascript">
 	
@@ -58,10 +61,14 @@
 				url : urlAction,
 				data : '&acao=vendas',
 				success : function(json, textStatus, xhr) {
+					jQuery("#botao > button").remove();
+					jQuery("#botao").append("<button class='page-link' onclick='gerarPDFvendas()'>Imprimir PDF</button>");
 					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
 					jQuery("#imprimirRelatorio > table > thead").remove();
 					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data da venda</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
 					for(var p = 0; p < json.length; p++){
+						var numero = JSON.stringify(json[p].quantidade);
+						var numeroComPontos = numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 						var string = JSON.stringify(json[p].dataentrega);
 						var substrings = string.split('"');
 						var novaString = substrings.join('');
@@ -70,8 +77,21 @@
 						var novaString2 = substrings2.join('');
 						const valorNumerico = parseFloat(JSON.stringify(json[p].valortotal)); 
 			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
-						jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+JSON.stringify(json[p].quantidade)+"</td></tr>");
+						jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+numeroComPontos+"</td></tr>");
 					}
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Error');
+			});
+		}
+		
+		function gerarPDFvendas(){
+			var urlAction = document.getElementById('formularioFantasma').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=printFormVendasPDF',
+				success : function(json, textStatus, xhr) {
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Error');
@@ -86,15 +106,91 @@
 				url : urlAction,
 				data : '&acao=entradas',
 				success : function(json, textStatus, xhr) {
+					jQuery("#imprimirRelatorio > table > thead").remove();
 					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
+					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data da venda</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
 					for(var p = 0; p < json.length; p++){
-												
+						var numero = JSON.stringify(json[p].quantidade);
+						var numeroComPontos = numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+						var string = JSON.stringify(json[p].dataentrega);
+						var substrings = string.split('"');
+						var novaString = substrings.join('');
+						var string2 = JSON.stringify(json[p].nome);
+						var substrings2 = string2.split('"');
+						var novaString2 = substrings2.join('');
+						const valorNumerico = parseFloat(JSON.stringify(json[p].valorTotal)); 
+			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'});	
+			        	jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+numeroComPontos+"</td></tr>");
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Error');
 			});
 		}
+		
+		function gerarPedidos(){
+			jQuery("#imprimirRelatorio").show();
+			var urlAction = document.getElementById('formularioFantasma').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=pedidos',
+				success : function(json, textStatus, xhr) {
+					jQuery("#imprimirRelatorio > table > thead").remove();
+					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
+					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data do pedido</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
+					for(var p = 0; p < json.length; p++){
+						var numero = JSON.stringify(json[p].quantidade);
+						var numeroComPontos = numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+						var string = JSON.stringify(json[p].datapedido);
+						var substrings = string.split('"');
+						var novaString = substrings.join('');
+						var string2 = JSON.stringify(json[p].nome);
+						var substrings2 = string2.split('"');
+						var novaString2 = substrings2.join('');
+						const valorNumerico = parseFloat(JSON.stringify(json[p].valorTotal)); 
+			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'});	
+			        	jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+numeroComPontos+"</td></tr>");
+					}
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Error');
+			});
+		}
+		
+		function gerarCancelamentos(){
+			jQuery("#imprimirRelatorio").show();
+			var urlAction = document.getElementById('formularioFantasma').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=cancelamentos',
+				success : function(json, textStatus, xhr) {
+					jQuery("#imprimirRelatorio > table > thead").remove();
+					jQuery("#imprimirRelatorio > table > tbody > tr").remove();
+					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data do pedido</th><th>Data do cancelamento</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
+					for(var p = 0; p < json.length; p++){
+						var numero = JSON.stringify(json[p].quantidade);
+						var numeroComPontos = numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+						var string = JSON.stringify(json[p].datapedido);
+						var substrings = string.split('"');
+						var novaString = substrings.join('');
+						var string2 = JSON.stringify(json[p].nome);
+						var substrings2 = string2.split('"');
+						var novaString2 = substrings2.join('');
+						var string3 = JSON.stringify(json[p].datacancelamento);
+						var substrings3 = string3.split('"');
+						var novaString3 = substrings3.join('');
+						const valorNumerico = parseFloat(JSON.stringify(json[p].valorTotal)); 
+			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'});	
+			        	jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+novaString3+"</td><td>"+valorMonetario+"</td><td>"+numeroComPontos+"</td></tr>");
+					}
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Error');
+			});
+		}
+	
 	
 	</script>
 </html>

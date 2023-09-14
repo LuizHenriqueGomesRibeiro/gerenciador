@@ -61,4 +61,24 @@ private Connection connection;
 		
 		return retorno;
 	}
+	
+	public List<ModelVendas> listarVendasTotais(int id_usuario) throws SQLException{
+		List<ModelVendas> retorno = new ArrayList<ModelVendas>();
+		String sql = "SELECT * FROM vendas";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()) {
+			ModelVendas vendas = new ModelVendas();
+			vendas.setNome(resultado.getString("nome"));
+			vendas.setId(resultado.getInt("id"));
+			vendas.setDataentrega(resultado.getString("dataentrega"));
+			vendas.setValortotal(resultado.getInt("valortotal"));
+			vendas.setQuantidade(resultado.getInt("quantidade"));
+			
+			retorno.add(vendas);
+		}
+		
+		return retorno;
+	}
 }

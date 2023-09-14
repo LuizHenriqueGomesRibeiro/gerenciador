@@ -71,6 +71,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 
 			int valor_R$Long = Integer.parseInt(valor_R$);
 			String quantidade = request.getParameter("quantidade");
+			quantidade = quantidade.replaceAll("\\.", "");
 			int quantidadeInt = Integer.parseInt(quantidade);
 			int quantidadeIntInversa = -quantidadeInt;
 			
