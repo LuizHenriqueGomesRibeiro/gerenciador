@@ -2,18 +2,15 @@ package Servlet;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelPedidos;
 import model.ModelVendas;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -122,13 +119,11 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
 			try{
 				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				ReportUtil report = new ReportUtil();
-				byte[] relatorio = report.geraReltorioPDF(vendas, "vendas", request.getServletContext());
-				System.out.println(relatorio);
-				
+				byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+				response.setContentType("application/pdf");
 				response.getOutputStream().write(relatorio);
-				
+		        response.getOutputStream().write(relatorio);
 			}catch (Exception e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
