@@ -119,11 +119,13 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
 			try{
 				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
+				ReportUtil reportUtil = new ReportUtil();
+				byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
+				System.out.println(relatorio);
 				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 				response.setContentType("application/pdf");
 				response.getOutputStream().write(relatorio);
-		        response.getOutputStream().write(relatorio);
+				
 			}catch (Exception e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
