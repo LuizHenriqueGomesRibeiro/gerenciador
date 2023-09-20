@@ -50,8 +50,8 @@
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td>generico</td>
 						<td>generico</td>
-						<td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
+						<td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Informações</a></td>
+						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" id="focus"
 							href="#" data-toggle="modal" data-target="#exampleModal" onclick="loadProduto(${ml.id})"><p>Vender</p></a></td>
 						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
@@ -68,17 +68,19 @@
 											<div class="mb-3">
 												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
 												<div id="letreiro"></div>
-												</label> 	
+												</label>
+												<input name="id" id="id" type="hidden">
+												<input name="valorHidden" id="valorHidden" type="hidden"> 
 												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" type="hidden">
 												<input onkeyup="limitar()" class="form-control" id="quantidade" name="quantidade" type="number">
 													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
 												<input class="form-control" id="valor" name="valor">
+												<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
 											</div>
 										</form>
 									</div>
-									<div class="modal-footer">
+									<div class="modal-footer" id="footer">
 										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-										<button type="button" class="btn btn-primary" onclick="pedido(${ml.id})">Save changes</button>
 									</div>
 								</div>
 							</div>
@@ -88,18 +90,69 @@
 			</tbody>
 		</table>
 	</div>
+	<div id="knowHow" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Como o valor de venda é calculado?</h5>
+				</div>
+				<div style="padding: 10px 15px 0px 15px;">
+					<p>(1) O valor proposto de venda é calculado a partir do dobro das médias dos valores por unidade dos fornecedores.</p>
+					<p>(2) O valor de venda deve estar dentro da margem de erro fornecida pelo setor de contabilidade.</p>
+					<p>(3) Caso a contabilidade não tenha proposto a margem, a margem-padão, de vinte por cento, será aplicada.</p>
+					<div id="imprimirMargem"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<a class="scroll-to-top rounded" href="#page-top"> 
 		<i class="fas fa-angle-up"></i>
 	</a>
 	<script type="text/javascript">
 	
+		function limitar2(){
+			const input = document.getElementById('valor').value;
+			const minValue = document.getElementById('valorHidden').value;
+			const realMinValue = 0.8*minValue;
+			var inputTrans = input.replace("R$", "").replace(".", "").trim();
+			var inputTrans2 = inputTrans.split(",");
+			var inputNovo = inputTrans2[0];
+			
+			if (parseInt(inputNovo) < parseInt(realMinValue)) {
+				jQuery("#valor").val("R$" + realMinValue + ",00");
+				jQuery("#clicar").attr("hidden", true);
+		       	alert("O valor mínimo de venda é R$" + realMinValue + ",00");
+		       	jQuery("#clicar").attr("hidden", false);
+			}
+		}
+	
+		function carregarMargem(){
+			
+			var urlAction = document.getElementById('formularioSaida').action;
+			var id = jQuery("#id").val();
+			
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=loadFinanceiro&id=' + id,
+				success : function(response) {
+					
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
+	
 		function limitar(){
 	
 			const maxValue = document.getElementById('quantidadeHidden').value;
 			const input = document.getElementById('quantidade').value;
-			     if (parseInt(input) > parseInt(maxValue)) {
-			       	  jQuery("#quantidade").val(maxValue);
-			     }
+			    if (parseInt(input) > parseInt(maxValue)) {
+			       	 jQuery("#quantidade").val(maxValue);
+			    }
 		}
 	
 		function loadProduto(id){
@@ -112,17 +165,23 @@
 				url : urlAction,
 				data : '&acao=loadProduto&id=' + id,
 				success : function(response) {
-					
 					var responseArray = response.split("|");
 			        var stringLista1 = responseArray[0];
 			        var jsonLista1 = JSON.parse(stringLista1);
 			        var stringLista2 = responseArray[1];
 			        var jsonLista2 = JSON.parse(stringLista2);
-
+			        
 					jQuery("#letreiro").append("<p>	*Deve ser inferior ou igual à quantidade em caixa: " + jsonLista1.quantidade + " unidades</p>");
 					jQuery("#quantidade").val(jsonLista1.quantidade);
 					jQuery("#quantidadeHidden").val(jsonLista1.quantidade);
-					
+					jQuery("#valorHidden").val(2*jsonLista2);
+					jQuery("#id").val(jsonLista1.id);
+					jQuery("#valor").val("R$" + 2*jsonLista2 + ",00");
+					jQuery("#footer > button").remove();
+					jQuery("#imprimirMargem > p").remove();
+					jQuery("#imprimirMargem").append("<p>(4) A atual margem-padrão para " + jsonLista1.nome + " é de vinte por cento</p><p>O dobro das médidas do produto '" + 
+							jsonLista1.nome + "' é R$" + 2*jsonLista2 + ",00</p>" + "<p>Preço mínimo de venda: R$" + 1.6*jsonLista2 + ",00</p>");
+					jQuery("#footer").append("<button id=\"clicar\" type=\"button\" class=\"btn btn-primary\" onmousemove=\"limitar2()\" onclick=\"pedido(" + jsonLista1.id + ")\">Save changes</button>");
 				}
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
@@ -153,5 +212,7 @@
 			thousands : "."
 		});
 	
+		jQuery("#valor").focus();
+		
 	</script>
 </html>

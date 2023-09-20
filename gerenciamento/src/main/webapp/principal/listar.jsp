@@ -118,7 +118,8 @@
 	<table class="table table-striped table-sm">
 		<thead>
 			<tr>
-				<th>Soma dos valores</th>
+				<th>Soma dos valores dos pedidos</th>
+				<th>Setor de contabilidade</th>
 			</tr>
 			<tr>
 			</tr>
@@ -126,6 +127,11 @@
 		<tbody>
 			<tr>
 				<td><c:out value="${soma}"></c:out></td>
+				<td>
+					<a class="page-link" style="text-decoration: none; padding: 5px 0px 0px 4px; margin: -6px -12px -6px 0px; height: 38px;" 
+						href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro">Ir para setor de contabilidade
+					</a>
+				</td>
 			</tr>
 			<tr>
 				<td></td>

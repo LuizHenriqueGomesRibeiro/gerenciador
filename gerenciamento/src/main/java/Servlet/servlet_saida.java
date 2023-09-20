@@ -110,7 +110,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 			try {
 				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
 				Double medias = daoFornecimento.mediaValoresFornecimento(Long.parseLong(id));
-				System.out.println(medias);
 				
 				Gson gson = new Gson();
 				String json1 = gson.toJson(produto);
@@ -122,7 +121,31 @@ public class servlet_saida extends servlet_recuperacao_login{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadFinanceiro")) {
+			String id = request.getParameter("id");
+			
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("financeiro")) {
+			
+			// carregar todas as listas necessárias;
+			
+			/*
+			<%
+				List<SeuObjeto> listaObjetos = (List<SeuObjeto>) request.getAttribute("listaObjetos");
+				
+				String jsonEncode(Object object) {
+				    return new Gson().toJson(object);
+				}			    
+			%>
+			
+			<script>
+				var listaObjetos = ${jsonUtils.jsonEncode(listaObjetos)};
+			</script>
+			*/
+			
+			RequestDispatcher despache = request.getRequestDispatcher("principal/financeiro.jsp");
+			despache.forward(request, response);
 		}
+		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

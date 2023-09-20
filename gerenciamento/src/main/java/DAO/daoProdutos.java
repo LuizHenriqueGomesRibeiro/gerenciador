@@ -180,10 +180,12 @@ public class daoProdutos {
 	
 	public String somaProdutos(int usuario_pai_id) throws Exception{
 		
-		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ?";
+		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
 		
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, usuario_pai_id);
+		int a = 0;
+		statement.setInt(2, a);
 		ResultSet resultado = statement.executeQuery();
 		int soma = 0;
 		if (resultado.next()) {
