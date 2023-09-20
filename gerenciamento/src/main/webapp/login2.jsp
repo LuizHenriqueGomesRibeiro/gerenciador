@@ -26,19 +26,19 @@ rel="stylesheet">
 
 								<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
 
-								<div class="form-outline mb-4" style="margin-top: 25%;">
-									<input class="form-control form-control-lg" placeholder="login" name="login" id="login">
+								<div class="form-group" style="margin-top: 25%;">
+									<input class="form-control form-control-user" placeholder="login" name="login" id="login">
 								</div>
-								<div class="form-outline mb-4">
-									<input class="form-control form-control-lg" placeholder="email" name="email" id="email">
+								<div class="form-group">
+									<input class="form-control form-control-user" placeholder="email" name="email" id="email">
 								</div>
-								<div class="form-outline mb-4">
-									<input class="form-control form-control-lg" placeholder="nome" name="nome" id="nome">
+								<div class="form-group">
+									<input class="form-control form-control-user" placeholder="nome" name="nome" id="nome">
 								</div>
-								<div class="form-outline mb-4">
-									<input type="password" class="form-control form-control-lg" name="senha" id="senha" placeholder="senha">
+								<div class="form-group">
+									<input type="password" class="form-control form-control-user" name="senha" id="senha" placeholder="senha">
 								</div>
-								<input type="submit" value="Cadastrar" class="btn btn-info btn-lg btn-block">
+								<input type="submit" value="Cadastrar" class="btn btn-primary btn-user btn-block">
 								<hr>
 							</form>
 						</div>

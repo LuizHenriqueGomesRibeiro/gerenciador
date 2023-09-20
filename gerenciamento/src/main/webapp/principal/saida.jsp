@@ -52,7 +52,7 @@
 						<td>generico</td>
 						<td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Inf</a></td>
 						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"
-							href="#" data-toggle="modal" data-target="#exampleModal"><p>Vender</p></a></td>
+							href="#" data-toggle="modal" data-target="#exampleModal" onclick="loadProduto(${ml.id})"><p>Vender</p></a></td>
 						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
@@ -67,9 +67,10 @@
 										<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
 											<div class="mb-3">
 												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
-												*Deve ser inferior ou igual à quantidade em caixa: ${ml.quantidade} unidades</label>
-												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" value="${ml.quantidade}" type="hidden">
-												<input class="form-control" id="quantidade" name="quantidade" value="${ml.quantidade}">
+												<div id="letreiro"></div>
+												</label> 	
+												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" type="hidden">
+												<input onkeyup="limitar()" class="form-control" id="quantidade" name="quantidade" type="number">
 													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
 												<input class="form-control" id="valor" name="valor">
 											</div>
@@ -92,17 +93,40 @@
 	</a>
 	<script type="text/javascript">
 	
-		const input = document.getElementById("quantidade");
-		const numeroMaximo = document.getElementById("quantidadeHidden").value;
+		function limitar(){
 	
-		input.addEventListener("input", validarNumero);
+			const maxValue = document.getElementById('quantidadeHidden').value;
+			const input = document.getElementById('quantidade').value;
+			     if (parseInt(input) > parseInt(maxValue)) {
+			       	  jQuery("#quantidade").val(maxValue);
+			     }
+		}
 	
-		function validarNumero(event) {
-		  	const valorInput = Number(event.target.value);
-	
-		  	if (valorInput > numeroMaximo) {
-		    	event.target.value = numeroMaximo;
-		  	}
+		function loadProduto(id){
+			
+			var urlAction = document.getElementById('formularioSaida').action;
+			jQuery("#letreiro > p").remove();
+			
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=loadProduto&id=' + id,
+				success : function(response) {
+					
+					var responseArray = response.split("|");
+			        var stringLista1 = responseArray[0];
+			        var jsonLista1 = JSON.parse(stringLista1);
+			        var stringLista2 = responseArray[1];
+			        var jsonLista2 = JSON.parse(stringLista2);
+
+					jQuery("#letreiro").append("<p>	*Deve ser inferior ou igual à quantidade em caixa: " + jsonLista1.quantidade + " unidades</p>");
+					jQuery("#quantidade").val(jsonLista1.quantidade);
+					jQuery("#quantidadeHidden").val(jsonLista1.quantidade);
+					
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
 		}
 		
 		function pedido(id){

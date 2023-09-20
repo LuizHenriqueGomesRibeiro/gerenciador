@@ -90,5 +90,38 @@ public class daoFornecimento {
 			e.printStackTrace();
 		}
 		return null;
-	}	
+	}
+	
+	public void excluirFornecedor(String id) {
+
+		try {
+			String sql = "DELETE FROM fornecimento WHERE id = ?";
+			
+			PreparedStatement statement = connection.prepareStatement(sql);
+			statement.setLong(1, Long.parseLong(id));
+			statement.executeUpdate();
+			
+			statement.execute();
+			connection.commit();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+	
+	public Double mediaValoresFornecimento(Long produto) throws Exception{
+		
+		String sql = "SELECT AVG(valor) AS media FROM fornecimento WHERE produtos_pai_id = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, produto);
+		
+		ResultSet resultado = statement.executeQuery();
+		
+		resultado.next();
+		Double total = resultado.getDouble("media");
+		
+		return total;
+	}
 }

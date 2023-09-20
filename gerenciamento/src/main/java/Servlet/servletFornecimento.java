@@ -133,6 +133,9 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarFornecedor")){
+			String id = request.getParameter("id");
+			daofornecimento.excluirFornecedor(id);
 		}
 	}
 

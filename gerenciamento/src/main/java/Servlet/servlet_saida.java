@@ -13,10 +13,13 @@ import model.ModelUsuarios;
 import model.ModelVendas;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import com.google.gson.Gson;
 
 import DAO.daoFornecimento;
 import DAO.daoLogin;
@@ -98,6 +101,23 @@ public class servlet_saida extends servlet_recuperacao_login{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadProduto")) {
+			String id = request.getParameter("id");
+			try {
+				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
+				Double medias = daoFornecimento.mediaValoresFornecimento(Long.parseLong(id));
+				System.out.println(medias);
+				
+				Gson gson = new Gson();
+				String json1 = gson.toJson(produto);
+				String json2 = gson.toJson(medias);
+				PrintWriter out = response.getWriter();
+			    out.print(json1 + "|" + json2);
+			    out.flush();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

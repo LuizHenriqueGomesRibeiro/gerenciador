@@ -168,6 +168,8 @@
 								<th>Nome</th>
 								<th>Tempo de entrega</th>
 								<th>Valor</th>
+								<th>Configurações</th>
+								<th>Pedidos</th>
 							</tr>
 						</thead>
 							<tbody>	
@@ -398,6 +400,26 @@
 		loadData(id); 
 	}
 	
+	function funcoes3(id){
+		deletarFornecedor(id);
+		loadData(id); 
+	}
+	
+	function deletarFornecedor(id) {
+		var urlAction = document.getElementById('formularioFornecimento').action;
+		jQuery.ajax({
+
+			method : "get",
+			url : urlAction,
+			data : '&acao=deletarFornecedor&id=' + id,
+			success : function(json, textStatus, xhr) {
+
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
+	
 	function adicionarFornecedor() {
 		
 		var urlAction = document.getElementById('formularioFornecimento').action;
@@ -503,16 +525,16 @@
 			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
 			        	const tempoentregaDias = JSON.stringify(jsonObj[p].tempoentrega) + " dias";
 			        	
-			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome)+'</td><td>'+tempoentregaDias+'</td><td>'+valorMonetario+'</td><td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="funcoes('+JSON.stringify(jsonObj[p].id)+')">Fazer pedido</a></td></tr>');
+			        	jQuery('#listaFornecedores > tbody').append('<tr><td>'+JSON.stringify(jsonObj[p].nome)+'</td><td>'+tempoentregaDias+'</td><td>'+valorMonetario+'</td><td style="height: 30px; color: red; padding: 0px 0px 0px 0px;"><a class="page-link" style="color: red; margin: -1px -28px -6px 0px; width: 160px; height: 37px;" href="#" onclick="funcoes3(' + JSON.stringify(jsonObj[p].id) + ')">Deletar fornecedor</a></td><td><a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" onclick="funcoes(' + JSON.stringify(jsonObj[p].id) + ')">Fazer pedido</a></td></tr>');
 			        }
 				}
 			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);	
 			});
 		}
 		
 		function loadPedido(id) {
-			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id_fornecedor' value="+id+">");
+			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id_fornecedor' value=" + id + ">");
 		}
 			
 		function excData(id) {
