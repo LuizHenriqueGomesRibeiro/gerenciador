@@ -48,7 +48,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
 			
 			try {
-				List<ModelVendas> vendas = daoVendas.listarVendasTotais(super.getUsuarioLogado(request).getId());
+				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
 				Gson gson = new Gson();
 				String json = gson.toJson(vendas);
 				PrintWriter printWriter = response.getWriter();

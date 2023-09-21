@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.ModelFornecimento;
+import model.ModelPedidos;
 import model.ModelProdutos;
 import model.ModelUsuarios;
 import model.ModelVendas;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 import DAO.daoFornecimento;
@@ -38,7 +40,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoProdutos daoproduto = new daoProdutos();
 	daoFornecimento daoFornecimento = new daoFornecimento();
 	daoPedidos daopedidos = new daoPedidos();
-	daoVendas vendas = new daoVendas();
+	daoVendas daovendas = new daoVendas();
 	
 	public servlet_saida() {
         super();
@@ -91,7 +93,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 				venda.setQuantidade(quantidadeInt);
 				venda.setDataentrega(dataFormatada);
 				venda.setValortotal(valor_R$Long);
-				vendas.gravarVenda(venda);
+				daovendas.gravarVenda(venda, super.getUsuarioLogado(request).getId());
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
@@ -126,26 +128,46 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("financeiro")) {
 			
-			// carregar todas as listas necessárias;
-			
-			/*
-			<%
-				List<SeuObjeto> listaObjetos = (List<SeuObjeto>) request.getAttribute("listaObjetos");
-				
-				String jsonEncode(Object object) {
-				    return new Gson().toJson(object);
-				}			    
-			%>
-			
-			<script>
-				var listaObjetos = ${jsonUtils.jsonEncode(listaObjetos)};
-			</script>
-			*/
-			
 			RequestDispatcher despache = request.getRequestDispatcher("principal/financeiro.jsp");
 			despache.forward(request, response);
+			
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaVendas")) {
+			
+			String dataInicial = request.getParameter("dataInicial");
+			String dataFinal = request.getParameter("dataFinal");
+	
+			try {
+			
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+					
+					List<ModelVendas> vendas = daovendas.listarVendas(super.getUsuarioLogado(request).getId());
+					
+					Gson gson = new Gson();
+					String json = gson.toJson(vendas);
+					PrintWriter printWriter = response.getWriter();
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					printWriter.write(json);
+					printWriter.close();
+					
+				}else{
+					
+					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					
+					Gson gson = new Gson();
+					String json = gson.toJson(vendas);
+					PrintWriter printWriter = response.getWriter();
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					printWriter.write(json);
+					printWriter.close();
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
