@@ -53,6 +53,24 @@
 			</ul>
 		</div>
 	</div>
+	<div id="cabeçario">
+		<table style="" class="table table-striped table-sm" id="listaFornecedores">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Tempo de entrega</th>
+					<th>Valor</th>
+					<th>Configurações</th>
+					<th>Pedidos</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<div id="criarRelatorio">
+		
+	</div>
 </body>
 <script type="text/javascript">
 
@@ -67,7 +85,7 @@
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(json, textStatus, xhr) {
-				alert(json);
+				jQuery("#criarRelatorio").append();
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);

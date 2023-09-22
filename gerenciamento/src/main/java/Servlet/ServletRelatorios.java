@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.ModelPedidos;
 import model.ModelVendas;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -119,9 +120,9 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
 			try{
 				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				ReportUtil reportUtil = new ReportUtil();
-				byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
+				byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 				System.out.println(relatorio);
+			
 				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 				response.setContentType("application/pdf");
 				response.getOutputStream().write(relatorio);

@@ -33,7 +33,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16"/>
 				</textElement>
-				<text><![CDATA[RELATÓRIO DE VENDAS]]></text>
+				<text><![CDATA[RELATORIO DE VENDAS]]></text>
 			</staticText>
 		</band>
 	</title>
