@@ -48,31 +48,56 @@
 			</form>
 			<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 				<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaVendas()">Carregar lista de vendas</button></li>
-				<li class="page-item"><button class="page-link" style="text-decoration: none; width: 218px;">Carregar lista de entradas</button></li>
+				<li class="page-item"><button class="page-link" style="text-decoration: none; width: 218px;" onclick="carregarListaEntradas()">Carregar lista de entradas</button></li>
 				<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;">Carregar lista de Lucros</button></li>
 			</ul>
 		</div>
 	</div>
-	<div id="cabeçario">
-		<table style="" class="table table-striped table-sm" id="listaFornecedores">
-			<thead>
-				<tr>
-					<th>Nome</th>
-					<th>Tempo de entrega</th>
-					<th>Valor</th>
-					<th>Configurações</th>
-					<th>Pedidos</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
+	<div id="cabecario">
+		
 	</div>
 	<div id="criarRelatorio">
 		
 	</div>
 </body>
 <script type="text/javascript">
+
+	jQuery("#cabeçario").hide();
+	
+	function carregarListaEntradas(){
+		
+		var urlAction = document.getElementById('formularioSaida').action;
+		var dataInicial = document.getElementById('dataInicial').value;
+		var dataFinal = document.getElementById('dataFinal').value;
+		
+		jQuery.ajax({
+			method : "get",
+			url : urlAction,
+			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
+			success : function(json, textStatus, xhr) {
+				jQuery("#cabecario > table").remove();
+				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
+					'<thead>' + 
+						'<tr>' + 
+							'<th>Nome</th>' + 
+							'<th>Quantidade</th>' + 
+							'<th>Valor total</th>' + 
+							'<th>Data de pedido</th>' +
+							'<th>Data de entrega</th>' +
+							'<th>Configurações</th>' + 
+						'</tr>' + 
+					'</thead>' + 
+					'<tbody></tbody>' + 
+				'</table>');
+				
+				for(var p = 0; p < json.length; p++){
+					
+				}			
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
 
 	function carregarListaVendas(){
 		
@@ -85,7 +110,50 @@
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(json, textStatus, xhr) {
-				jQuery("#criarRelatorio").append();
+				jQuery("#cabecario > table").remove();
+				jQuery("#cabecario").append(
+					'<table style="margin-top: 30px;" class="table table-striped table-sm">' +
+						'<thead>' + 
+							'<tr>' + 
+								'<th>Nome</th>' + 
+								'<th>Quantidade</th>' + 
+								'<th>Valor total</th>' + 
+								'<th>Data da venda</th>' +
+								'<th>Configurações</th>' + 
+							'</tr>' + 
+						'</thead>' + 
+						'<tbody></tbody>' + 
+					'</table>'
+				);
+				
+				alert(JSON.stringify(json));
+				
+				for(var p = 0; p < json.length; p++){
+					var nome = JSON.stringify(json[p].nome);
+					nome = nome.split('"');
+					nome = nome.join('');
+					var quantidade = JSON.stringify(json[p].quantidade);
+					quantidade = quantidade.split('"');
+					quantidade = quantidade.join('');
+					quantidade = quantidade + " unidades";
+					var valortotal = JSON.stringify(json[p].valortotal);
+					valortotal = valortotal.split('"');
+					valortotal = valortotal.join('');
+					valortotal = "R$" + valortotal + ",00";
+					var dataentrega = JSON.stringify(json[p].dataentrega);
+					dataentrega = dataentrega.split('"');
+					dataentrega = dataentrega.join('');
+					
+					jQuery("#cabecario > table > tbody > tr").remove();
+					jQuery("#cabecario > table > tbody").append(
+							"<tr>" + 
+								"<td>" + nome + "</td>" + 
+								"<td>" + quantidade + "</td>" + 
+								"<td>" + valortotal +  "</td>" + 
+								"<td>" + dataentrega + "</td>" +  
+								"<td>Configurações</td>" + 
+							"</tr>");
+				}			
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);

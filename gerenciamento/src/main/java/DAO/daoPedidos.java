@@ -1,11 +1,14 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,8 @@ import model.ModelProdutos;
 import model.ModelUsuarios;
 
 public class daoPedidos {
+	
+	
 	private Connection connection;
 	
 	public daoPedidos(){
@@ -28,16 +33,29 @@ public class daoPedidos {
 			String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
+			String data = transformarFormatoData(pedido.getDatapedido(), "dd/MM/yyyy", "yyyy-MM-dd");
+			SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date dataUtil;
+			
+			dataUtil = formatador.parse(data);
+			Date dataSql = new Date(dataUtil.getTime());
+			
+			statement.setDate(1, dataSql);
+			
+			data = transformarFormatoData(pedido.getDataentrega(), "dd/MM/yyyy", "yyyy-MM-dd");
+			dataUtil = formatador.parse(data);
+			dataSql = new Date(dataUtil.getTime());
+			
+			statement.setDate(6, dataSql);
+			
 			daoFornecimento daofornecimento = new daoFornecimento();
 			Long id_preduto = pedido.getFornecedor_pai_id().getProduto_pai_id().getId();
 			ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(pedido.getFornecedor_pai_id().getId(), id_preduto, id_usuario);
 			int a = 0;
-			statement.setString(1, pedido.getDatapedido());
 			statement.setLong(2, pedido.getQuantidade());
 			statement.setLong(3, pedido.getValor());
 			statement.setLong(4, pedido.getQuantidade()*fornecedor.getValor());
 			statement.setLong(5, pedido.getFornecedor_pai_id().getId());
-			statement.setString(6, pedido.getDataentrega());
 			statement.setLong(7, fornecedor.getProduto_pai_id().getId());
 			statement.setLong(8, id_usuario);
 			statement.setInt(9, a);
@@ -83,13 +101,12 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
-	public List<ModelPedidos> listarPedidos(Long id) throws SQLException {
+	public List<ModelPedidos> listarPedidos(Long id, int status) throws SQLException {
 		
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		
 		String sql = "SELECT * FROM pedidos WHERE status = ? AND produtos_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		int status = 0;
 		statement.setLong(1, status);
 		ResultSet resultado = statement.executeQuery();
 		
@@ -143,6 +160,46 @@ public class daoPedidos {
 		while(resultado.next()){
 	        ModelPedidos pedidos = new ModelPedidos();
 	        
+	        String data = resultado.getString("dataentrega");
+	        String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			pedidos.setDataentrega(data);
+
+			data = resultado.getString("datapedido");
+			parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			pedidos.setDatapedido(data);
+			
+	        pedidos.setQuantidade(resultado.getLong("quantidade"));
+	        pedidos.setId(resultado.getLong("id"));
+	        pedidos.setValorTotal(resultado.getLong("valortotal"));
+	        pedidos.setNome(resultado.getString("nome"));
+	        
+	        daoPedidos daopedido = new daoPedidos();
+	        
+	        ModelCancelamento cancelamento = daopedido.buscarCancelamento(resultado.getLong("id"));
+	        pedidos.setDatacancelamento(cancelamento.getDatacancelamento());
+	        
+			retorno.add(pedidos);
+		}
+		
+		return retorno;
+	}
+	
+	public List<ModelPedidos> listarRelatorioPorTempo(int id, int status, String dataInicial, String dataFinal) throws SQLException {
+		
+		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+		
+		String sql = "SELECT * FROM pedidos WHERE status = ? AND usuario_pai_id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, status);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+	        ModelPedidos pedidos = new ModelPedidos();
+	        
 	        pedidos.setDataentrega(resultado.getString("dataentrega"));
 	        pedidos.setQuantidade(resultado.getLong("quantidade"));
 	        pedidos.setId(resultado.getLong("id"));
@@ -153,7 +210,6 @@ public class daoPedidos {
 	        daoPedidos daopedido = new daoPedidos();
 	        
 	        ModelCancelamento cancelamento = daopedido.buscarCancelamento(resultado.getLong("id"));
-	        System.out.println(cancelamento.getDatacancelamento());
 	        pedidos.setDatacancelamento(cancelamento.getDatacancelamento());
 	        
 			retorno.add(pedidos);
@@ -226,6 +282,23 @@ public class daoPedidos {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+		}
+	}
+	
+	public static String transformarFormatoData(String dataString, String formatoOriginal, String novoFormato) {
+		try {
+			SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
+			SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
+
+			java.util.Date data = formatoOriginalData.parse(dataString);
+
+			String dataFormatada = formatoNovoData.format(data);
+
+			return dataFormatada;
+		} catch (ParseException e) {
+			e.printStackTrace();
+			
+			return null;
 		}
 	}
 }

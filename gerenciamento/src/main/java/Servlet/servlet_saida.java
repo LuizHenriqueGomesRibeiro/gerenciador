@@ -167,6 +167,43 @@ public class servlet_saida extends servlet_recuperacao_login{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
+			
+			String dataInicial = request.getParameter("dataInicial");
+			String dataFinal = request.getParameter("dataFinal");
+	
+			try {
+			
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+					
+					int status = 2;
+					List<ModelPedidos> entradas = daopedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), status);
+					
+					Gson gson = new Gson();
+					String json = gson.toJson(entradas);
+					PrintWriter printWriter = response.getWriter();
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					printWriter.write(json);
+					printWriter.close();
+					
+				}else{
+					
+					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					
+					Gson gson = new Gson();
+					String json = gson.toJson(vendas);
+					PrintWriter printWriter = response.getWriter();
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					printWriter.write(json);
+					printWriter.close();
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
