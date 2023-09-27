@@ -1,24 +1,24 @@
 package Servlet;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import model.ModelPedidos;
-import model.ModelVendas;
-
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
 import com.google.gson.Gson;
-
+import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import DAO.daoPedidos;
 import DAO.daoVendas;
 import Util.ReportUtil;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import model.ModelPedidos;
+import model.ModelVendas;
+import java.io.OutputStream;
 
 /**
  * Servlet implementation class ServletRelatorios
@@ -120,12 +120,29 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
 			try{
 				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
+				ReportUtil reportUtil = new ReportUtil();
+				byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
 				System.out.println(relatorio);
+				/*
 			
 				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 				response.setContentType("application/pdf");
 				response.getOutputStream().write(relatorio);
+				*/
+				
+				if (relatorio != null) {
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+		            response.setContentType("application/octet-stream");
+
+		            try (OutputStream outputStream = response.getOutputStream()) {
+		                outputStream.write(relatorio);
+		                outputStream.flush();
+		            }
+		        } else {
+		            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		        }
+				
+		        
 				
 			}catch (Exception e){
 				// TODO Auto-generated catch block

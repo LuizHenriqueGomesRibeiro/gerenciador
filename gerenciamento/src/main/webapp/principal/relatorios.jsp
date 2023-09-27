@@ -68,16 +68,11 @@
 					jQuery("#imprimirRelatorio > table").append("<thead><tr><th>Produto</th><th>Data da venda</th><th>Valor total</th><th>Quantidade</th></tr></thead>");
 					for(var p = 0; p < json.length; p++){
 						var numero = JSON.stringify(json[p].quantidade);
-						var numeroComPontos = numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 						var string = JSON.stringify(json[p].dataentrega);
-						var substrings = string.split('"');
-						var novaString = substrings.join('');
 						var string2 = JSON.stringify(json[p].nome);
-						var substrings2 = string2.split('"');
-						var novaString2 = substrings2.join('');
 						const valorNumerico = parseFloat(JSON.stringify(json[p].valortotal)); 
 			        	const valorMonetario = valorNumerico.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
-						jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+novaString2+"</td><td>"+novaString+"</td><td>"+valorMonetario+"</td><td>"+numeroComPontos+"</td></tr>");
+						jQuery("#imprimirRelatorio > table > tbody").append("<tr><td>"+string2+"</td><td>"+string+"</td><td>"+valorMonetario+"</td><td>"+numero+"</td></tr>");
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {

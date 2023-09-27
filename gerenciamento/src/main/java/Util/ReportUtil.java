@@ -1,9 +1,14 @@
 package Util;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+
+import com.itextpdf.text.pdf.codec.Base64;
+import com.itextpdf.text.pdf.codec.Base64.OutputStream;
 
 import jakarta.servlet.ServletContext;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -40,4 +45,6 @@ public class ReportUtil implements Serializable {
 		
 		return JasperExportManager.exportReportToPdf(impressoraJasper);
 	}
+	
+	
 }
