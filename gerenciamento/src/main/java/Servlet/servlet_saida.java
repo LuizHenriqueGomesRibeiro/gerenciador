@@ -28,6 +28,7 @@ import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.daoVendas;
+import Util.BeanChart;
 
 /**
  * Servlet implementation class servletLogin
@@ -137,6 +138,10 @@ public class servlet_saida extends servlet_recuperacao_login{
 			String dataFinal = request.getParameter("dataFinal");
 	
 			try {
+				
+				BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
+				System.out.println(bean.getDatas());
+				System.out.println(bean.getValores());
 			
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
 					
@@ -198,6 +203,25 @@ public class servlet_saida extends servlet_recuperacao_login{
 					response.setCharacterEncoding("UTF-8");
 					printWriter.write(json);
 					printWriter.close();
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaLucros")) {
+			
+			String dataInicial = request.getParameter("dataInicial");
+			String dataFinal = request.getParameter("dataFinal");
+	
+			try {
+			
+				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+					
+					
+				}else{
+
+
 				}
 				
 			} catch (Exception e) {

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import Util.BeanChart;
 import conexao.conexao;
 import model.ModelProdutos;
 import model.ModelVendas;
@@ -139,5 +140,34 @@ private Connection connection;
 			
 			return null;
 		}
+	}
+	
+	public BeanChart listarVendasGrafico(int id_usuario) throws SQLException{
+		
+		String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, id_usuario);
+		ResultSet resultado = statement.executeQuery();
+		List<Double> valores = new ArrayList<Double>();
+		List<String> datas = new ArrayList<String>();
+		
+		BeanChart beanChart = new BeanChart();
+		
+		while(resultado.next()) {
+			Double valortotal = resultado.getDouble("valortotal");
+			
+			String data = resultado.getString("dataentrega");
+			String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			
+			valores.add(valortotal);
+			datas.add(data);
+		}
+		
+		beanChart.setDatas(datas);
+		beanChart.setValores(valores);
+		
+		return beanChart;
 	}
 }
