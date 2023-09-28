@@ -110,8 +110,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
 				daopedidos.mudarStatus(Integer.parseInt(id), status);
-				//entrada.setValortotal(produto);
-				//daopedidos.excluirPedido(Long.parseLong(id));
+
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
@@ -128,6 +127,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		        String dataFormatada = dataAtual.format(formatter);	
 				daopedidos.gravarCancelamento(dataFormatada, Long.parseLong(id));
+				
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {

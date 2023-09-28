@@ -140,32 +140,26 @@ public class servlet_saida extends servlet_recuperacao_login{
 			try {
 				
 				BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
-				System.out.println(bean.getDatas());
-				System.out.println(bean.getValores());
+				Gson gson = new Gson();
+				String json1 = gson.toJson(bean);
 			
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
 					
 					List<ModelVendas> vendas = daovendas.listarVendas(super.getUsuarioLogado(request).getId());
 					
-					Gson gson = new Gson();
 					String json = gson.toJson(vendas);
-					PrintWriter printWriter = response.getWriter();
-					response.setContentType("application/json");
-					response.setCharacterEncoding("UTF-8");
-					printWriter.write(json);
-					printWriter.close();
+					PrintWriter out = response.getWriter();
+				    out.print(json1 + "|" + json);
+				    out.flush();
 					
 				}else{
 					
 					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					
-					Gson gson = new Gson();
 					String json = gson.toJson(vendas);
-					PrintWriter printWriter = response.getWriter();
-					response.setContentType("application/json");
-					response.setCharacterEncoding("UTF-8");
-					printWriter.write(json);
-					printWriter.close();
+					PrintWriter out = response.getWriter();
+				    out.print(json1 + "|" + json);
+				    out.flush();
 				}
 				
 			} catch (Exception e) {
@@ -218,9 +212,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
 					
-					
 				}else{
-
 
 				}
 				

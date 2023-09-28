@@ -55,12 +55,10 @@
 		</div>
 	</div>
 	<div style="display: flex; width: 100%;">
-		<div style="width: 55%;">
-			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;">
-			</div>
+		<div style="width: 45%;">
+			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
 		</div>
-		<div style="width: 45%;" id="canvas">
-		</div>
+		<div style="width: 55%;" id="canvas"></div>
 	</div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -73,7 +71,6 @@
 <script type="text/javascript">
 
 	function graficoVendas(json) {
-		
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -101,12 +98,16 @@
 		  	return s.join(dec);
 		}
 		
+		var parse = JSON.parse(json);
+		const data = parse.map(item => item.valortotal);
+		const label = parse.map(item => item.dataentrega);
+		alert(label);
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: ["oi"],
+						labels: [label[0]],
 						datasets: [{
 							label: "Earnings",
 							lineTension: 0.3,
@@ -120,38 +121,38 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
-						} ],
+							data: [data],
+						}],
 					},
-					options : {
+					options: {
 						maintainAspectRatio : false,
-						layout : {
-							padding : {
-								left : 10,
-								right : 25,
-								top : 25,
-								bottom : 0
+						layout: {
+							padding: {
+								left: 10,
+								right: 25,
+								top: 25,
+								bottom: 0
 							}
 						},
-						scales : {
-							xAxes : [ {
-								time : {
-									unit : 'date'
+						scales: {
+							xAxes: [ {
+								time: {
+									unit: 'date'
 								},
-								gridLines : {
-									display : false,
-									drawBorder : false
+								gridLines: {
+									display: false,
+									drawBorder: false
 								},
-								ticks : {
-									maxTicksLimit : 7
+								ticks: {
+									maxTicksLimit: 7
 								}
-							} ],
-							yAxes : [ {
-								ticks : {
+							}],
+							yAxes: [ {
+								ticks: {
 									maxTicksLimit : 5,
 									padding : 10,
 									// Include a dollar sign in the ticks
-									callback : function(value, index, values) {
+									callback: function(value, index, values) {
 										return 'R$' + number_format(value);
 									}
 								},
@@ -185,7 +186,7 @@
 								label : function(tooltipItem, chart) {
 									var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label
 											|| '';
-									return datasetLabel + ': $'
+									return datasetLabel + ': R$'
 											+ number_format(tooltipItem.yLabel);
 								}
 							}
@@ -206,7 +207,13 @@
 			method : "get",
 			url : urlAction,
 			data : '&acao=carregarListaLucros&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(json, textStatus, xhr) {
+			success : function(response) {
+				var responseArray = response.split("|");
+		        var jsonLista1 = responseArray[0];
+		        var jsonLista2 = responseArray[1];
+		        
+		        var json = JSON.parse(jsonLista2);
+		        
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
 					'<thead>' + 
@@ -237,7 +244,14 @@
 			method : "get",
 			url : urlAction,
 			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(json, textStatus, xhr) {
+			success : function(response) {
+				var responseArray = response.split("|");
+		        var jsonLista1 = responseArray[0];
+		        var jsonLista2 = responseArray[1];
+		        var json = JSON.parse(jsonLista2);
+		        
+				graficoVendas(json);
+				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
 					'<thead>' + 
@@ -288,9 +302,16 @@
 			method : "get",
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(json, textStatus, xhr) {
+			success : function(response) {
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
-				graficoVendas(json);
+				
+				var responseArray = response.split("|");
+		        var jsonLista1 = responseArray[0];
+		        var jsonLista2 = responseArray[1];
+		        var json = JSON.parse(jsonLista2);
+		        
+				graficoVendas(jsonLista2);
+				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append(
 					'<table style="margin-top: 30px;" class="table table-striped table-sm">' +
@@ -300,7 +321,6 @@
 								'<th>Quantidade</th>' + 
 								'<th>Valor total</th>' + 
 								'<th>Data da venda</th>' +
-								'<th>Configurações</th>' + 
 							'</tr>' + 	
 						'</thead>' + 
 						'<tbody></tbody>' + 
@@ -321,7 +341,6 @@
 							"<td>" + quantidade + "</td>" + 
 							"<td>" + valortotal +  "</td>" + 
 							"<td>" + dataentrega + "</td>" +  
-							"<td>Configurações</td>" + 
 						"</tr>");
 				}			
 			}

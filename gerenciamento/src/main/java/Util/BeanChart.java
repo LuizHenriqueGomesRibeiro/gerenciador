@@ -11,7 +11,7 @@ public class BeanChart implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	List<String> datas = new ArrayList<String>();
-	List<Double> valores = new ArrayList<Double>();
+	List<Long> valores = new ArrayList<Long>();
 	
 	public List<String> getDatas() {
 		return datas;
@@ -19,10 +19,10 @@ public class BeanChart implements Serializable{
 	public void setDatas(List<String> datas) {
 		this.datas = datas;
 	}
-	public List<Double> getValores() {
+	public List<Long> getValores() {
 		return valores;
 	}
-	public void setValores(List<Double> valores) {
+	public void setValores(List<Long> valores) {
 		this.valores = valores;
 	}
 	
