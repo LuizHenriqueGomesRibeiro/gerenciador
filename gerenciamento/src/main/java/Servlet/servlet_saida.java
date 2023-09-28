@@ -203,23 +203,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaLucros")) {
-			
-			String dataInicial = request.getParameter("dataInicial");
-			String dataFinal = request.getParameter("dataFinal");
-	
-			try {
-			
-				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
-					
-				}else{
-
-				}
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 	

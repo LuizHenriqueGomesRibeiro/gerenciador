@@ -49,16 +49,15 @@
 				<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaVendas()">Carregar lista de vendas</button></li>
 					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 218px;" onclick="carregarListaEntradas()">Carregar lista de entradas</button></li>
-					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaLucros()">Carregar lista de Lucros</button></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div style="display: flex; width: 100%;">
-		<div style="width: 45%;">
+		<div style="width: 50%;">
 			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
 		</div>
-		<div style="width: 55%;" id="canvas"></div>
+		<div style="width: 50%;" id="canvas"></div>
 	</div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -79,8 +78,8 @@
 			number = (number + '').replace(',', '').replace(' ', '');
 		  	var n = !isFinite(+number) ? 0 : +number,
 		    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
-		    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
-		    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+		    sep = (typeof thousands_sep === 'undefined') ? '.' : thousands_sep,
+		    dec = (typeof dec_point === 'undefined') ? ',' : dec_point,
 		    s = '',
 		    toFixedFix = function(n, prec) {
 		    	var k = Math.pow(10, prec);
@@ -101,13 +100,15 @@
 		var parse = JSON.parse(json);
 		const data = parse.map(item => item.valortotal);
 		const label = parse.map(item => item.dataentrega);
-		alert(label);
+		var ultimoData = data[data.length - 1];
+		var ultimoLabel = label[label.length - 1];
+		
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: [label[0]],
+						labels: [label[0], label[1], label[2], label[3], label[4], label[5], label[6], label[7], label[8], label[9], ultimoLabel],
 						datasets: [{
 							label: "Earnings",
 							lineTension: 0.3,
@@ -121,7 +122,7 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: [data],
+							data: [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], ultimoData]
 						}],
 					},
 					options: {
@@ -151,9 +152,8 @@
 								ticks: {
 									maxTicksLimit : 5,
 									padding : 10,
-									// Include a dollar sign in the ticks
 									callback: function(value, index, values) {
-										return 'R$' + number_format(value);
+										return 'R$' + number_format(value) + ',00';
 									}
 								},
 								gridLines : {
@@ -194,45 +194,137 @@
 					}
 				});
 	}
+	
+	function graficoEntradas(json) {
+		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+		Chart.defaults.global.defaultFontColor = '#858796';
+		
+		function number_format(number, decimals, dec_point, thousands_sep) {
+	
+			number = (number + '').replace(',', '').replace(' ', '');
+		  	var n = !isFinite(+number) ? 0 : +number,
+		    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+		    sep = (typeof thousands_sep === 'undefined') ? '.' : thousands_sep,
+		    dec = (typeof dec_point === 'undefined') ? ',' : dec_point,
+		    s = '',
+		    toFixedFix = function(n, prec) {
+		    	var k = Math.pow(10, prec);
+		      	return '' + Math.round(n * k) / k;
+		    	};
+		    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+		    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+		    if (s[0].length > 3) {
+		    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+		    }
+		    if ((s[1] || '').length < prec) {
+		    	s[1] = s[1] || '';
+		    	s[1] += new Array(prec - s[1].length + 1).join('0');
+		    }
+		  	return s.join(dec);
+		}
+		
+		const label = json.map(item => item.dataentrega);
+		var ultimoLabel = label[label.length - 1];
+		const data = json.map(item => item.valorTotal);
+		var ultimoData = data[data.length - 1];
+		
+		var ctx = document.getElementById("myAreaChart");
+		var myLineChart = new Chart(
+				ctx,{
+					type: 'line',
+					data: {
+						labels: [label[0], label[1], label[2], label[3], label[4], label[5], label[6], label[7], label[8], label[9], ultimoLabel],
+						datasets: [{
+							label: "Earnings",
+							lineTension: 0.3,
+							backgroundColor: "rgba(78, 115, 223, 0.05)",
+							borderColor: "rgba(78, 115, 223, 1)",
+							pointRadius: 3,
+							pointBackgroundColor: "rgba(78, 115, 223, 1)",
+							pointBorderColor: "rgba(78, 115, 223, 1)",
+							pointHoverRadius: 3,
+							pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+							pointHitRadius: 10,
+							pointBorderWidth : 2,
+							data: [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], ultimoData]
+						}],
+					},
+					options: {
+						maintainAspectRatio : false,
+						layout: {
+							padding: {
+								left: 10,
+								right: 25,
+								top: 25,
+								bottom: 0
+							}
+						},
+						scales: {
+							xAxes: [ {
+								time: {
+									unit: 'date'
+								},
+								gridLines: {
+									display: false,
+									drawBorder: false
+								},
+								ticks: {
+									maxTicksLimit: 7
+								}
+							}],
+							yAxes: [ {
+								ticks: {
+									maxTicksLimit : 5,
+									padding : 10,
+									callback: function(value, index, values) {
+										return 'R$' + number_format(value) + ',00';
+									}
+								},
+								gridLines : {
+									color : "rgb(234, 236, 244)",
+									zeroLineColor : "rgb(234, 236, 244)",
+									drawBorder : false,
+									borderDash : [ 2 ],
+									zeroLineBorderDash : [ 2 ]
+								}
+							} ],
+						},
+						legend : {
+							display : false
+						},
+						tooltips : {
+							backgroundColor : "rgb(255,255,255)",
+							bodyFontColor : "#858796",
+							titleMarginBottom : 10,
+							titleFontColor : '#6e707e',
+							titleFontSize : 14,
+							borderColor : '#dddfeb',
+							borderWidth : 1,
+							xPadding : 15,
+							yPadding : 15,
+							displayColors : false,
+							intersect : false,
+							mode : 'index',
+							caretPadding : 10,
+							callbacks : {
+								label : function(tooltipItem, chart) {
+									var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label
+											|| '';
+									return datasetLabel + ': R$'
+											+ number_format(tooltipItem.yLabel);
+								}
+							}
+						}
+					}
+				});
+	}
+	
+	</script>
+	
+	<script type="text/javascript">
 
 	jQuery("#cabeçario").hide();
-	
-	function carregarListaLucros(){
-		
-		var urlAction = document.getElementById('formularioSaida').action;
-		var dataInicial = document.getElementById('dataInicial').value;
-		var dataFinal = document.getElementById('dataFinal').value;
-		
-		jQuery.ajax({
-			method : "get",
-			url : urlAction,
-			data : '&acao=carregarListaLucros&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(response) {
-				var responseArray = response.split("|");
-		        var jsonLista1 = responseArray[0];
-		        var jsonLista2 = responseArray[1];
-		        
-		        var json = JSON.parse(jsonLista2);
-		        
-				jQuery("#cabecario > table").remove();
-				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
-					'<thead>' + 
-						'<tr>' + 
-							'<th>Nome</th>' + 
-							'<th>Valor das vendas</th>' + 
-							'<th>Valor dos pedidos</th>' + 
-							'<th>Valor dos cancelamentos</th>' +
-							'<th>Superavicit/Deficit</th>' +
-							'<th>Configurações</th>' + 
-						'</tr>' + 
-					'</thead>' + 
-					'<tbody></tbody>' + 
-				'</table>');
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
 	
 	function carregarListaEntradas(){
 		
@@ -244,13 +336,11 @@
 			method : "get",
 			url : urlAction,
 			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(response) {
-				var responseArray = response.split("|");
-		        var jsonLista1 = responseArray[0];
-		        var jsonLista2 = responseArray[1];
-		        var json = JSON.parse(jsonLista2);
-		        
-				graficoVendas(json);
+			success : function(json, textStatus, xhr) {
+				jQuery("#canvas > canvas").remove();
+				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
+				
+				graficoEntradas(json);
 				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
@@ -261,7 +351,6 @@
 							'<th>Valor total</th>' + 
 							'<th>Data de pedido</th>' +
 							'<th>Data de entrega</th>' +
-							'<th>Configurações</th>' + 
 						'</tr>' + 
 					'</thead>' + 
 					'<tbody></tbody>' + 
@@ -283,7 +372,6 @@
 								"<td>" + valortotal +  "</td>" + 
 								"<td>" + dataentrega + "</td>" +
 								"<td>" + datapedido + "</td>" +  
-								"<td>Configurações</td>" + 
 							"</tr>");
 				}				
 			}
@@ -303,6 +391,7 @@
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(response) {
+				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				
 				var responseArray = response.split("|");
