@@ -170,7 +170,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 			String dataInicial = request.getParameter("dataInicial");
 			String dataFinal = request.getParameter("dataFinal");
-	
+			
 			try {
 			
 				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
@@ -187,8 +187,8 @@ public class servlet_saida extends servlet_recuperacao_login{
 					printWriter.close();
 					
 				}else{
-					
-					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					int a = 2;
+					List<ModelPedidos> vendas = daopedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), a, dataInicial, dataFinal);
 					
 					Gson gson = new Gson();
 					String json = gson.toJson(vendas);

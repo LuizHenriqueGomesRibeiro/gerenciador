@@ -86,14 +86,12 @@ private Connection connection;
 		String sql = "SELECT * FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
-		String novoFormato = transformarFormatoData(dataInicial, "dd/MM/yyyy", "yyyy-MM-dd");
-        String novoFormato2 = transformarFormatoData(dataFinal, "dd/MM/yyyy", "yyyy-MM-dd");
 		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date dataUtil;
 		
-		dataUtil = formatador.parse(novoFormato);
+		dataUtil = formatador.parse(dataInicial);
 		Date dataSql = new Date(dataUtil.getTime());
-		dataUtil = formatador.parse(novoFormato2);
+		dataUtil = formatador.parse(dataFinal);
 		Date dataSql2 = new Date(dataUtil.getTime());
 		statement.setDate(2, dataSql);
 		statement.setDate(3, dataSql2);

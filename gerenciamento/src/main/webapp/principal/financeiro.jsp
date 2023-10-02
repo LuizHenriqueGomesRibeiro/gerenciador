@@ -38,10 +38,10 @@
 				<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
 					<div class="row">
 						<div class="col">
-							<input onkeypress="$(this).mask('00/00/0000')" class="form-control" id="dataInicial" name="dataInicial">
+							<input type="date" class="form-control" id="dataInicial" name="dataInicial">
 						</div>
 						<div class="col">
-							<input onkeypress="$(this).mask('00/00/0000')" class="form-control" id="dataFinal" name="dataFinal">
+							<input type="date" class="form-control" id="dataFinal" name="dataFinal">
 						</div>
 					</div>
 					<p style="margin-left: 10px;">*Caso as datas não sejam especificadas, o servidor rodará todos os resultados.</p>
@@ -69,7 +69,8 @@
 </body>
 <script type="text/javascript">
 
-	function graficoVendas(json) {
+	function graficoVendas(jsonLista2) {
+		var json = JSON.parse(jsonLista2);
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -96,19 +97,21 @@
 		    }
 		  	return s.join(dec);
 		}
-		
-		var parse = JSON.parse(json);
-		const data = parse.map(item => item.valortotal);
-		const label = parse.map(item => item.dataentrega);
-		var ultimoData = data[data.length - 1];
-		var ultimoLabel = label[label.length - 1];
+
+		var labels = [];
+		var data = [];
+
+		for (var i = 0; i < json.valores.length; i++) {
+			labels.push(json.valores[i]);
+			data.push(json.datas[i]);
+		}
 		
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: [label[0], label[1], label[2], label[3], label[4], label[5], label[6], label[7], label[8], label[9], ultimoLabel],
+						labels: data,
 						datasets: [{
 							label: "Earnings",
 							lineTension: 0.3,
@@ -122,7 +125,7 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], ultimoData]
+							data: labels
 						}],
 					},
 					options: {
@@ -224,16 +227,16 @@
 		}
 		
 		const label = json.map(item => item.dataentrega);
-		var ultimoLabel = label[label.length - 1];
 		const data = json.map(item => item.valorTotal);
-		var ultimoData = data[data.length - 1];
+		const valoresLabel = Object.values(label).slice(0, 5);
+		const valoresData = Object.values(data).slice(0, 5);
 		
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: [label[0], label[1], label[2], label[3], label[4], label[5], label[6], label[7], label[8], label[9], ultimoLabel],
+						labels: [valoresLabel],
 						datasets: [{
 							label: "Earnings",
 							lineTension: 0.3,
@@ -247,7 +250,7 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: [data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], ultimoData]
+							data: [valoresData]
 						}],
 					},
 					options: {
@@ -275,7 +278,7 @@
 							}],
 							yAxes: [ {
 								ticks: {
-									maxTicksLimit : 5,
+									maxTicksLimit : 7,
 									padding : 10,
 									callback: function(value, index, values) {
 										return 'R$' + number_format(value) + ',00';
@@ -360,7 +363,7 @@
 					var nome = JSON.stringify(json[p].nome);
 					var quantidade = JSON.stringify(json[p].quantidade);
 					quantidade = quantidade + " unidades";
-					var valortotal = JSON.stringify(json[p].valorTotal);
+					var valortotal = JSON.stringify(json[p].valortotal);
 					valortotal = "R$" + valortotal + ",00";
 					var dataentrega = JSON.stringify(json[p].dataentrega);
 					var datapedido = JSON.stringify(json[p].datapedido);
@@ -399,7 +402,7 @@
 		        var jsonLista2 = responseArray[1];
 		        var json = JSON.parse(jsonLista2);
 		        
-				graficoVendas(jsonLista2);
+				graficoVendas(jsonLista1);
 				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append(

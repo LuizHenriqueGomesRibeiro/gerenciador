@@ -188,19 +188,40 @@ public class daoPedidos {
 		return retorno;
 	}
 	
-	public List<ModelPedidos> listarRelatorioPorTempo(int id, int status, String dataInicial, String dataFinal) throws SQLException {
+	public List<ModelPedidos> listarRelatorioPorTempo(int id, int status, String dataInicial, String dataFinal) throws SQLException, ParseException {
 		
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
-		
-		String sql = "SELECT * FROM pedidos WHERE status = ? AND usuario_pai_id = " + id;
+		String sql = "SELECT * FROM pedidos WHERE status = ? AND usuario_pai_id = " + id + " AND dataentrega >= ? AND dataentrega <= ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setLong(1, status);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(2, dataSql);
+		statement.setDate(3, dataSql2);
+		
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()){
 	        ModelPedidos pedidos = new ModelPedidos();
 	        
-	        pedidos.setDataentrega(resultado.getString("dataentrega"));
+	        String data = resultado.getString("dataentrega");
+	        String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			pedidos.setDataentrega(data);
+
+			data = resultado.getString("datapedido");
+			parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			pedidos.setDatapedido(data);
+	        
 	        pedidos.setQuantidade(resultado.getLong("quantidade"));
 	        pedidos.setId(resultado.getLong("id"));
 	        pedidos.setValorTotal(resultado.getLong("valortotal"));
