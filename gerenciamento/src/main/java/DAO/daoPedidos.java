@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import Util.BeanChart;
 import conexao.conexao;
 import model.ModelCancelamento;
 import model.ModelFornecimento;
@@ -213,20 +214,20 @@ public class daoPedidos {
 	        String data = resultado.getString("dataentrega");
 	        String[] parte = data.split(" ");
 			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			pedidos.setDataentrega(data);
+			String data2 = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			pedidos.setDataentrega(data2);
 
-			data = resultado.getString("datapedido");
-			parte = data.split(" ");
+			String data3 = resultado.getString("datapedido");
+			String[] parte2 = data3.split(" ");
 			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			pedidos.setDatapedido(data);
+			String data4 = transformarFormatoData(parte2[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			
+			pedidos.setDatapedido(data4);
 	        
 	        pedidos.setQuantidade(resultado.getLong("quantidade"));
 	        pedidos.setId(resultado.getLong("id"));
 	        pedidos.setValorTotal(resultado.getLong("valortotal"));
 	        pedidos.setNome(resultado.getString("nome"));
-	        pedidos.setDatapedido(resultado.getString("datapedido"));
 	        
 	        daoPedidos daopedido = new daoPedidos();
 	        
@@ -321,5 +322,76 @@ public class daoPedidos {
 			
 			return null;
 		}
+	}
+	
+	public BeanChart listarEntradasGrafico(int id_usuario, int status) throws SQLException{
+		
+		String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = ? AND status = ? ORDER BY dataentrega ASC";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, id_usuario);
+		statement.setInt(2, status);
+		ResultSet resultado = statement.executeQuery();
+		List<Long> valores = new ArrayList<Long>();
+		List<String> datas = new ArrayList<String>();
+		
+		BeanChart beanChart = new BeanChart();
+		
+		while(resultado.next()) {
+			Long valortotal = resultado.getLong("valortotal");
+			
+			String data = resultado.getString("dataentrega");
+			String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			
+			valores.add(valortotal);
+			datas.add(data);
+		}
+		
+		beanChart.setDatas(datas);
+		beanChart.setValores(valores);
+		
+		return beanChart;
+	}
+	
+	public BeanChart listarEntradasGrafico(int id_usuario, int status, String dataInicial, String dataFinal) throws SQLException, ParseException{
+		
+		String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = ? AND status = ? AND dataentrega >= ? AND dataentrega <= ?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, id_usuario);
+		statement.setInt(2, status);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(3, dataSql);
+		statement.setDate(4, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+		List<Long> valores = new ArrayList<Long>();
+		List<String> datas = new ArrayList<String>();
+		
+		BeanChart beanChart = new BeanChart();
+		
+		while(resultado.next()) {
+			Long valortotal = resultado.getLong("valortotal");
+			
+			String data = resultado.getString("dataentrega");
+			String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			
+			valores.add(valortotal);
+			datas.add(data);
+		}
+		
+		beanChart.setDatas(datas);
+		beanChart.setValores(valores);
+		
+		return beanChart;
 	}
 }

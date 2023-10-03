@@ -139,11 +139,11 @@ public class servlet_saida extends servlet_recuperacao_login{
 	
 			try {
 				
-				BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
-				Gson gson = new Gson();
-				String json1 = gson.toJson(bean);
 			
-				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
+					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
+					Gson gson = new Gson();
+					String json1 = gson.toJson(bean);
 					
 					List<ModelVendas> vendas = daovendas.listarVendas(super.getUsuarioLogado(request).getId());
 					
@@ -153,6 +153,9 @@ public class servlet_saida extends servlet_recuperacao_login{
 				    out.flush();
 					
 				}else{
+					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					Gson gson = new Gson();
+					String json1 = gson.toJson(bean);
 					
 					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					
@@ -161,42 +164,46 @@ public class servlet_saida extends servlet_recuperacao_login{
 				    out.print(json1 + "|" + json);
 				    out.flush();
 				}
-				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
 			
 			String dataInicial = request.getParameter("dataInicial");
 			String dataFinal = request.getParameter("dataFinal");
 			
 			try {
+				int status = 2;
 			
-				if(dataInicial == null || dataInicial.isEmpty() && dataFinal == null || dataFinal.isEmpty()){
+				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
 					
-					int status = 2;
+					BeanChart bean = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status);
+					System.out.println(bean);
+					
+					Gson gson = new Gson();
+					String json1 = gson.toJson(bean);
+					
 					List<ModelPedidos> entradas = daopedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), status);
 					
-					Gson gson = new Gson();
 					String json = gson.toJson(entradas);
-					PrintWriter printWriter = response.getWriter();
-					response.setContentType("application/json");
-					response.setCharacterEncoding("UTF-8");
-					printWriter.write(json);
-					printWriter.close();
+					PrintWriter out = response.getWriter();
+				    out.print(json1 + "|" + json);
+				    out.flush();
 					
 				}else{
-					int a = 2;
-					List<ModelPedidos> vendas = daopedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), a, dataInicial, dataFinal);
+					
+					BeanChart bean = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
 					
 					Gson gson = new Gson();
-					String json = gson.toJson(vendas);
-					PrintWriter printWriter = response.getWriter();
-					response.setContentType("application/json");
-					response.setCharacterEncoding("UTF-8");
-					printWriter.write(json);
-					printWriter.close();
+					String json1 = gson.toJson(bean);
+					
+					List<ModelPedidos> entradas = daopedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
+					
+					String json = gson.toJson(entradas);
+					PrintWriter out = response.getWriter();
+				    out.print(json1 + "|" + json);
+				    out.flush();
 				}
 				
 			} catch (Exception e) {

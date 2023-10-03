@@ -140,6 +140,46 @@ private Connection connection;
 		}
 	}
 	
+	public BeanChart listarVendasGrafico(int id_usuario, String dataInicial, String dataFinal) throws SQLException, ParseException{
+		
+		String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ? ORDER BY dataentrega ASC";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setInt(1, id_usuario);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(2, dataSql);
+		statement.setDate(3, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+		List<Long> valores = new ArrayList<Long>();
+		List<String> datas = new ArrayList<String>();
+		
+		BeanChart beanChart = new BeanChart();
+		
+		while(resultado.next()) {
+			Long valortotal = resultado.getLong("valortotal");
+			
+			String data = resultado.getString("dataentrega");
+			String[] parte = data.split(" ");
+			
+			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
+			
+			valores.add(valortotal);
+			datas.add(data);
+		}
+		
+		beanChart.setDatas(datas);
+		beanChart.setValores(valores);
+		
+		return beanChart;
+	}
+	
 	public BeanChart listarVendasGrafico(int id_usuario) throws SQLException{
 		
 		String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = ? ORDER BY dataentrega ASC";
@@ -153,7 +193,7 @@ private Connection connection;
 		
 		while(resultado.next()) {
 			Long valortotal = resultado.getLong("valortotal");
-			
+				
 			String data = resultado.getString("dataentrega");
 			String[] parte = data.split(" ");
 			

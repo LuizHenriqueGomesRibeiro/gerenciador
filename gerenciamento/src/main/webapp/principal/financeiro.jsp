@@ -59,6 +59,11 @@
 		</div>
 		<div style="width: 50%;" id="canvas"></div>
 	</div>
+	<div id="botao">
+		<a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=printFormVendasPDF">
+			<button>Imprimir PDF</button>
+		</a>
+	</div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -198,7 +203,8 @@
 				});
 	}
 	
-	function graficoEntradas(json) {
+	function graficoEntradas(jsonLista2) {
+		var json = JSON.parse(jsonLista2);
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -226,17 +232,20 @@
 		  	return s.join(dec);
 		}
 		
-		const label = json.map(item => item.dataentrega);
-		const data = json.map(item => item.valorTotal);
-		const valoresLabel = Object.values(label).slice(0, 5);
-		const valoresData = Object.values(data).slice(0, 5);
+		var labels = [];
+		var data = [];
+		
+		for (var i = 0; i < json.valores.length; i++) {
+			labels.push(json.valores[i]);
+			data.push(json.datas[i]);
+		}
 		
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: [valoresLabel],
+						labels: data,
 						datasets: [{
 							label: "Earnings",
 							lineTension: 0.3,
@@ -250,7 +259,7 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: [valoresData]
+							data: labels
 						}],
 					},
 					options: {
@@ -339,11 +348,16 @@
 			method : "get",
 			url : urlAction,
 			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
-			success : function(json, textStatus, xhr) {
+			success : function(response) {
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				
-				graficoEntradas(json);
+				var responseArray = response.split("|");
+		        var jsonLista1 = responseArray[0];
+		        var jsonLista2 = responseArray[1];
+		        var json = JSON.parse(jsonLista2);
+		        
+				graficoEntradas(jsonLista1);
 				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
@@ -363,8 +377,8 @@
 					var nome = JSON.stringify(json[p].nome);
 					var quantidade = JSON.stringify(json[p].quantidade);
 					quantidade = quantidade + " unidades";
-					var valortotal = JSON.stringify(json[p].valortotal);
-					valortotal = "R$" + valortotal + ",00";
+					var valortotal = JSON.stringify(json[p].valorTotal);
+					var valortotalFinal = "R$" + valortotal + ",00";
 					var dataentrega = JSON.stringify(json[p].dataentrega);
 					var datapedido = JSON.stringify(json[p].datapedido);
 					
@@ -372,9 +386,9 @@
 							"<tr>" + 
 								"<td>" + nome + "</td>" + 
 								"<td>" + quantidade + "</td>" + 
-								"<td>" + valortotal +  "</td>" + 
-								"<td>" + dataentrega + "</td>" +
+								"<td>" + valortotalFinal +  "</td>" + 
 								"<td>" + datapedido + "</td>" +  
+								"<td>" + dataentrega + "</td>" +
 							"</tr>");
 				}				
 			}
@@ -394,6 +408,10 @@
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(response) {
+				
+				jQuery("#botao > button").remove();
+				jQuery("#botao").append("<a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class='page-link' onclick='gerarPDFvendas()'>Imprimir PDF</button>");
+				
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				
