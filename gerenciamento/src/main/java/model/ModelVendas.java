@@ -7,7 +7,21 @@ public class ModelVendas {
 	private int valortotal;
 	private int quantidade;
 	private String nome;
-	
+	private int valores;
+	private int quantidadeTotal;
+
+	public int getValores() {
+		return valores;
+	}
+	public void setValores(int valores) {
+		this.valores = valores;
+	}
+	public int getQuantidadeTotal() {
+		return quantidadeTotal;
+	}
+	public void setQuantidadeTotal(int quantidadeTotal) {
+		this.quantidadeTotal = quantidadeTotal;
+	}
 	public String getNome() {
 		return nome;
 	}

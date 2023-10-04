@@ -50,7 +50,7 @@ private Connection connection;
 		}
 	}
 	
-	public List<ModelVendas> listarVendas(int id_usuario) throws SQLException{
+	public List<ModelVendas> listarVendas(int id_usuario) throws SQLException, ParseException{
 		List<ModelVendas> retorno = new ArrayList<ModelVendas>();
 		String sql = "SELECT * FROM vendas WHERE usuario_pai_id = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -74,6 +74,11 @@ private Connection connection;
 			vendas.setValortotal(resultado.getInt("valortotal"));
 			vendas.setProduto_pai(produto);
 			vendas.setQuantidade(resultado.getInt("quantidade"));
+			
+			daoVendas daovenda = new daoVendas();
+			
+			vendas.setValores(daovenda.somaValores(id_usuario));
+			vendas.setQuantidadeTotal(daovenda.somaQuantidade(id_usuario));
 			
 			retorno.add(vendas);
 		}
@@ -116,6 +121,11 @@ private Connection connection;
 			vendas.setValortotal(resultado.getInt("valortotal"));
 			vendas.setProduto_pai(produto);
 			vendas.setQuantidade(resultado.getInt("quantidade"));
+			
+			daoVendas daovenda = new daoVendas();
+			
+			vendas.setValores(daovenda.somaValores(id_usuario, dataInicial, dataFinal));
+			vendas.setQuantidadeTotal(daovenda.somaQuantidade(id_usuario, dataInicial, dataFinal));
 			
 			retorno.add(vendas);
 		}
@@ -208,4 +218,82 @@ private Connection connection;
 		
 		return beanChart;
 	}
+	
+	public int somaQuantidade(int id_usuario) throws SQLException, ParseException {
+		String sql = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, id_usuario);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}	
+	
+	public int somaValores(int usuario_pai_id) throws SQLException, ParseException {
+		String sql = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}
+	
+	public int somaQuantidade(int usuario_pai_id, String dataInicial, String dataFinal) throws SQLException, ParseException {
+		String sql = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(2, dataSql);
+		statement.setDate(3, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}	
+	
+	public int somaValores(int usuario_pai_id, String dataInicial, String dataFinal) throws SQLException, ParseException {
+		String sql = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(2, dataSql);
+		statement.setDate(3, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}
+	
+	
+	
+	
+	
+	
 }

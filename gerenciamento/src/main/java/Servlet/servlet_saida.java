@@ -138,8 +138,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 			String dataFinal = request.getParameter("dataFinal");
 	
 			try {
-				
-			
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
 					Gson gson = new Gson();
@@ -151,7 +149,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 					PrintWriter out = response.getWriter();
 				    out.print(json1 + "|" + json);
 				    out.flush();
-					
 				}else{
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					Gson gson = new Gson();
@@ -179,7 +176,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
 					
 					BeanChart bean = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status);
-					System.out.println(bean);
 					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);

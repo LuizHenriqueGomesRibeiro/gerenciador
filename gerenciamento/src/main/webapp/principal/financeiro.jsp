@@ -60,9 +60,6 @@
 		<div style="width: 50%;" id="canvas"></div>
 	</div>
 	<div id="botao">
-		<a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=printFormVendasPDF">
-			<button>Imprimir PDF</button>
-		</a>
 	</div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -335,7 +332,7 @@
 	</script>
 	
 	<script type="text/javascript">
-
+	
 	jQuery("#cabeçario").hide();
 	
 	function carregarListaEntradas(){
@@ -349,6 +346,8 @@
 			url : urlAction,
 			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(response) {
+				jQuery("#botao").hide();
+				
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				
@@ -396,6 +395,7 @@
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 		});
 	}
+	
 
 	function carregarListaVendas(){
 		
@@ -408,10 +408,13 @@
 			url : urlAction,
 			data : '&acao=carregarListaVendas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(response) {
-				
-				jQuery("#botao > button").remove();
-				jQuery("#botao").append("<a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class='page-link' onclick='gerarPDFvendas()'>Imprimir PDF</button>");
-				
+				jQuery("#botao > a").remove();
+				jQuery("#botao").append(
+					"<a style='text-decoration: none' href='ServletRelatorios?acao=printFormVendasPDF&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal + "'>" +
+						"<button>Imprimir PDF de relatório de vendas</button>" +
+					"</a>"
+				);
+
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				

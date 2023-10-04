@@ -80,7 +80,6 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				printWriter.close();
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("pedidos")) {
@@ -96,7 +95,6 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				printWriter.close();
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -117,31 +115,54 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				e.printStackTrace();
 			}
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
-			try{
-				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
-				ReportUtil reportUtil = new ReportUtil();
-				byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
-				/*
 			
-				response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-				response.setContentType("application/pdf");
-				response.getOutputStream().write(relatorio);
-				*/
-				
-				if (relatorio != null) {
-					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-		            response.setContentType("application/octet-stream");
+			String dataInicial = request.getParameter("dataInicial");
+			String dataFinal = request.getParameter("dataFinal");
+			
+			try{
+				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
+					List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
+					
+					ReportUtil reportUtil = new ReportUtil();
+					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
 
-		            try (OutputStream outputStream = response.getOutputStream()) {
-		                outputStream.write(relatorio);
-		                outputStream.flush();
-		            }
-		        } else {
-		            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-		        }
+					if (relatorio != null) {
+						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+			            response.setContentType("application/octet-stream");
+
+			            try (OutputStream outputStream = response.getOutputStream()) {
+			                outputStream.write(relatorio);
+			                outputStream.flush();
+			            }
+			        } else {
+			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			        }
+				}else {
+					List<ModelVendas> vendas = daoVendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					
+					ReportUtil reportUtil = new ReportUtil();
+					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
+
+					if (relatorio != null) {
+						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+			            response.setContentType("application/octet-stream");
+
+			            try (OutputStream outputStream = response.getOutputStream()) {
+			                outputStream.write(relatorio);
+			                outputStream.flush();
+			            }
+			        } else {
+			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			        }
+				}
 				
+			}catch (Exception e){
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormEntradasPDF")) {
+			try{
 		        
-				
 			}catch (Exception e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();
