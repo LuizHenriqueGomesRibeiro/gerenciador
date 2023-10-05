@@ -102,6 +102,81 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
+	public int somaQuantidade(int usuario_pai_id, int status) throws SQLException {
+		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		statement.setInt(2, status);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}	
+	
+	public int somaValores(int usuario_pai_id, int status) throws SQLException {
+		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		statement.setInt(2, status);
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}
+	
+	public int somaQuantidadeRelatorio(int usuario_pai_id, int status, String dataInicial, String dataFinal) throws SQLException, ParseException {
+		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ? AND dataentrega >= ? AND dataentrega <= ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		statement.setInt(2, status);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(3, dataSql);
+		statement.setDate(4, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}	
+	
+	public int somaValoresRelatorio(int usuario_pai_id, int status, String dataInicial, String dataFinal) throws SQLException, ParseException {
+		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ? AND dataentrega >= ? AND dataentrega <= ?";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setLong(1, usuario_pai_id);
+		statement.setInt(2, status);
+		
+		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date dataUtil;
+		
+		dataUtil = formatador.parse(dataInicial);
+		Date dataSql = new Date(dataUtil.getTime());
+		dataUtil = formatador.parse(dataFinal);
+		Date dataSql2 = new Date(dataUtil.getTime());
+		statement.setDate(3, dataSql);
+		statement.setDate(4, dataSql2);
+		
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}
+	
 	public List<ModelPedidos> listarPedidos(Long id, int status) throws SQLException {
 		
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
@@ -183,6 +258,12 @@ public class daoPedidos {
 	        ModelCancelamento cancelamento = daopedido.buscarCancelamento(resultado.getLong("id"));
 	        pedidos.setDatacancelamento(cancelamento.getDatacancelamento());
 	        
+	        pedidos.setQuantidadeTotal(daopedido.somaQuantidade(id, status));
+	        pedidos.setValores(daopedido.somaValores(id, status));
+	        
+	        System.out.println(daopedido.somaValores(id, status));
+	        System.out.println(daopedido.somaQuantidade(id, status));
+	        
 			retorno.add(pedidos);
 		}
 		
@@ -233,6 +314,12 @@ public class daoPedidos {
 	        
 	        ModelCancelamento cancelamento = daopedido.buscarCancelamento(resultado.getLong("id"));
 	        pedidos.setDatacancelamento(cancelamento.getDatacancelamento());
+	        
+	        pedidos.setQuantidadeTotal(daopedido.somaQuantidadeRelatorio(id, status, dataInicial, dataFinal));
+	        pedidos.setValores(daopedido.somaValoresRelatorio(id, status, dataInicial, dataFinal));
+	        
+	        System.out.println(daopedido.somaValores(id, status));
+	        System.out.println(daopedido.somaQuantidade(id, status));
 	        
 			retorno.add(pedidos);
 		}

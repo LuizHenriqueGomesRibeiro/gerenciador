@@ -161,8 +161,48 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				e.printStackTrace();
 			}
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormEntradasPDF")) {
+			String dataInicial = request.getParameter("dataInicial");
+			String dataFinal = request.getParameter("dataFinal");
+			
 			try{
-		        
+				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
+					int a = 2;
+					List<ModelPedidos> entradas = daoPedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), a);
+					
+					ReportUtil reportUtil = new ReportUtil();
+					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());
+
+					if (relatorio != null) {
+						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+			            response.setContentType("application/octet-stream");
+
+			            try (OutputStream outputStream = response.getOutputStream()) {
+			                outputStream.write(relatorio);
+			                outputStream.flush();
+			            }
+			        } else {
+			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			        }
+				}else {
+					int a = 2;
+					List<ModelPedidos> entradas = daoPedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), a, dataInicial, dataFinal);
+					
+					ReportUtil reportUtil = new ReportUtil();
+					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());
+
+					if (relatorio != null) {
+						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+			            response.setContentType("application/octet-stream");
+
+			            try (OutputStream outputStream = response.getOutputStream()) {
+			                outputStream.write(relatorio);
+			                outputStream.flush();
+			            }
+			        } else {
+			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			        }
+				}
+				
 			}catch (Exception e){
 				// TODO Auto-generated catch block
 				e.printStackTrace();

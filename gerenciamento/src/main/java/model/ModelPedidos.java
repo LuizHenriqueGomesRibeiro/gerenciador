@@ -10,7 +10,25 @@ public class ModelPedidos {
 	private Long valor;
 	private Long valorTotal;
 	private String nome;
+	private int valores;
+	private int quantidadeTotal;
 	
+	public int getValores() {
+		return valores;
+	}
+
+	public void setValores(int valores) {
+		this.valores = valores;
+	}
+
+	public int getQuantidadeTotal() {
+		return quantidadeTotal;
+	}
+
+	public void setQuantidadeTotal(int quantidadeTotal) {
+		this.quantidadeTotal = quantidadeTotal;
+	}
+
 	@Override
 	public String toString() {
 		return "ModelPedidos [fornecedor_pai_id=" + fornecedor_pai_id + ", id=" + id + ", datapedido=" + datapedido

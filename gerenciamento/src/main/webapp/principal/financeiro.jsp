@@ -346,7 +346,13 @@
 			url : urlAction,
 			data : '&acao=carregarListaEntradas&dataInicial=' + dataInicial + '&dataFinal=' + dataFinal,
 			success : function(response) {
-				jQuery("#botao").hide();
+				
+				jQuery("#botao > a").remove();
+				jQuery("#botao").append(
+					"<a style='text-decoration: none' href='ServletRelatorios?acao=printFormEntradasPDF&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal + "'>" +
+						"<button>Imprimir PDF de relatório de entradas</button>" +
+					"</a>"
+				);
 				
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");

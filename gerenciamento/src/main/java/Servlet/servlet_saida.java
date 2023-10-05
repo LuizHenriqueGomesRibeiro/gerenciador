@@ -55,7 +55,6 @@ public class servlet_saida extends servlet_recuperacao_login{
 			try {
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
-				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

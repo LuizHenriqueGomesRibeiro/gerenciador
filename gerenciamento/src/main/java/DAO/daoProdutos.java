@@ -42,7 +42,6 @@ public class daoProdutos {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			
 		}
 	}
 	
@@ -127,19 +126,8 @@ public class daoProdutos {
 		while(resultado.next()){
 			
 			ModelProdutos produtos = new ModelProdutos();
-			//daoProdutos daoprodutos = new daoProdutos();
-			//daoFornecimento fornecimento = new daoFornecimento();
 			daoPedidos pedido = new daoPedidos();
 			
-			//NumberFormat format = NumberFormat.getInstance();
-	        //format.setGroupingUsed(true);
-	        
-	        //String precoFormatado = format.format(resultado.getInt("preco"));
-	        //String precoFormatado00R$ = "R$"+precoFormatado + ",00";
-	        
-	        //String precoTotalFormatado = format.format(resultado.getInt("valortotal"));
-	        //String precoTotalFormatado00R$ = "R$"+precoTotalFormatado + ",00";
-	        
 			produtos.setId(resultado.getLong("id"));
 			
 			int quantidade = pedido.somaQuantidade(resultado.getLong("id"));
