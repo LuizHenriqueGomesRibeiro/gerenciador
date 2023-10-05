@@ -126,6 +126,7 @@
 	</detail>
 	<columnFooter>
 		<band height="14">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == $V{PAGE_COUNT}]]></printWhenExpression>
 			<staticText>
 				<reportElement x="270" y="0" width="150" height="14" uuid="3cad83f1-d59d-4962-9646-92fd1e2040af">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a34327e8-65d5-4ce7-b97a-b54695ad3afc"/>
@@ -148,6 +149,7 @@
 	</columnFooter>
 	<pageFooter>
 		<band height="14">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == $V{PAGE_COUNT}]]></printWhenExpression>
 			<textField>
 				<reportElement x="270" y="1" width="150" height="13" uuid="d4acad91-0758-4af7-bac0-bf5e0c7b9245">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
