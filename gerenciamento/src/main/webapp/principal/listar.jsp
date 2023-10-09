@@ -35,7 +35,6 @@
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
 		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button class="page-link">Ir para caixa</button></a></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class="page-link">Ir para relatórios</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>

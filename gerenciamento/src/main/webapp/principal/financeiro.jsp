@@ -18,14 +18,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
-<body style="overflow: hidden;">
+<body style="overflow-x: hidden ">
 	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 		<li class="page-item"><button class="page-link">Índice=></button></li>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
 		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar">
 			<button class="page-link">Ir para caixa</button></a></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios">
-			<button class="page-link">Ir para relatórios</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
 		<li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">
@@ -55,12 +53,14 @@
 	</div>
 	<div style="display: flex; width: 100%;">
 		<div style="width: 50%;">
+			<div id="letreiro"></div>
 			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
+			<div id="tabela"></div>
 		</div>
-		<div style="width: 50%;" id="canvas"></div>
 	</div>
 	<div id="botao">
 	</div>
+	<div style="width: 100%;" id="canvas"></div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -71,8 +71,7 @@
 </body>
 <script type="text/javascript">
 
-	function graficoVendas(jsonLista2) {
-		var json = JSON.parse(jsonLista2);
+	function graficoVendas(jsonLista2, jsonLista3) {
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -100,10 +99,28 @@
 		  	return s.join(dec);
 		}
 
+		var json2 = JSON.parse(jsonLista3);
+		
+		var labels2 = [];
+		var data2 = [];
+		
+		for (var i = 0; i < json2.valores.length; i++) {
+			labels2.push(json2.valores[i]);
+			data2.push(json2.datas[i]);
+		}
+
+		var json = JSON.parse(jsonLista2);
+		
 		var labels = [];
 		var data = [];
 
-		for (var i = 0; i < json.valores.length; i++) {
+		
+		//for (var i = 0; i < json2.valores.length; i++) {
+		//	labels.push(json.valores[i]);
+		//	data.push(json.datas[i]);
+		//}
+		
+		for (var i = json2.valores.length - 1; i >= 0; i--) {
 			labels.push(json.valores[i]);
 			data.push(json.datas[i]);
 		}
@@ -113,21 +130,36 @@
 				ctx,{
 					type: 'line',
 					data: {
-						labels: data,
+						labels: data, data2,
 						datasets: [{
-							label: "Earnings",
+							label: "Vendas",
 							lineTension: 0.3,
 							backgroundColor: "rgba(78, 115, 223, 0.05)",
 							borderColor: "rgba(78, 115, 223, 1)",
-							pointRadius: 3,
+							pointRadius: 0,
 							pointBackgroundColor: "rgba(78, 115, 223, 1)",
 							pointBorderColor: "rgba(78, 115, 223, 1)",
-							pointHoverRadius: 3,
+							pointHoverRadius: 0,
 							pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
 							data: labels
+						},
+						{
+							label: "Entradas",
+							lineTension: 0.3,
+							backgroundColor: "rgba(78, 115, 223, 0.05)",
+							borderColor: "red",
+							pointRadius: 0,
+							pointBackgroundColor: "red",
+							pointBorderColor: "red",
+							pointHoverRadius: 0,
+							pointHoverBackgroundColor: "red",
+							pointHoverBorderColor: "red",
+							pointHitRadius: 10,
+							pointBorderWidth : 2,
+							data: labels2
 						}],
 					},
 					options: {
@@ -350,7 +382,7 @@
 				jQuery("#botao > a").remove();
 				jQuery("#botao").append(
 					"<a style='text-decoration: none' href='ServletRelatorios?acao=printFormEntradasPDF&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal + "'>" +
-						"<button>Imprimir PDF de relatório de entradas</button>" +
+						"<button style=\"page-link\">Imprimir PDF de relatório de entradas</button>" +
 					"</a>"
 				);
 				
@@ -363,6 +395,31 @@
 		        var json = JSON.parse(jsonLista2);
 		        
 				graficoEntradas(jsonLista1);
+				
+				var quantidadeTotal = json[0].quantidadeTotal;
+				quantidadeTotal = quantidadeTotal.toLocaleString();
+				quantidadeTotal = quantidadeTotal + " unidades";
+				var valores = json[0].valores;
+				valores = valores.toLocaleString();
+				valores = "R$" + valores + ",00";
+				
+				jQuery("#tabela > table").remove();
+				jQuery("#tabela").append(
+					'<table class="table table-striped table-sm">' +
+						'<thead>' + 
+							'<tr>' + 
+								'<th>Quantidades totais</th>' + 
+								'<th>Valores totais</th>' + 
+							'</tr>' + 	
+						'</thead>' + 
+						'<tbody>' +
+							'<tr>' +
+								'<td>' + quantidadeTotal + '</td>' +
+								'<td>' + valores + '</td>' +
+							'</tr>' +
+						'</tbody>' + 
+					'</table>'
+				);
 				
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append('<table style="margin-top: 30px;" class="table table-striped table-sm">' +
@@ -417,7 +474,7 @@
 				jQuery("#botao > a").remove();
 				jQuery("#botao").append(
 					"<a style='text-decoration: none' href='ServletRelatorios?acao=printFormVendasPDF&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal + "'>" +
-						"<button>Imprimir PDF de relatório de vendas</button>" +
+						"<button style=\"page-link\">Imprimir PDF de relatório de vendas</button>" +
 					"</a>"
 				);
 
@@ -427,13 +484,46 @@
 				var responseArray = response.split("|");
 		        var jsonLista1 = responseArray[0];
 		        var jsonLista2 = responseArray[1];
+		        var jsonLista3 = responseArray[2];
+		        var jsonLista4 = responseArray[3];
+		        
+		        alert(jsonLista4);
+		        
 		        var json = JSON.parse(jsonLista2);
 		        
-				graficoVendas(jsonLista1);
+				graficoVendas(jsonLista1, jsonLista3);
 				
+				var quantidadeTotal = json[0].quantidadeTotal;
+				quantidadeTotal = quantidadeTotal.toLocaleString();
+				quantidadeTotal = quantidadeTotal + " unidades";
+				var valores = json[0].valores;
+				valores = valores.toLocaleString();
+				valores = "R$" + valores + ",00";
+				
+				jQuery("#tabela > table").remove();
+				jQuery("#tabela").append(
+					'<table class="table table-striped table-sm">' +
+						'<thead>' + 
+							'<tr>' + 
+								'<th>Quantidades totais</th>' + 
+								'<th>Valores totais</th>' + 
+							'</tr>' + 	
+						'</thead>' + 
+						'<tbody>' +
+							'<tr>' +
+								'<td>' + quantidadeTotal + '</td>' +
+								'<td>' + valores + '</td>' +
+							'</tr>' +
+						'</tbody>' + 
+					'</table>'
+				);
+				
+				jQuery("#letreiro > h2").remove();
+				jQuery("#letreiro").append('<h2>Listagem de vendas por saída</h2>');
+
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append(
-					'<table style="margin-top: 30px;" class="table table-striped table-sm">' +
+					'<table class="table table-striped table-sm">' +
 						'<thead>' + 
 							'<tr>' + 
 								'<th>Nome</th>' + 

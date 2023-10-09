@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.ModelDataVenda;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 import model.ModelProdutos;
@@ -28,6 +29,7 @@ import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.daoVendas;
+import DAO.daoVendasRelatorio;
 import Util.BeanChart;
 
 /**
@@ -42,6 +44,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoFornecimento daoFornecimento = new daoFornecimento();
 	daoPedidos daopedidos = new daoPedidos();
 	daoVendas daovendas = new daoVendas();
+	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
 	
 	public servlet_saida() {
         super();
@@ -69,6 +72,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
 			String id = request.getParameter("idProduto");
 			String valor = request.getParameter("valor");
+			String data = request.getParameter("dataVenda");
 			valor = valor.replaceAll("\\.", "").replaceAll("\\,00", "");
 			
 	        String valor_R$ = valor.replace("R$", "");
@@ -78,20 +82,31 @@ public class servlet_saida extends servlet_recuperacao_login{
 			String quantidade = request.getParameter("quantidade");
 			quantidade = quantidade.replaceAll("\\.", "");
 			int quantidadeInt = Integer.parseInt(quantidade);
-			int quantidadeIntInversa = -quantidadeInt;
-			
-			LocalDate dataAtual = LocalDate.now();
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	        String dataFormatada = dataAtual.format(formatter);			
+			int quantidadeIntInversa = -quantidadeInt;	
 			
 			try {
+				
+				ModelDataVenda dataVenda = new ModelDataVenda();
+				
+				int valortotal = valor_R$Long * quantidadeInt;
+				dataVenda.setDatavenda(data);
+				dataVenda.setValortotal(valortotal);
+				dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
+				
+				boolean booleana = daoVendasRelatorio.buscarData(dataVenda);
+				
+				if(booleana) {
+					daoVendasRelatorio.atualizarDataEValor(dataVenda);
+				}else {
+					daoVendasRelatorio.inserirDataEValor(dataVenda);
+				}
+				
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id), quantidadeIntInversa);
 				ModelVendas venda = new ModelVendas();
 				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
-				//ModelFornecimento fornecimento = daoFornecimento.consultaFornecedor(null, Long.parseLong(id), super.getUsuarioLogado(request).getId());
 				venda.setProduto_pai(produto);
 				venda.setQuantidade(quantidadeInt);
-				venda.setDataentrega(dataFormatada);
+				venda.setDataentrega(data);
 				venda.setValortotal(valor_R$Long);
 				daovendas.gravarVenda(venda, super.getUsuarioLogado(request).getId());
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
@@ -137,27 +152,40 @@ public class servlet_saida extends servlet_recuperacao_login{
 			String dataFinal = request.getParameter("dataFinal");
 	
 			try {
+				int status = 2;
+				
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
+					BeanChart entradas = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status);
+					
+					ModelDataVenda dataVenda = new ModelDataVenda();
+					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
+					List<ModelDataVenda> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda);
+					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
+					String json2 = gson.toJson(entradas);
+					String json3 = gson.toJson(dataVendas);
 					
 					List<ModelVendas> vendas = daovendas.listarVendas(super.getUsuarioLogado(request).getId());
 					
 					String json = gson.toJson(vendas);
 					PrintWriter out = response.getWriter();
-				    out.print(json1 + "|" + json);
+				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3);
 				    out.flush();
 				}else{
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					BeanChart entradas = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
+
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
+					String json2 = gson.toJson(entradas);
 					
 					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					
 					String json = gson.toJson(vendas);
 					PrintWriter out = response.getWriter();
-				    out.print(json1 + "|" + json);
+				    out.print(json1 + "|" + json + "|" + json2);
 				    out.flush();
 				}
 			} catch (Exception e) {

@@ -75,6 +75,8 @@
 												<input onkeyup="limitar()" class="form-control" id="quantidade" name="quantidade" type="number">
 													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
 												<input class="form-control" id="valor" name="valor">
+													<label for="exampleInputEmail1" class="form-label">Data da venda<br/>
+												<input class="form-control" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
 												<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
 											</div>
 										</form>
@@ -98,9 +100,7 @@
 				</div>
 				<div style="padding: 10px 15px 0px 15px;">
 					<p>(1) O valor proposto de venda é calculado a partir do dobro das médias dos valores por unidade dos fornecedores.</p>
-					<p>(2) O valor de venda deve estar dentro da margem de erro fornecida pelo setor de contabilidade.</p>
-					<p>(3) Caso a contabilidade não tenha proposto a margem, a margem-padão, de vinte por cento, será aplicada.</p>
-					<div id="imprimirMargem"></div>
+					<p>(2) O valor de venda deve estar dentro do valor mínimo de venda, que é oitenta por cento do valor estipulado.</p>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -112,6 +112,24 @@
 		<i class="fas fa-angle-up"></i>
 	</a>
 	<script type="text/javascript">
+	
+		function dataAtual() {
+		  	var input = document.getElementById('dataVenda');
+		  	var dataAtual = new Date();
+		  	var dia = dataAtual.getDate();
+		  	var mes = dataAtual.getMonth() + 1;
+		  	var ano = dataAtual.getFullYear();
+
+		  	if (dia < 10) {
+		    	dia = '0' + dia;
+		  	}
+
+		  	if (mes < 10) {
+		    	mes = '0' + mes;
+		  	}
+
+		  	input.value = dia + '/' + mes + '/' + ano;
+		};
 	
 		function limitar2(){
 			const input = document.getElementById('valor').value;
@@ -157,6 +175,8 @@
 	
 		function loadProduto(id){
 			
+			dataAtual();
+			
 			var urlAction = document.getElementById('formularioSaida').action;
 			jQuery("#letreiro > p").remove();
 			
@@ -192,11 +212,13 @@
 			var urlAction = document.getElementById('formularioSaida').action;
 			var quantidade = document.getElementById('quantidade').value;
 			var valor = document.getElementById('valor').value;
+			var dataVenda = document.getElementById('dataVenda').value;
 			
+			dataVenda
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&valor=' + valor + '&idProduto=' + id + '&quantidade=' + quantidade + '&acao=vender',
+				data : '&dataVenda=' + dataVenda + '&valor=' + valor + '&idProduto=' + id + '&quantidade=' + quantidade + '&acao=vender',
 				success : function(json, textStatus, xhr) {
 					location.reload();
 				}
