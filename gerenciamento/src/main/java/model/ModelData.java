@@ -4,7 +4,7 @@ public class ModelData {
 	private Long id;
 	private ModelUsuarios usuario_pai_id;
 	private String datavenda;
-	private int valortotal;
+	private Long valortotal;
 	
 	public Long getId() {
 		return id;
@@ -24,10 +24,10 @@ public class ModelData {
 	public void setDatavenda(String datavenda) {
 		this.datavenda = datavenda;
 	}
-	public int getValortotal() {
+	public Long getValortotal() {
 		return valortotal;
 	}
-	public void setValortotal(int valortotal) {
+	public void setValortotal(Long valortotal) {
 		this.valortotal = valortotal;
 	}
 	

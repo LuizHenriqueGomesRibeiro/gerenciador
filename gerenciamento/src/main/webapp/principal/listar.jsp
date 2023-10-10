@@ -331,11 +331,13 @@
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
 		var urlAction = document.getElementById('formularioFornecimento').action;
+		var capturarData = document.getElementById('capturarData').value;
+		
 		jQuery.ajax({
 
 			method : "get",
 			url : urlAction,
-			data : '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
+			data : '&data=' + capturarData + '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
 				location.reload();
 			}
@@ -381,6 +383,7 @@
 					var string2 = JSON.stringify(json[p].datapedido);
 					var substrings2 = string2.split('"');
 					var novaString2 = substrings2.join('');
+					chamarString(string);
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
 						.append('<tr><td>' + novaString + 
 							'</td><td>' + novaString2 + 
@@ -390,6 +393,10 @@
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 		});
+	}
+	
+	function chamarString(data){
+		jQuery("#tabelaHistoricoPedidos").append("<input type='hidden' id='capturarData' value=" + data + "></input>");
 	}
 	
 	function funcoes(id){

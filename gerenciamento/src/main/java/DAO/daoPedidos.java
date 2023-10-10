@@ -349,6 +349,7 @@ public class daoPedidos {
 		while(resultado.next()){
 			pedido.setDataentrega(resultado.getString("dataentrega"));
 	        pedido.setDatapedido(resultado.getString("datapedido"));
+	        pedido.setValorTotal(resultado.getLong("valortotal"));
 	        pedido.setId(resultado.getLong("id"));
 		}
 		return pedido;	

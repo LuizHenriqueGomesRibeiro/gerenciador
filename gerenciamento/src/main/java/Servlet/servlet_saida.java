@@ -24,6 +24,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -45,6 +46,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoPedidos daopedidos = new daoPedidos();
 	daoVendas daovendas = new daoVendas();
 	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
+	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
 	
 	public servlet_saida() {
         super();
@@ -88,7 +90,10 @@ public class servlet_saida extends servlet_recuperacao_login{
 				
 				ModelData dataVenda = new ModelData();
 				
-				int valortotal = valor_R$Long * quantidadeInt;
+				Long valor_data = Long.parseLong(data);
+				Long quantidade_data = Long.parseLong(quantidade);
+				
+				Long valortotal = valor_data * quantidade_data;
 				dataVenda.setDatavenda(data);
 				dataVenda.setValortotal(valortotal);
 				dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -162,17 +167,23 @@ public class servlet_saida extends servlet_recuperacao_login{
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
 					List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda);
 					
+					ModelData dataEntrada = new ModelData();
+					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
+					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
+					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 					String json2 = gson.toJson(entradas);
 					String json3 = gson.toJson(dataVendas);
+					String json4 = gson.toJson(dataEntradas);
 					
 					List<ModelVendas> vendas = daovendas.listarVendas(super.getUsuarioLogado(request).getId());
 					
 					String json = gson.toJson(vendas);
 					PrintWriter out = response.getWriter();
-				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3);
+				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3 + "|" + json4);
 				    out.flush();
+				    
 				}else{
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					BeanChart entradas = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
@@ -181,17 +192,22 @@ public class servlet_saida extends servlet_recuperacao_login{
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
 					
 					List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda, dataInicial, dataFinal);
+					
+					ModelData dataEntrada = new ModelData();
+					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
+					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
 
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 					String json2 = gson.toJson(entradas);
 					String json3 = gson.toJson(dataVendas);
+					String json4 = gson.toJson(dataEntradas);
 					
 					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					
 					String json = gson.toJson(vendas);
 					PrintWriter out = response.getWriter();
-				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3);
+				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3 + "|" + json4);
 				    out.flush();
 				}
 			} catch (Exception e) {

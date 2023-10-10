@@ -9,94 +9,74 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import conexao.conexao;
 import model.ModelData;
 import model.ModelProdutos;
 import model.ModelVendas;
 
-public class daoVendasRelatorio {
+public class daoEntradasRelatorio {
 	private Connection connection;
 	
-	public daoVendasRelatorio(){
+	public daoEntradasRelatorio(){
 		connection = conexao.getConnection();
 	}
 	
-	public Boolean buscarData(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "SELECT COUNT(*) FROM datavenda WHERE usuario_pai_id = ? AND datavenda = ?;";
+	public Boolean buscarData(ModelData dataEntrada) throws SQLException, ParseException {
+		String sql = "SELECT COUNT(*) FROM dataentrada WHERE usuario_pai_id = ? AND dataentrada = ?;";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
+		statement.setLong(1, dataEntrada.getUsuario_pai_id().getId());
+		statement.setString(2, dataEntrada.getDatavenda());
 		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
-		
-		statement.setLong(1, dataVenda.getUsuario_pai_id().getId());
-		statement.setDate(2, dataSql);
-		
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
+		statement.setInt(1, dataEntrada.getUsuario_pai_id().getId());
 		ResultSet resultado = statement.executeQuery();
 		
 		if (resultado.next() && resultado.getInt(1) > 0) {
-			System.out.println("Há registros");
             return true;
         } else {
-        	System.out.println("Não há registros");
             return false;
         }
 	}
 	
-	public void inserirDataEValor(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "INSERT INTO datavenda(datavenda, valortotal, usuario_pai_id) VALUES(?, ?, ?);";
+	public void inserirDataEValor(ModelData dataEntrada) throws SQLException, ParseException {
+		String sql = "INSERT INTO dataentrada(dataentrada, valortotal, usuario_pai_id) VALUES(?, ?, ?);";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
-		
-		statement.setDate(1, dataSql);
-		statement.setLong(2, dataVenda.getValortotal());
-		statement.setLong(3, dataVenda.getUsuario_pai_id().getId());
+
+		statement.setString(1, dataEntrada.getDatavenda());
+		statement.setLong(2, dataEntrada.getValortotal());
+		statement.setLong(3, dataEntrada.getUsuario_pai_id().getId());
 		
 		statement.execute();
 		connection.commit();
 	}
 	
-	public void atualizarDataEValor(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "UPDATE datavenda SET valortotal = valortotal + ? WHERE usuario_pai_id = ? AND datavenda = ?";
+	public void atualizarDataEValor(ModelData dataEntrada) throws SQLException, ParseException {
+		String sql = "UPDATE dataentrada SET valortotal = valortotal + ? WHERE usuario_pai_id = ? AND dataentrada = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
-		
-		statement.setLong(1, dataVenda.getValortotal());
-		statement.setLong(2, dataVenda.getUsuario_pai_id().getId());
-		statement.setDate(3, dataSql);
+		statement.setLong(1, dataEntrada.getValortotal());
+		statement.setLong(2, dataEntrada.getUsuario_pai_id().getId());
+		statement.setString(3, dataEntrada.getDatavenda());
 		
 		statement.executeUpdate();
 		connection.commit();
 	}
 	
-	public List<ModelData> listarDatasVendas(ModelData dataVenda) throws SQLException, ParseException{
+	public List<ModelData> listarDatasEntradas(ModelData dataEntrada) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
-		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = ? ORDER BY datavenda ASC";
+		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = ? ORDER BY dataentrada ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
+		statement.setInt(1, dataEntrada.getUsuario_pai_id().getId());
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()) {
 			ModelData dataVendas = new ModelData();
 			
-			String data = resultado.getString("datavenda");
+			String data = resultado.getString("dataentrada");
 			String[] parte = data.split(" ");
 			
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
@@ -110,11 +90,11 @@ public class daoVendasRelatorio {
 		return retorno;
 	}
 	
-	public List<ModelData> listarDatasVendas(ModelData dataVenda, String dataInicial, String dataFinal) throws SQLException, ParseException{
+	public List<ModelData> listarDatasEntradas(ModelData dataEntrada, String dataInicial, String dataFinal) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
-		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = ? AND datavenda >= ? AND datavenda <= ? ORDER BY datavenda ASC";
+		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = ? AND dataentrada >= ? AND dataentrada <= ? ORDER BY dataentrada ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
+		statement.setInt(1, dataEntrada.getUsuario_pai_id().getId());
 		
 		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date dataUtil;
@@ -131,7 +111,7 @@ public class daoVendasRelatorio {
 		while(resultado.next()) {
 			ModelData dataVendas = new ModelData();
 			
-			String data = resultado.getString("datavenda");
+			String data = resultado.getString("dataEntrada");
 			String[] parte = data.split(" ");
 			
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");

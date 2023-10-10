@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ModelData;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 import model.ModelProdutos;
@@ -12,6 +13,7 @@ import model.ModelProdutos;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -21,10 +23,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
+import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
+import DAO.daoVendasRelatorio;
 
 /**
  * Servlet implementation class servletFornecimento
@@ -37,6 +41,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	daoProdutos daoproduto = new daoProdutos();
 	daoPedidos pedido = new daoPedidos();
 	daoPedidos daopedidos = new daoPedidos();
+	daoEntradasRelatorio daoEntradaRelatorio = new daoEntradasRelatorio();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -105,9 +110,34 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String id = request.getParameter("id");
 			String id_produto = request.getParameter("id_produto");
 			String quantidade = request.getParameter("quantidade");
+			String data = request.getParameter("data");
+			
+			try {
+				ModelData modelData = new ModelData();
+				modelData.setDatavenda(data);
+				modelData.setUsuario_pai_id(super.getUsuarioLogado(request));
+				
+				Long valortotal = daopedidos.buscarPedido(Long.parseLong(id)).getValorTotal();
+				modelData.setValortotal(valortotal);
+				
+				boolean booleana = daoEntradaRelatorio.buscarData(modelData);
+				
+				if(booleana) {
+					daoEntradaRelatorio.atualizarDataEValor(modelData);
+				}else {
+					daoEntradaRelatorio.inserirDataEValor(modelData);
+				}
+			} catch (SQLException | ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
 			int status = 2;
 			try {
-				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id_produto), super.getUsuarioLogado(request).getId());
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
 				daopedidos.mudarStatus(Integer.parseInt(id), status);
 

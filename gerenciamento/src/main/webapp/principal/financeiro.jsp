@@ -60,6 +60,7 @@
 	</div>
 	<div id="botao">
 	</div>
+	<div id="letrascanvas"></div>
 	<div style="width: 100%;" id="canvas"></div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -71,7 +72,7 @@
 </body>
 <script type="text/javascript">
 
-	function graficoVendas(jsonLista4) {
+	function graficoVendas(jsonLista4, jsonLista5) {
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -108,13 +109,23 @@
 		var valores = json.map(function(data) {
 			return data.valortotal;
 		});
+		
+		var json2 = JSON.parse(jsonLista5);
+		
+		var datas2 = json2.map(function(data) {
+			return data.datavenda;
+		});
+
+		var valores2 = json2.map(function(data) {
+			return data.valortotal;
+		});
 
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: datas,
+						labels: datas2,
 						datasets: [{
 							label: "Vendas",
 							lineTension: 0.3,
@@ -129,6 +140,21 @@
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
 							data: valores
+						},
+						{
+							label: "Entradas",
+							lineTension: 0.3,
+							backgroundColor: "rgba(78, 115, 223, 0.05)",
+							borderColor: "red",
+							pointRadius: 0,
+							pointBackgroundColor: "rgba(78, 115, 223, 1)",
+							pointBorderColor: "red",
+							pointHoverRadius: 0,
+							pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+							pointHoverBorderColor: "red",
+							pointHitRadius: 10,
+							pointBorderWidth : 2,
+							data: valores2
 						}],
 					},
 					options: {
@@ -229,8 +255,6 @@
 		    }
 		  	return s.join(dec);
 		}
-		
-		alert(jsonLista2);
 		
 		var labels = [];
 		var data = [];
@@ -359,6 +383,8 @@
 				
 				jQuery("#canvas > canvas").remove();
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
+				jQuery("#letrascanvas").remove();
+				jQuery("#letrascanvas").append("<h2>Gráfico de entradas e vendas por dia</h2>");
 				
 				var responseArray = response.split("|");
 		        var jsonLista1 = responseArray[0];
@@ -457,10 +483,11 @@
 		        var jsonLista2 = responseArray[1];
 		        var jsonLista3 = responseArray[2];
 		        var jsonLista4 = responseArray[3];
+		        var jsonLista5 = responseArray[4];
 		        
 		        var json = JSON.parse(jsonLista2);
 		        
-				graficoVendas(jsonLista4);
+				graficoVendas(jsonLista4, jsonLista5);
 				
 				var quantidadeTotal = json[0].quantidadeTotal;
 				quantidadeTotal = quantidadeTotal.toLocaleString();
