@@ -71,7 +71,7 @@
 </body>
 <script type="text/javascript">
 
-	function graficoVendas(jsonLista2, jsonLista3) {
+	function graficoVendas(jsonLista4) {
 		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 		Chart.defaults.global.defaultFontColor = '#858796';
 		
@@ -98,39 +98,23 @@
 		    }
 		  	return s.join(dec);
 		}
+		
+		var json = JSON.parse(jsonLista4);
+		
+		var datas = json.map(function(data) {
+			return data.datavenda;
+		});
 
-		var json2 = JSON.parse(jsonLista3);
-		
-		var labels2 = [];
-		var data2 = [];
-		
-		for (var i = 0; i < json2.valores.length; i++) {
-			labels2.push(json2.valores[i]);
-			data2.push(json2.datas[i]);
-		}
+		var valores = json.map(function(data) {
+			return data.valortotal;
+		});
 
-		var json = JSON.parse(jsonLista2);
-		
-		var labels = [];
-		var data = [];
-
-		
-		//for (var i = 0; i < json2.valores.length; i++) {
-		//	labels.push(json.valores[i]);
-		//	data.push(json.datas[i]);
-		//}
-		
-		for (var i = json2.valores.length - 1; i >= 0; i--) {
-			labels.push(json.valores[i]);
-			data.push(json.datas[i]);
-		}
-		
 		var ctx = document.getElementById("myAreaChart");
 		var myLineChart = new Chart(
 				ctx,{
 					type: 'line',
 					data: {
-						labels: data, data2,
+						labels: datas,
 						datasets: [{
 							label: "Vendas",
 							lineTension: 0.3,
@@ -144,22 +128,7 @@
 							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
-							data: labels
-						},
-						{
-							label: "Entradas",
-							lineTension: 0.3,
-							backgroundColor: "rgba(78, 115, 223, 0.05)",
-							borderColor: "red",
-							pointRadius: 0,
-							pointBackgroundColor: "red",
-							pointBorderColor: "red",
-							pointHoverRadius: 0,
-							pointHoverBackgroundColor: "red",
-							pointHoverBorderColor: "red",
-							pointHitRadius: 10,
-							pointBorderWidth : 2,
-							data: labels2
+							data: valores
 						}],
 					},
 					options: {
@@ -260,6 +229,8 @@
 		    }
 		  	return s.join(dec);
 		}
+		
+		alert(jsonLista2);
 		
 		var labels = [];
 		var data = [];
@@ -487,11 +458,9 @@
 		        var jsonLista3 = responseArray[2];
 		        var jsonLista4 = responseArray[3];
 		        
-		        alert(jsonLista4);
-		        
 		        var json = JSON.parse(jsonLista2);
 		        
-				graficoVendas(jsonLista1, jsonLista3);
+				graficoVendas(jsonLista4);
 				
 				var quantidadeTotal = json[0].quantidadeTotal;
 				quantidadeTotal = quantidadeTotal.toLocaleString();

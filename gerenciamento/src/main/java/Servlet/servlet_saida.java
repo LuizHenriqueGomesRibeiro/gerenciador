@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.ModelDataVenda;
+import model.ModelData;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 import model.ModelProdutos;
@@ -86,7 +86,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 			try {
 				
-				ModelDataVenda dataVenda = new ModelDataVenda();
+				ModelData dataVenda = new ModelData();
 				
 				int valortotal = valor_R$Long * quantidadeInt;
 				dataVenda.setDatavenda(data);
@@ -158,9 +158,9 @@ public class servlet_saida extends servlet_recuperacao_login{
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId());
 					BeanChart entradas = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status);
 					
-					ModelDataVenda dataVenda = new ModelDataVenda();
+					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
-					List<ModelDataVenda> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda);
+					List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda);
 					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
@@ -176,16 +176,22 @@ public class servlet_saida extends servlet_recuperacao_login{
 				}else{
 					BeanChart bean = daovendas.listarVendasGrafico(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					BeanChart entradas = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
+					
+					ModelData dataVenda = new ModelData();
+					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
+					
+					List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda, dataInicial, dataFinal);
 
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 					String json2 = gson.toJson(entradas);
+					String json3 = gson.toJson(dataVendas);
 					
 					List<ModelVendas> vendas = daovendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
 					
 					String json = gson.toJson(vendas);
 					PrintWriter out = response.getWriter();
-				    out.print(json1 + "|" + json + "|" + json2);
+				    out.print(json1 + "|" + json + "|" + json2 + "|" + json3);
 				    out.flush();
 				}
 			} catch (Exception e) {

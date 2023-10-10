@@ -1,6 +1,6 @@
 package model;
 
-public class ModelDataVenda {
+public class ModelData {
 	private Long id;
 	private ModelUsuarios usuario_pai_id;
 	private String datavenda;
