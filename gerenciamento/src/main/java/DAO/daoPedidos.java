@@ -9,6 +9,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,96 +179,74 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
+	
 	public List<ModelPedidos> listarPedidos(Long id, int status) throws SQLException {
-		
-		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
-		
-		String sql = "SELECT * FROM pedidos WHERE status = ? AND produtos_pai_id = " + id;
+		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, status);
 		ResultSet resultado = statement.executeQuery();
 		
-		while(resultado.next()){
-	        ModelPedidos pedidos = new ModelPedidos();
-	        
-	        pedidos.setDataentrega(resultado.getString("dataentrega"));
-	        pedidos.setDatapedido(resultado.getString("datapedido"));
-	        pedidos.setQuantidade(resultado.getLong("quantidade"));
-	        pedidos.setId(resultado.getLong("id"));
-	        pedidos.setNome(resultado.getString("nome"));
-	        
-			retorno.add(pedidos);
-		}
-		
-		return retorno;
+	    ModelPedidos pedidos = new ModelPedidos();
+	    
+	    return resultadosListagem(pedidos, resultado);
 	}
-	
+
 	public List<ModelPedidos> listarPedidosRelatorio(int id) throws SQLException {
-		
-		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
-		
 		String sql = "SELECT * FROM pedidos WHERE usuario_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
-		while(resultado.next()){
-	        ModelPedidos pedidos = new ModelPedidos();
+	    ModelPedidos pedidos = new ModelPedidos();
 	        
-	        pedidos.setDatapedido(resultado.getString("datapedido"));
-	        pedidos.setValorTotal(resultado.getLong("valortotal"));
-	        pedidos.setQuantidade(resultado.getLong("quantidade"));
-	        pedidos.setId(resultado.getLong("id"));
-	        pedidos.setNome(resultado.getString("nome"));
-	        
-			retorno.add(pedidos);
-		}
-		
-		return retorno;
+		return resultadosListagem(pedidos, resultado);
 	}
 	
 	public List<ModelPedidos> listarRelatorio(int id, int status) throws SQLException {
-		
-		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
-		
-		String sql = "SELECT * FROM pedidos WHERE status = ? AND usuario_pai_id = " + id;
+		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, status);
 		ResultSet resultado = statement.executeQuery();
 		
-		while(resultado.next()){
-	        ModelPedidos pedidos = new ModelPedidos();
-	        
-	        String data = resultado.getString("dataentrega");
-	        String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			pedidos.setDataentrega(data);
-
-			data = resultado.getString("datapedido");
-			parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			pedidos.setDatapedido(data);
-			
-	        pedidos.setQuantidade(resultado.getLong("quantidade"));
-	        pedidos.setId(resultado.getLong("id"));
-	        pedidos.setValorTotal(resultado.getLong("valortotal"));
-	        pedidos.setNome(resultado.getString("nome"));
-	        
-	        daoPedidos daopedido = new daoPedidos();
-	        
-	        ModelCancelamento cancelamento = daopedido.buscarCancelamento(resultado.getLong("id"));
-	        pedidos.setDatacancelamento(cancelamento.getDatacancelamento());
-	        
-	        pedidos.setQuantidadeTotal(daopedido.somaQuantidade(id, status));
-	        pedidos.setValores(daopedido.somaValores(id, status));
-	        
-	        System.out.println(daopedido.somaValores(id, status));
-	        System.out.println(daopedido.somaQuantidade(id, status));
-	        
-			retorno.add(pedidos);
-		}
+		ModelPedidos pedidos = new ModelPedidos();
 		
+		return resultadosListagem(pedidos, resultado);
+	}
+	
+	public static boolean verificarFormatoData(String data, String formato) {
+        try {
+            LocalDate.parse(data, DateTimeFormatter.ofPattern(formato));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+	
+	public String converterDatas(String data) {
+		
+		String[] parte = data.split(" ");
+		data = parte[0];
+
+		if (verificarFormatoData(data, "yyyy-MM-dd")) {
+			data = transformarFormatoData(data, "yyyy-MM-dd", "dd/MM/yyyy");
+        } else if (verificarFormatoData(data, "dd/MM/yyyy")) {
+        	data = transformarFormatoData(data, "dd/MM/yyyy", "yyyy-MM-dd");
+        }
+		
+		return data;
+	}
+	
+	public List<ModelPedidos> resultadosListagem(ModelPedidos pedido, ResultSet resultado) throws SQLException {
+		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+		while(resultado.next()){
+			pedido.setId(resultado.getLong("id"));
+			pedido.setQuantidade(resultado.getLong("quantidade"));
+			pedido.setValorTotal(resultado.getLong("valortotal"));
+			pedido.setDataentrega(converterDatas(resultado.getString("dataentrega")));
+			pedido.setDatapedido(converterDatas(resultado.getString("datapedido")));
+			pedido.setValor(resultado.getLong("valor"));
+			pedido.setNome(resultado.getString("nome"));
+			pedido.setQuantidadeTotal(somaQuantidade(resultado.getInt("usuario_pai_id"), resultado.getInt("status")));
+			pedido.setValores(somaValores(resultado.getInt("usuario_pai_id"), resultado.getInt("status")));
+			retorno.add(pedido);
+		}
 		return retorno;
 	}
 	
@@ -317,9 +297,6 @@ public class daoPedidos {
 	        
 	        pedidos.setQuantidadeTotal(daopedido.somaQuantidadeRelatorio(id, status, dataInicial, dataFinal));
 	        pedidos.setValores(daopedido.somaValoresRelatorio(id, status, dataInicial, dataFinal));
-	        
-	        System.out.println(daopedido.somaValores(id, status));
-	        System.out.println(daopedido.somaQuantidade(id, status));
 	        
 			retorno.add(pedidos);
 		}
