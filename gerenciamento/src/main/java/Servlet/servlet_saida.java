@@ -229,7 +229,8 @@ public class servlet_saida extends servlet_recuperacao_login{
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 					
-					List<ModelPedidos> entradas = daopedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), status);
+					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql);
 					
 					String json = gson.toJson(entradas);
 					PrintWriter out = response.getWriter();

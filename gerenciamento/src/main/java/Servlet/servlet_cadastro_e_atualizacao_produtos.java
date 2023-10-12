@@ -126,10 +126,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				printWriter.close();
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
-
 				String id = request.getParameter("id");
 				int status = 0;
-				List<ModelPedidos> pedidos = daopedidos.listarPedidos(Long.parseLong(id), status);
+				String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
+				List<ModelPedidos> pedidos = daopedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(pedidos);
 				PrintWriter printWriter = response.getWriter();

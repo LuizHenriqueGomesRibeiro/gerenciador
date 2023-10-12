@@ -179,35 +179,11 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
-	
-	public List<ModelPedidos> listarPedidos(Long id, int status) throws SQLException {
-		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
+	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
-	    ModelPedidos pedidos = new ModelPedidos();
-	    
-	    return resultadosListagem(pedidos, resultado);
-	}
-
-	public List<ModelPedidos> listarPedidosRelatorio(int id) throws SQLException {
-		String sql = "SELECT * FROM pedidos WHERE usuario_pai_id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-		
-	    ModelPedidos pedidos = new ModelPedidos();
-	        
-		return resultadosListagem(pedidos, resultado);
-	}
-	
-	public List<ModelPedidos> listarRelatorio(int id, int status) throws SQLException {
-		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-		
-		ModelPedidos pedidos = new ModelPedidos();
-		
-		return resultadosListagem(pedidos, resultado);
+	    return resultadosListagem(resultado);
 	}
 	
 	public static boolean verificarFormatoData(String data, String formato) {
@@ -233,8 +209,9 @@ public class daoPedidos {
 		return data;
 	}
 	
-	public List<ModelPedidos> resultadosListagem(ModelPedidos pedido, ResultSet resultado) throws SQLException {
+	public List<ModelPedidos> resultadosListagem(ResultSet resultado) throws SQLException {
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+		ModelPedidos pedido = new ModelPedidos();
 		while(resultado.next()){
 			pedido.setId(resultado.getLong("id"));
 			pedido.setQuantidade(resultado.getLong("quantidade"));

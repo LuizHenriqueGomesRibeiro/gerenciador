@@ -68,9 +68,9 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
 			try {
-				int a = 2;
-				List<ModelPedidos> entregas = daoPedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), a);
-				System.out.println(entregas.toString());
+				int status = 2;
+				String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				List<ModelPedidos> entregas = daoPedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(entregas);
 				PrintWriter printWriter = response.getWriter();
@@ -85,7 +85,8 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("pedidos")) {
 			
 			try {
-				List<ModelPedidos> pedidos = daoPedidos.listarPedidosRelatorio(super.getUsuarioLogado(request).getId());
+				String sql = "SELECT * FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				List<ModelPedidos> pedidos = daoPedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(pedidos);
 				PrintWriter printWriter = response.getWriter();
@@ -100,8 +101,9 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelamentos")) {
 			try {
-				int a = 1;
-				List<ModelPedidos> cancelamentos = daoPedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), a);
+				int status = 1;
+				String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				List<ModelPedidos> cancelamentos = daoPedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(cancelamentos);
 				PrintWriter printWriter = response.getWriter();
@@ -166,8 +168,9 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 			try{
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					int a = 2;
-					List<ModelPedidos> entradas = daoPedidos.listarRelatorio(super.getUsuarioLogado(request).getId(), a);
+					int status = 2;
+					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
 					
 					ReportUtil reportUtil = new ReportUtil();
 					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());
