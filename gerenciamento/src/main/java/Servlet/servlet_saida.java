@@ -3,27 +3,21 @@ package Servlet;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import model.ModelData;
-import model.ModelFornecimento;
 import model.ModelPedidos;
 import model.ModelProdutos;
-import model.ModelUsuarios;
 import model.ModelVendas;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
+import DAO.DaoGenerico;
 import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
@@ -47,6 +41,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoVendas daovendas = new daoVendas();
 	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
 	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
+	DaoGenerico dao = new DaoGenerico();
 	
 	public servlet_saida() {
         super();
@@ -58,7 +53,8 @@ public class servlet_saida extends servlet_recuperacao_login{
 		
 		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("caixaListar")) {
 			try {
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -72,28 +68,16 @@ public class servlet_saida extends servlet_recuperacao_login{
 			despache.forward(request, response);
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
-			String id = request.getParameter("idProduto");
-			String valor = request.getParameter("valor");
-			String data = request.getParameter("dataVenda");
-			valor = valor.replaceAll("\\.", "").replaceAll("\\,00", "");
-			
-	        String valor_R$ = valor.replace("R$", "");
-	        valor_R$ = valor_R$.replaceAll("[^0-9]", "");
-
-			int valor_R$Long = Integer.parseInt(valor_R$);
-			String quantidade = request.getParameter("quantidade");
-			quantidade = quantidade.replaceAll("\\.", "");
-			int quantidadeInt = Integer.parseInt(quantidade);
-			int quantidadeIntInversa = -quantidadeInt;	
+			Long id = Long.parseLong(request.getParameter("idProduto"));
+			int valor = dao.converterDinheiroInteger(request.getParameter("valor"));//R$####,00;
+			String data = dao.converterDatas(request.getParameter("dataVenda"));//dd-MM-yyyy
+			int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 			
 			try {
 				
 				ModelData dataVenda = new ModelData();
 				
-				Long valor_data = Long.parseLong(data);
-				Long quantidade_data = Long.parseLong(quantidade);
-				
-				Long valortotal = valor_data * quantidade_data;
+				Long valortotal = (long) (valor * quantidade);
 				dataVenda.setDatavenda(data);
 				dataVenda.setValortotal(valortotal);
 				dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -106,15 +90,16 @@ public class servlet_saida extends servlet_recuperacao_login{
 					daoVendasRelatorio.inserirDataEValor(dataVenda);
 				}
 				
-				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id), quantidadeIntInversa);
+				daoproduto.adicionaProdutoCaixa(Integer.parseInt(request.getParameter("idProduto")) , -quantidade);
 				ModelVendas venda = new ModelVendas();
-				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(id), super.getUsuarioLogado(request).getId());
+				ModelProdutos produto = daoproduto.consultaProduto(id, super.getUsuarioLogado(request).getId());
 				venda.setProduto_pai(produto);
-				venda.setQuantidade(quantidadeInt);
+				venda.setQuantidade(quantidade);
 				venda.setDataentrega(data);
-				venda.setValortotal(valor_R$Long);
+				venda.setValortotal(valor*quantidade);
 				daovendas.gravarVenda(venda, super.getUsuarioLogado(request).getId());
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
 			} catch (NumberFormatException e) {

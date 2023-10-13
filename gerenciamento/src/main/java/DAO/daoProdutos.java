@@ -11,6 +11,7 @@ import java.util.List;
 import conexao.conexao;
 import model.ModelUsuarios;
 import model.ModelFornecimento;
+import model.ModelPedidos;
 import model.ModelProdutos;
 
 public class daoProdutos {
@@ -115,45 +116,34 @@ public class daoProdutos {
 			
 		}
 	}
-	
-	public List<ModelProdutos> listarProdutos(int id) throws SQLException {
-		
-		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
-		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " LIMIT 10";
+
+	public List<ModelProdutos> listarProdutos(String sql, int id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
+		return resultadosListagem(resultado, id);
+	}
+	
+	public List<ModelProdutos> resultadosListagem(ResultSet resultado, int id) throws SQLException {
+		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		while(resultado.next()){
-			
 			ModelProdutos produtos = new ModelProdutos();
 			daoPedidos pedido = new daoPedidos();
+			DaoGenerico dao = new DaoGenerico(); 
 			
 			produtos.setId(resultado.getLong("id"));
-			
-			int quantidade = pedido.somaQuantidade(resultado.getLong("id"));
-			String quantidadeString = String.valueOf(quantidade);
-			DecimalFormat formato = new DecimalFormat("#,###");
-	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
-	        
-	        int valor = pedido.somaValores(resultado.getLong("id"));
-	        
-	        if(valor == 0) {
+			int status = 0;
+			String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
+	        if(pedido.somaValores(resultado.getLong("id")) == 0) {
 	        	produtos.setValorTotalString("Sem valores");
 	        }else {
-	        	
-	        	NumberFormat format = NumberFormat.getInstance();
-	        	format.setGroupingUsed(true);
-	        
-	        	String precoFormatado = format.format(valor);
-	        	String precoFormatado00R$ = "R$" + precoFormatado + ",00";
-	        	
-	        	produtos.setValorTotalString(precoFormatado00R$);
+	        	produtos.setValorTotalString(dao.converterIntegerDinheiro(pedido.somaValores(resultado.getLong("id"))));
 	        }
 	        
-	        if(quantidade == 0) {
+	        if(pedido.somaQuantidade(sql) == 0) {
 	        	produtos.setQuantidadePedidaString("Sem quantidades");
 	        }else {
-	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado + " unidades");
+	        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(pedido.somaQuantidade(sql))) + " unidades");
 	        }
 	       
 			produtos.setQuantidade(resultado.getInt("quantidade"));
@@ -162,11 +152,10 @@ public class daoProdutos {
 
 			retorno.add(produtos);
 		}
-		
 		return retorno;
 	}
 	
-	public String somaProdutos(int usuario_pai_id) throws Exception{
+	public int somaProdutos(int usuario_pai_id) throws Exception{
 		
 		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
 		
@@ -180,13 +169,7 @@ public class daoProdutos {
 		    soma = resultado.getInt(1);
 		}
 		
-        NumberFormat format = NumberFormat.getInstance();
-
-        format.setGroupingUsed(true);
-
-        String numeroFormatado = format.format(soma);
-		
-		return numeroFormatado;
+		return soma;
 	}
 	
 	public int consultaProdutosPaginas(int usuario) throws Exception {
@@ -209,59 +192,6 @@ public class daoProdutos {
 		}
 		
 		return pagina.intValue();
-	}
-	
-	public List<ModelProdutos> consultaProdutosOffset(int usuario, int offset) throws Exception{
-		
-		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
-		
-		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + usuario + " ORDER BY quantidade OFFSET ? LIMIT 10";
-		
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, offset);
-		
-		ResultSet resultado = statement.executeQuery();
-
-		while (resultado.next()) {
-			
-			ModelProdutos produtos = new ModelProdutos();
-			daoPedidos pedido = new daoPedidos();
-	        
-			produtos.setId(resultado.getLong("id"));
-			
-			int quantidade = pedido.somaQuantidade(resultado.getLong("id"));
-			String quantidadeString = String.valueOf(quantidade);
-			DecimalFormat formato = new DecimalFormat("#,###");
-	        String quantidadeStringFormatado = formato.format(Double.parseDouble(quantidadeString));
-	        
-	        int valor = pedido.somaValores(resultado.getLong("id"));
-	        
-	        if(valor == 0) {
-	        	produtos.setValorTotalString("Sem valores");
-	        }else {
-	        	
-	        	NumberFormat format = NumberFormat.getInstance();
-	        	format.setGroupingUsed(true);
-	        
-	        	String precoFormatado = format.format(valor);
-	        	String precoFormatado00R$ = "R$" + precoFormatado + ",00";
-	        	
-	        	produtos.setValorTotalString(precoFormatado00R$);
-	        }
-	        
-	        if(quantidade == 0) {
-	        	produtos.setQuantidadePedidaString("Sem quantidades");
-	        }else {
-	        	produtos.setQuantidadePedidaString(quantidadeStringFormatado);
-	        }
-	       
-			produtos.setQuantidade(pedido.somaQuantidade(resultado.getLong("id")));
-			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(usuario));
-			produtos.setNome(resultado.getString("nome"));
-
-			retorno.add(produtos);
-		}
-		return retorno;
 	}
 	
 	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {

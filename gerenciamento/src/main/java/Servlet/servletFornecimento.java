@@ -70,7 +70,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				
 				dataPedido = dataPedido.replaceAll("\\/", "-");
 				
-				ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, idProdutoLong, super.getUsuarioLogado(request).getId());
+				ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, Long.parseLong(idProduto), super.getUsuarioLogado(request).getId());
 				
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				LocalDate data = LocalDate.parse(dataPedido, formatter);
@@ -91,15 +91,15 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				modelPedidos.setDatapedido(dataPedido);
 				modelPedidos.setDataentrega(dataEntrega);
 				modelPedidos.setValor(fornecedor.getValor());
-				modelPedidos.setNome(daoproduto.consultaProduto(idProdutoLong, super.getUsuarioLogado(request).getId()).getNome());
+				modelPedidos.setNome(daoproduto.consultaProduto(Long.parseLong(idProduto), super.getUsuarioLogado(request).getId()).getNome());
 				
 				pedido.gravarPedido(modelPedidos, super.getUsuarioLogado(request).getId());
 				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
 				request.setAttribute("soma", numero);
-				
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+				String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
 				request.setAttribute("produtos", produtos);
 				
 			} catch (Exception e) {
@@ -193,8 +193,8 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 			String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";
 			request.setAttribute("soma", numero);
-	
-			List<ModelProdutos> produtos = daoproduto.listarProdutos(super.getUsuarioLogado(request).getId());
+			String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
+			List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
 			request.setAttribute("produtos", produtos);
 			
 			RequestDispatcher despache = request.getRequestDispatcher("principal/listar.jsp");

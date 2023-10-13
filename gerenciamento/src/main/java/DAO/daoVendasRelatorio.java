@@ -23,64 +23,35 @@ public class daoVendasRelatorio {
 	}
 	
 	public Boolean buscarData(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "SELECT COUNT(*) FROM datavenda WHERE usuario_pai_id = ? AND datavenda = ?;";
+		String sql = "SELECT COUNT(*) FROM datavenda WHERE usuario_pai_id = " + dataVenda.getUsuario_pai_id().getId() + " AND datavenda = '" + dataVenda.getDatavenda() + "'";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
-		
-		statement.setLong(1, dataVenda.getUsuario_pai_id().getId());
-		statement.setDate(2, dataSql);
-		
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
 		ResultSet resultado = statement.executeQuery();
 		
 		if (resultado.next() && resultado.getInt(1) > 0) {
-			System.out.println("Há registros");
             return true;
         } else {
-        	System.out.println("Não há registros");
             return false;
         }
 	}
 	
 	public void inserirDataEValor(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "INSERT INTO datavenda(datavenda, valortotal, usuario_pai_id) VALUES(?, ?, ?);";
+		String sql = "INSERT INTO datavenda(datavenda, valortotal, usuario_pai_id) VALUES('" + dataVenda.getDatavenda() + "', ?, ?);";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
-		
-		statement.setDate(1, dataSql);
-		statement.setLong(2, dataVenda.getValortotal());
-		statement.setLong(3, dataVenda.getUsuario_pai_id().getId());
+		statement.setLong(1, dataVenda.getValortotal());
+		statement.setLong(2, dataVenda.getUsuario_pai_id().getId());
 		
 		statement.execute();
 		connection.commit();
 	}
 	
 	public void atualizarDataEValor(ModelData dataVenda) throws SQLException, ParseException {
-		String sql = "UPDATE datavenda SET valortotal = valortotal + ? WHERE usuario_pai_id = ? AND datavenda = ?";
+		String sql = "UPDATE datavenda SET valortotal = valortotal + ? WHERE usuario_pai_id = ? AND datavenda = '" + dataVenda.getDatavenda() + "'";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
-		String dataEmFormatacao = transformarFormatoData(dataVenda.getDatavenda(), "dd/MM/yyyy", "yyyy-MM-dd");
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataEmFormatacao);
-		Date dataSql = new Date(dataUtil.getTime());
 		
 		statement.setLong(1, dataVenda.getValortotal());
 		statement.setLong(2, dataVenda.getUsuario_pai_id().getId());
-		statement.setDate(3, dataSql);
 		
 		statement.executeUpdate();
 		connection.commit();

@@ -58,19 +58,14 @@ public class daoPedidos {
 		}
 	}
 	
-	public int somaQuantidade(Long produtoId) throws SQLException {
-		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = ? AND status = ?";
-
+	public int somaQuantidade(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, produtoId);
-		int status = 0;
-		statement.setInt(2, status);
 		ResultSet resultado = statement.executeQuery();
 			
 		resultado.next();
 		
 		return resultado.getInt("soma");
-	}	
+	}
 	
 	public int somaValores(Long produtoId) throws SQLException {
 		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = ? AND status = ?";
@@ -86,19 +81,6 @@ public class daoPedidos {
 		return resultado.getInt("soma");
 	}
 	
-	public int somaQuantidade(int usuario_pai_id, int status) throws SQLException {
-		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
-
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, usuario_pai_id);
-		statement.setInt(2, status);
-		
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
-	}	
 	
 	public int somaValores(int usuario_pai_id, int status) throws SQLException {
 		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
@@ -179,7 +161,8 @@ public class daoPedidos {
 			pedido.setDatapedido(dao.converterDatas(resultado.getString("datapedido")));
 			pedido.setValor(resultado.getLong("valor"));
 			pedido.setNome(resultado.getString("nome"));
-			pedido.setQuantidadeTotal(somaQuantidade(resultado.getInt("usuario_pai_id"), resultado.getInt("status")));
+			String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE usuario_pai_id = " + resultado.getInt("usuario_pai_id") + " AND status = " + resultado.getInt("status");
+			pedido.setQuantidadeTotal(somaQuantidade(sql));
 			pedido.setValores(somaValores(resultado.getInt("usuario_pai_id"), resultado.getInt("status")));
 			retorno.add(pedido);
 		}
