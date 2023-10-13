@@ -221,9 +221,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 			try {
 				int status = 2;
-			
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					
 					BeanChart bean = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status);
 					
 					Gson gson = new Gson();
@@ -236,15 +234,15 @@ public class servlet_saida extends servlet_recuperacao_login{
 					PrintWriter out = response.getWriter();
 				    out.print(json1 + "|" + json);
 				    out.flush();
-					
 				}else{
-					
 					BeanChart bean = daopedidos.listarEntradasGrafico(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
 					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
-					
-					List<ModelPedidos> entradas = daopedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), status, dataInicial, dataFinal);
+
+					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
+							+ " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql);
 					
 					String json = gson.toJson(entradas);
 					PrintWriter out = response.getWriter();

@@ -107,7 +107,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				e.printStackTrace();
 			}
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-			String id = request.getParameter("id");
+			Long id = Long.parseLong(request.getParameter("id"));
 			String id_produto = request.getParameter("id_produto");
 			String quantidade = request.getParameter("quantidade");
 			String data = request.getParameter("data");
@@ -117,7 +117,8 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				modelData.setDatavenda(data);
 				modelData.setUsuario_pai_id(super.getUsuarioLogado(request));
 				
-				Long valortotal = daopedidos.buscarPedido(Long.parseLong(id)).getValorTotal();
+				String sql = "SELECT * FROM pedidos WHERE id = " + id;
+				Long valortotal = daopedidos.listarPedidos(sql).get(0).getValorTotal();
 				modelData.setValortotal(valortotal);
 				
 				boolean booleana = daoEntradaRelatorio.buscarData(modelData);
@@ -135,11 +136,10 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				e.printStackTrace();
 			}
 			
-			
 			int status = 2;
 			try {
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(id_produto), Integer.parseInt(quantidade));
-				daopedidos.mudarStatus(Integer.parseInt(id), status);
+				daopedidos.mudarStatus(id, status);
 
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -149,14 +149,10 @@ public class servletFornecimento extends servlet_recuperacao_login {
 				e.printStackTrace();
 			}
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
-			String id = request.getParameter("id");
+			Long id = Long.parseLong(request.getParameter("id"));
 			try {
 				int status = 1;
-				daopedidos.mudarStatus(Integer.parseInt(id), status);
-				LocalDate dataAtual = LocalDate.now();
-		        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		        String dataFormatada = dataAtual.format(formatter);	
-				daopedidos.gravarCancelamento(dataFormatada, Long.parseLong(id));
+				daopedidos.mudarStatus(id, status);
 				
 			} catch (NumberFormatException e) {
 				e.printStackTrace();

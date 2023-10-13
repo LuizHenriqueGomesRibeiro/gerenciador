@@ -9,6 +9,9 @@ import com.google.gson.Gson;
 import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
+
+import DAO.DAOGeneric;
+import DAO.DaoGenerico;
 import DAO.daoPedidos;
 import DAO.daoVendas;
 import Util.ReportUtil;
@@ -28,6 +31,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 	
 	daoVendas daoVendas = new daoVendas();
 	daoPedidos daoPedidos = new daoPedidos();
+	DaoGenerico dao = new DaoGenerico();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -187,8 +191,10 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			        }
 				}else {
-					int a = 2;
-					List<ModelPedidos> entradas = daoPedidos.listarRelatorioPorTempo(super.getUsuarioLogado(request).getId(), a, dataInicial, dataFinal);
+					int status = 2;
+					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
+							+ " AND dataentrega >= " +     dao.converterDatas(dataInicial) + " AND dataentrega <= " + dao.converterDatas(dataFinal);
+					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
 					
 					ReportUtil reportUtil = new ReportUtil();
 					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());

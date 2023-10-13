@@ -16,8 +16,9 @@ import model.ModelProdutos;
 import model.ModelVendas;
 
 public class daoVendas {
-private Connection connection;
-	
+	private Connection connection;
+	DaoGenerico dao = new DaoGenerico();
+
 	public daoVendas(){
 		connection = conexao.getConnection();
 	}
@@ -27,15 +28,8 @@ private Connection connection;
 			String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
-			String data = transformarFormatoData(venda.getDataentrega(), "dd/MM/yyyy", "yyyy-MM-dd");
-			SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-			java.util.Date dataUtil;
-			
-			dataUtil = formatador.parse(data);
-			Date dataSql = new Date(dataUtil.getTime());
-			
 			statement.setLong(1, venda.getProduto_pai().getId());
-			statement.setDate(2, dataSql);
+			statement.setString(2, dao.converterDatas(venda.getDataentrega()));
 			statement.setInt(3, venda.getValortotal()*venda.getQuantidade());
 			statement.setInt(4, venda.getQuantidade());
 			statement.setString(5, venda.getProduto_pai().getNome());
