@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
+import DAO.DaoGenerico;
 import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
@@ -42,6 +43,7 @@ public class servletFornecimento extends servlet_recuperacao_login {
 	daoPedidos pedido = new daoPedidos();
 	daoPedidos daopedidos = new daoPedidos();
 	daoEntradasRelatorio daoEntradaRelatorio = new daoEntradasRelatorio();
+	DaoGenerico dao = new DaoGenerico();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -62,38 +64,27 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			String fornecimento_pai_id = request.getParameter("fornecimento_pai_id");
 			String quantidade = request.getParameter("quantidade");
 			String dataPedido = request.getParameter("dataPedido");
-			String idProduto = request.getParameter("idProduto");
-			Long idProdutoLong = Long.parseLong(idProduto);
+			Long idProduto = Long.parseLong(request.getParameter("idProduto"));
 			Long fornecimento_pai_id_int = Long.parseLong(fornecimento_pai_id);
 
 			try {
-				
 				dataPedido = dataPedido.replaceAll("\\/", "-");
 				
-				ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, Long.parseLong(idProduto), super.getUsuarioLogado(request).getId());
+				ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(fornecimento_pai_id_int, idProduto, super.getUsuarioLogado(request).getId());
 				
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-				LocalDate data = LocalDate.parse(dataPedido, formatter);
-				
-				long quantidadeDiasAdicionais = fornecedor.getTempoentrega();
-				data = data.plusDays(quantidadeDiasAdicionais);
-
-				String dataEntrega = data.format(formatter);
-				dataEntrega = dataEntrega.replaceAll("\\-", "/");
-				dataPedido = dataPedido.replaceAll("\\-", "/");
-				
-				quantidade = quantidade.replaceAll("\\.", "");
-				Long quantidade_int = Long.parseLong(quantidade);
+				LocalDate data = LocalDate.parse(dataPedido, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+				data = data.plusDays(fornecedor.getTempoentrega());
 				
 				ModelPedidos modelPedidos = new ModelPedidos();
 				modelPedidos.setFornecedor_pai_id(fornecedor);
-				modelPedidos.setQuantidade(quantidade_int);
+				modelPedidos.setQuantidade(Long.parseLong(dao.tirarPonto(quantidade)));
 				modelPedidos.setDatapedido(dataPedido);
-				modelPedidos.setDataentrega(dataEntrega);
+				modelPedidos.setDataentrega(data.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 				modelPedidos.setValor(fornecedor.getValor());
-				modelPedidos.setNome(daoproduto.consultaProduto(Long.parseLong(idProduto), super.getUsuarioLogado(request).getId()).getNome());
+				modelPedidos.setNome(daoproduto.consultaProduto(idProduto, super.getUsuarioLogado(request).getId()).getNome());
+				modelPedidos.setUsuario_pai_id(super.getUsuarioLogado(request));
 				
-				pedido.gravarPedido(modelPedidos, super.getUsuarioLogado(request).getId());
+				pedido.gravarPedido(modelPedidos);
 				
 				request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(this.getUsuarioLogado(request).getId()));
 				String numero = "R$" + daoproduto.somaProdutos(this.getUsuarioLogado(request).getId()) + ",00";

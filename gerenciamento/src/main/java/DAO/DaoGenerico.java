@@ -1,11 +1,19 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import conexao.conexao;
+
 public class DaoGenerico {
+	private Connection connection;
+	
 	public String colocarPonto(String numero) {
 		int posicao = numero.length() - 3;
 			
@@ -78,5 +86,25 @@ public class DaoGenerico {
 			
 			return null;
 		}
+	}
+	
+	public int somaQuantidade(String sql) throws SQLException {
+		connection = conexao.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
+	}
+	
+	public int somaValores(String sql) throws SQLException {
+		connection = conexao.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+			
+		resultado.next();
+		
+		return resultado.getInt("soma");
 	}
 }

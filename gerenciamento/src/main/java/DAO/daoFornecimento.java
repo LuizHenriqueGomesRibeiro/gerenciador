@@ -37,16 +37,13 @@ public class daoFornecimento {
 		}
 	}
 	
-	public List<ModelFornecimento> listarFornecedores(int id) throws SQLException {
-		
+	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
 		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
-		
 		String sql = "SELECT * FROM fornecimento WHERE produtos_pai_id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()){
-			
 			ModelFornecimento fornecedores = new ModelFornecimento();
 			
 			fornecedores.setId(resultado.getLong("id"));
@@ -56,35 +53,25 @@ public class daoFornecimento {
 			
 			retorno.add(fornecedores);
 		}
-		
 		return retorno;
 	}
 	
 	public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuarioId) {
-		
 		ModelFornecimento modelFornecimento = new ModelFornecimento();
-
 		try {
-			String sql = "SELECT*FROM fornecimento WHERE id = ? AND produtos_pai_id = ?";
-
+			String sql = "SELECT* FROM fornecimento WHERE id = " + id + " AND produtos_pai_id = " + produtoId;
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
-			statement.setLong(2, produtoId);
 			ResultSet resultado = statement.executeQuery();
 
 			while (resultado.next()) {
-				
 				daoProdutos daoprodutos = new daoProdutos();
-
 				modelFornecimento.setId(resultado.getLong("id"));
 				modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
 				modelFornecimento.setNome(resultado.getString("nome"));
 				modelFornecimento.setValor(resultado.getLong("valor"));
 				modelFornecimento.setProduto_pai_id(daoprodutos.consultaProduto(produtoId, usuarioId));		
 			}
-
 			return modelFornecimento;
-
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -93,32 +80,22 @@ public class daoFornecimento {
 	}
 	
 	public void excluirFornecedor(String id) {
-
 		try {
-			String sql = "DELETE FROM fornecimento WHERE id = ?";
-			
+			String sql = "DELETE FROM fornecimento WHERE id = " + Long.parseLong(id);
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setLong(1, Long.parseLong(id));
 			statement.executeUpdate();
-			
-			statement.execute();
 			connection.commit();
 
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			
 		}
 	}
 	
 	public Double mediaValoresFornecimento(Long produto) throws Exception{
-		
-		String sql = "SELECT AVG(valor) AS media FROM fornecimento WHERE produtos_pai_id = ?";
+		String sql = "SELECT AVG(valor) AS media FROM fornecimento WHERE produtos_pai_id = " + produto;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, produto);
-		
 		ResultSet resultado = statement.executeQuery();
-		
 		resultado.next();
 		Double total = resultado.getDouble("media");
 		

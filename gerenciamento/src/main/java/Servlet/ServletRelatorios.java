@@ -47,13 +47,15 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 		String acao = request.getParameter("acao");
 		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("irParaRelatorios")) {
 			
-			RequestDispatcher despache = request.getRequestDispatcher("principal/relatorios.jsp");
-			despache.forward(request, response);
+			request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
 			
 			try {
-				List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
+				String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
 				Gson gson = new Gson();
 				String json = gson.toJson(vendas);
 				PrintWriter printWriter = response.getWriter();
@@ -72,8 +74,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
 			try {
-				int status = 2;
-				String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
 				List<ModelPedidos> entregas = daoPedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(entregas);
@@ -105,8 +106,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelamentos")) {
 			try {
-				int status = 1;
-				String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+				String sql = "SELECT * FROM pedidos WHERE status = " + 1L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
 				List<ModelPedidos> cancelamentos = daoPedidos.listarPedidos(sql);
 				Gson gson = new Gson();
 				String json = gson.toJson(cancelamentos);
@@ -127,7 +127,10 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 			try{
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					List<ModelVendas> vendas = daoVendas.listarVendas(super.getUsuarioLogado(request).getId());
+					String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
 					
 					ReportUtil reportUtil = new ReportUtil();
 					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
@@ -144,7 +147,10 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			        }
 				}else {
-					List<ModelVendas> vendas = daoVendas.listarVendasPorTempo(super.getUsuarioLogado(request).getId(), dataInicial, dataFinal);
+					String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
+					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
+					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
+					List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
 					
 					ReportUtil reportUtil = new ReportUtil();
 					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
@@ -172,8 +178,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			
 			try{
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					int status = 2;
-					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
 					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
 					
 					ReportUtil reportUtil = new ReportUtil();
@@ -191,9 +196,8 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			        }
 				}else {
-					int status = 2;
-					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND dataentrega >= " +     dao.converterDatas(dataInicial) + " AND dataentrega <= " + dao.converterDatas(dataFinal);
+					String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
+							+ " AND dataentrega >= " + dao.converterDatas(dataInicial) + " AND dataentrega <= " + dao.converterDatas(dataFinal);
 					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
 					
 					ReportUtil reportUtil = new ReportUtil();
@@ -224,5 +228,4 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	}
-
 }

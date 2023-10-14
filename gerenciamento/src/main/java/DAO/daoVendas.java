@@ -18,6 +18,7 @@ import model.ModelVendas;
 public class daoVendas {
 	private Connection connection;
 	DaoGenerico dao = new DaoGenerico();
+	daoProdutos daoproduto = new daoProdutos();
 
 	public daoVendas(){
 		connection = conexao.getConnection();
@@ -44,35 +45,25 @@ public class daoVendas {
 		}
 	}
 	
-	public List<ModelVendas> listarVendas(int id_usuario) throws SQLException, ParseException{
+	public List<ModelVendas> listarVendas(String sql, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException{
 		List<ModelVendas> retorno = new ArrayList<ModelVendas>();
-		String sql = "SELECT * FROM vendas WHERE usuario_pai_id = ?";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, id_usuario);
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()) {
 			ModelVendas vendas = new ModelVendas();
-			Long id = resultado.getLong("produtos_pai_Id");
-			daoProdutos daoproduto = new daoProdutos();
-			ModelProdutos produto = daoproduto.consultaProduto(id, id_usuario);
+			ModelProdutos produto = daoproduto.consultaProduto(resultado.getLong("produtos_pai_Id"), resultado.getInt("usuario_pai_id"));
 			vendas.setNome(produto.getNome());
 			vendas.setId(resultado.getInt("id"));
-			
-			String data = resultado.getString("dataentrega");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			vendas.setDataentrega(data);
-			
+			vendas.setDataentrega(dao.converterDatas(resultado.getString("dataentrega")));
 			vendas.setValortotal(resultado.getInt("valortotal"));
 			vendas.setProduto_pai(produto);
 			vendas.setQuantidade(resultado.getInt("quantidade"));
 			
 			daoVendas daovenda = new daoVendas();
 			
-			vendas.setValores(daovenda.somaValores(id_usuario));
-			vendas.setQuantidadeTotal(daovenda.somaQuantidade(id_usuario));
+			vendas.setValores(dao.somaValores(sqlSomaValores));
+			vendas.setQuantidadeTotal(dao.somaQuantidade(sqlSomaQuantidade));
 			
 			retorno.add(vendas);
 		}
@@ -80,86 +71,8 @@ public class daoVendas {
 		return retorno;
 	}
 	
-	public List<ModelVendas> listarVendasPorTempo(int id_usuario, String dataInicial, String dataFinal) throws SQLException, ParseException{
-		List<ModelVendas> retorno = new ArrayList<ModelVendas>();
-		String sql = "SELECT * FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
+	public BeanChart listarVendasGrafico(String sql) throws SQLException, ParseException{
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataInicial);
-		Date dataSql = new Date(dataUtil.getTime());
-		dataUtil = formatador.parse(dataFinal);
-		Date dataSql2 = new Date(dataUtil.getTime());
-		statement.setDate(2, dataSql);
-		statement.setDate(3, dataSql2);
-		
-		statement.setInt(1, id_usuario);
-		ResultSet resultado = statement.executeQuery();
-		
-		while(resultado.next()) {
-			ModelVendas vendas = new ModelVendas();
-			Long id = resultado.getLong("produtos_pai_Id");
-			daoProdutos daoproduto = new daoProdutos();
-			ModelProdutos produto = daoproduto.consultaProduto(id, id_usuario);
-			vendas.setNome(produto.getNome());
-			vendas.setId(resultado.getInt("id"));
-			
-			String data = resultado.getString("dataentrega");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			vendas.setDataentrega(data);
-			
-			vendas.setValortotal(resultado.getInt("valortotal"));
-			vendas.setProduto_pai(produto);
-			vendas.setQuantidade(resultado.getInt("quantidade"));
-			
-			daoVendas daovenda = new daoVendas();
-			
-			vendas.setValores(daovenda.somaValores(id_usuario, dataInicial, dataFinal));
-			vendas.setQuantidadeTotal(daovenda.somaQuantidade(id_usuario, dataInicial, dataFinal));
-			
-			retorno.add(vendas);
-		}
-		
-		return retorno;
-	}
-	
-	public static String transformarFormatoData(String dataString, String formatoOriginal, String novoFormato) {
-		try {
-			SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
-			SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
-
-			java.util.Date data = formatoOriginalData.parse(dataString);
-
-			String dataFormatada = formatoNovoData.format(data);
-
-			return dataFormatada;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
-	
-	public BeanChart listarVendasGrafico(int id_usuario, String dataInicial, String dataFinal) throws SQLException, ParseException{
-		
-		String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ? ORDER BY dataentrega ASC";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, id_usuario);
-		
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataInicial);
-		Date dataSql = new Date(dataUtil.getTime());
-		dataUtil = formatador.parse(dataFinal);
-		Date dataSql2 = new Date(dataUtil.getTime());
-		statement.setDate(2, dataSql);
-		statement.setDate(3, dataSql2);
-		
 		ResultSet resultado = statement.executeQuery();
 		List<Long> valores = new ArrayList<Long>();
 		List<String> datas = new ArrayList<String>();
@@ -167,127 +80,13 @@ public class daoVendas {
 		BeanChart beanChart = new BeanChart();
 		
 		while(resultado.next()) {
-			Long valortotal = resultado.getLong("valortotal");
-			
-			String data = resultado.getString("dataentrega");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			
-			valores.add(valortotal);
-			datas.add(data);
+			valores.add(resultado.getLong("valortotal"));
+			datas.add(dao.converterDatas(resultado.getString("dataentrega")));
 		}
 		
 		beanChart.setDatas(datas);
 		beanChart.setValores(valores);
 		
 		return beanChart;
-	}
-	
-	public BeanChart listarVendasGrafico(int id_usuario) throws SQLException{
-		
-		String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = ? ORDER BY dataentrega ASC";
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, id_usuario);
-		ResultSet resultado = statement.executeQuery();
-		List<Long> valores = new ArrayList<Long>();
-		List<String> datas = new ArrayList<String>();
-		
-		BeanChart beanChart = new BeanChart();
-		
-		while(resultado.next()) {
-			Long valortotal = resultado.getLong("valortotal");
-				
-			String data = resultado.getString("dataentrega");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			
-			valores.add(valortotal);
-			datas.add(data);
-		}
-		
-		beanChart.setDatas(datas);
-		beanChart.setValores(valores);
-		
-		return beanChart;
-	}
-	
-	public int somaQuantidade(int id_usuario) throws SQLException, ParseException {
-		String sql = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = ?";
-
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, id_usuario);
-		
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
 	}	
-	
-	public int somaValores(int usuario_pai_id) throws SQLException, ParseException {
-		String sql = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = ?";
-
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, usuario_pai_id);
-		
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
-	}
-	
-	public int somaQuantidade(int usuario_pai_id, String dataInicial, String dataFinal) throws SQLException, ParseException {
-		String sql = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
-
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, usuario_pai_id);
-		
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataInicial);
-		Date dataSql = new Date(dataUtil.getTime());
-		dataUtil = formatador.parse(dataFinal);
-		Date dataSql2 = new Date(dataUtil.getTime());
-		statement.setDate(2, dataSql);
-		statement.setDate(3, dataSql2);
-		
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
-	}	
-	
-	public int somaValores(int usuario_pai_id, String dataInicial, String dataFinal) throws SQLException, ParseException {
-		String sql = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = ? AND dataentrega >= ? AND dataentrega <= ?";
-
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setLong(1, usuario_pai_id);
-		
-		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date dataUtil;
-		
-		dataUtil = formatador.parse(dataInicial);
-		Date dataSql = new Date(dataUtil.getTime());
-		dataUtil = formatador.parse(dataFinal);
-		Date dataSql2 = new Date(dataUtil.getTime());
-		statement.setDate(2, dataSql);
-		statement.setDate(3, dataSql2);
-		
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
-	}
-	
-	
-	
-	
-	
-	
 }

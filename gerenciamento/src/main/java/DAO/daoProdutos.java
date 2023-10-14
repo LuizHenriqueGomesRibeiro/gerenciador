@@ -17,7 +17,7 @@ import model.ModelProdutos;
 public class daoProdutos {
 	
 	private Connection connection;
-	
+	DaoGenerico dao = new DaoGenerico();
 	daoLogin daoLogin = new daoLogin();
 
 	public daoProdutos() {
@@ -47,7 +47,6 @@ public class daoProdutos {
 	}
 	
 	public void excluirProduto(String id) {
-
 		try {
 			String sql = "DELETE FROM produtos WHERE id = ?";
 			
@@ -55,9 +54,7 @@ public class daoProdutos {
 			statement.setLong(1, Long.parseLong(id));
 			statement.executeUpdate();
 			
-			statement.execute();
 			connection.commit();
-
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -66,9 +63,7 @@ public class daoProdutos {
 	}
 	
 	public ModelProdutos consultaProduto(Long id, int userLogado) {
-		
 		ModelProdutos modelProduto = new ModelProdutos();
-
 		try {
 			String sql = "SELECT*FROM produtos WHERE id = ? AND usuario_pai_id = ?";
 
@@ -78,14 +73,12 @@ public class daoProdutos {
 			ResultSet resultado = statement.executeQuery();
 
 			while (resultado.next()) {
-
 				modelProduto.setId(resultado.getLong("id"));
 				modelProduto.setNome(resultado.getString("nome"));
 				modelProduto.setPreco(resultado.getInt("preco"));
 				modelProduto.setQuantidade(resultado.getInt("quantidade"));
 				modelProduto.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
 			}
-
 			return modelProduto;
 
 		} catch (Exception e) {
@@ -96,7 +89,6 @@ public class daoProdutos {
 	}
 	
 	public void atualizarProduto(ModelProdutos modelProduto) {
-
 		try {
 			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ?, valortotal = ? WHERE id = ?";
 			
@@ -128,24 +120,24 @@ public class daoProdutos {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		while(resultado.next()){
 			ModelProdutos produtos = new ModelProdutos();
-			daoPedidos pedido = new daoPedidos();
 			DaoGenerico dao = new DaoGenerico(); 
 			
-			produtos.setId(resultado.getLong("id"));
 			int status = 0;
-			String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
-	        if(pedido.somaValores(resultado.getLong("id")) == 0) {
+			String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
+			if(dao.somaValores(sql) == 0) {
 	        	produtos.setValorTotalString("Sem valores");
 	        }else {
-	        	produtos.setValorTotalString(dao.converterIntegerDinheiro(pedido.somaValores(resultado.getLong("id"))));
+	        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sql)));
 	        }
 	        
-	        if(pedido.somaQuantidade(sql) == 0) {
+	        if(dao.somaQuantidade(sql) == 0) {
 	        	produtos.setQuantidadePedidaString("Sem quantidades");
 	        }else {
-	        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(pedido.somaQuantidade(sql))) + " unidades");
+	        	sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
+	        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sql))) + " unidades");
 	        }
 	       
+	        produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
@@ -156,27 +148,20 @@ public class daoProdutos {
 	}
 	
 	public int somaProdutos(int usuario_pai_id) throws Exception{
-		
-		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = ? AND status = ?";
-		
+		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = " + usuario_pai_id + " AND status = " + 0L;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, usuario_pai_id);
-		int a = 0;
-		statement.setInt(2, a);
 		ResultSet resultado = statement.executeQuery();
-		int soma = 0;
 		if (resultado.next()) {
-		    soma = resultado.getInt(1);
+		    int soma = resultado.getInt(1);
+		    return soma;
+		}else {
+			return -1;
 		}
-		
-		return soma;
 	}
 	
 	public int consultaProdutosPaginas(int usuario) throws Exception {
-
-		String sql = "SELECT count(1) AS total FROM produtos WHERE usuario_pai_id = ?";
+		String sql = "SELECT count(1) AS total FROM produtos WHERE usuario_pai_id = " + usuario;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, usuario);
 
 		ResultSet resultado = statement.executeQuery();
 
@@ -195,13 +180,10 @@ public class daoProdutos {
 	}
 	
 	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {
-		String sql = "UPDATE produtos SET quantidade = quantidade + ? WHERE id = ?";
+		String sql = "UPDATE produtos SET quantidade = quantidade + " + quantidade + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		
 		ModelProdutos produto = new ModelProdutos();
-		statement.setInt(1, quantidade);
-		statement.setInt(2, id);
-		
 		statement.executeUpdate();
 		connection.commit();
 		

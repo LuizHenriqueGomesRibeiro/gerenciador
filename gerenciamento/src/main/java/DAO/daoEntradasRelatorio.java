@@ -68,9 +68,8 @@ public class daoEntradasRelatorio {
 	
 	public List<ModelData> listarDatasEntradas(ModelData dataEntrada) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
-		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = ? ORDER BY dataentrada ASC";
+		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = " + dataEntrada.getUsuario_pai_id().getId() + " ORDER BY dataentrada ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataEntrada.getUsuario_pai_id().getId());
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()) {

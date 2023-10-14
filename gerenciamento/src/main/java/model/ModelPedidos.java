@@ -12,15 +12,20 @@ public class ModelPedidos {
 	private String nome;
 	private int valores;
 	private int quantidadeTotal;
+	private ModelUsuarios usuario_pai_id;
 	
+	public ModelUsuarios getUsuario_pai_id() {
+		return usuario_pai_id;
+	}
+	public void setUsuario_pai_id(ModelUsuarios usuario_pai_id) {
+		this.usuario_pai_id = usuario_pai_id;
+	}
 	public int getValores() {
 		return valores;
 	}
-
 	public void setValores(int valores) {
 		this.valores = valores;
 	}
-
 	public int getQuantidadeTotal() {
 		return quantidadeTotal;
 	}
