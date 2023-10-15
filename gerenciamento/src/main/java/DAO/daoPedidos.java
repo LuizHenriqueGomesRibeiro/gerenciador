@@ -1,20 +1,17 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import Servlet.SQL.SQL;
 import Util.BeanChart;
 import conexao.conexao;
-import model.ModelCancelamento;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 
@@ -22,6 +19,7 @@ public class daoPedidos {
 	private Connection connection;
 	DaoGenerico dao = new DaoGenerico();
 	daoFornecimento daofornecimento = new daoFornecimento();
+	SQL sql = new SQL();
 	
 	public daoPedidos(){
 		connection = conexao.getConnection();
@@ -68,10 +66,8 @@ public class daoPedidos {
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
-			String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE usuario_pai_id = " + resultado.getInt("usuario_pai_id") + " AND status = " + resultado.getInt("status");
-			pedido.setQuantidadeTotal(dao.somaQuantidade(sql));
-			sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE usuario_pai_id = " + resultado.getInt("usuario_pai_id") + " AND status = " + resultado.getInt("status");
-			pedido.setValores(dao.somaValores(sql));
+			pedido.setQuantidadeTotal(dao.somaQuantidade(sql.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
+			pedido.setValores(dao.somaValores(sql.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setId(resultado.getLong("id"));
 			pedido.setQuantidade(resultado.getLong("quantidade"));
 			pedido.setValorTotal(resultado.getLong("valortotal"));

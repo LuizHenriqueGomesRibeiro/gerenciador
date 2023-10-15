@@ -25,6 +25,7 @@ import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.daoVendas;
 import DAO.daoVendasRelatorio;
+import Servlet.SQL.SQL;
 import Util.BeanChart;
 
 /**
@@ -42,6 +43,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
 	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
 	DaoGenerico dao = new DaoGenerico();
+	SQL sql = new SQL();
 	
 	public servlet_saida() {
         super();
@@ -53,8 +55,8 @@ public class servlet_saida extends servlet_recuperacao_login{
 		
 		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("caixaListar")) {
 			try {
-				String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
+				int id_usuario = super.getUsuarioLogado(request).getId();
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id_usuario), id_usuario);
 				request.setAttribute("produtos", produtos);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -64,16 +66,15 @@ public class servlet_saida extends servlet_recuperacao_login{
 				e.printStackTrace();
 			}
 			
-			RequestDispatcher despache = request.getRequestDispatcher("principal/saida.jsp");
-			despache.forward(request, response);
+			request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
 			
 		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
 			Long id = Long.parseLong(request.getParameter("idProduto"));
 			int valor = dao.converterDinheiroInteger(request.getParameter("valor"));//R$####,00;
 			String data = dao.converterDatas(request.getParameter("dataVenda"));//dd-MM-yyyy
 			int quantidade = Integer.parseInt(request.getParameter("quantidade"));
-			
 			try {
+				int id_usuario = super.getUsuarioLogado(request).getId();
 				
 				ModelData dataVenda = new ModelData();
 				
@@ -92,14 +93,13 @@ public class servlet_saida extends servlet_recuperacao_login{
 				
 				daoproduto.adicionaProdutoCaixa(Integer.parseInt(request.getParameter("idProduto")) , -quantidade);
 				ModelVendas venda = new ModelVendas();
-				ModelProdutos produto = daoproduto.consultaProduto(id, super.getUsuarioLogado(request).getId());
+				ModelProdutos produto = daoproduto.consultaProduto(id, id_usuario);
 				venda.setProduto_pai(produto);
 				venda.setQuantidade(quantidade);
 				venda.setDataentrega(data);
 				venda.setValortotal(valor*quantidade);
 				daovendas.gravarVenda(venda, super.getUsuarioLogado(request).getId());
-				String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " LIMIT 10";
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql, super.getUsuarioLogado(request).getId());
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id_usuario), id_usuario);
 				request.setAttribute("produtos", produtos);
 				
 			} catch (NumberFormatException e) {
@@ -143,13 +143,11 @@ public class servlet_saida extends servlet_recuperacao_login{
 	
 			try {
 				int status = 2;
+				int id = super.getUsuarioLogado(request).getId();
 				
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " ORDER BY dataentrega ASC";
-					BeanChart bean = daovendas.listarVendasGrafico(sql);
-					sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND status = " + status + " ORDER BY dataentrega ASC";
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql);
+					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorData(id));
+					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaEntradasValorData(id, status));
 					
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -159,11 +157,7 @@ public class servlet_saida extends servlet_recuperacao_login{
 					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
 					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
 					
-					
-					sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					List<ModelVendas> vendas = daovendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
+					List<ModelVendas> vendas = daovendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id));
 					
 					PrintWriter out = response.getWriter();
 					Gson gson = new Gson();
@@ -171,26 +165,18 @@ public class servlet_saida extends servlet_recuperacao_login{
 				    out.flush();
 				    
 				}else{
-					String sql = "SELECT valortotal, dataentrega FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "' ORDER BY dataentrega ASC";
-					BeanChart bean = daovendas.listarVendasGrafico(sql);
-					sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND status = " + status 
-							+ " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql);
+					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorDataTempo(id, dataInicial, dataFinal));
+					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaEntradasValorDataTempo(id, status, dataInicial, dataFinal));
 					
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
-					
 					List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda, dataInicial, dataFinal);
 					
 					ModelData dataEntrada = new ModelData();
 					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
 					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
 
-					sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					List<ModelVendas> vendas = daovendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
+					List<ModelVendas> vendas = daovendas.listarVendas(sql.listaVendasTempo(id, dataInicial, dataFinal), sql.somaValoresVendasTempo(id, dataInicial, dataFinal), sql.somaQuantidadeVendasTempo(id, dataInicial, dataFinal));
 					
 					PrintWriter out = response.getWriter();
 					Gson gson = new Gson();
@@ -208,15 +194,14 @@ public class servlet_saida extends servlet_recuperacao_login{
 			
 			try {
 				int status = 2;
+				int id = super.getUsuarioLogado(request).getId();
 				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND status = " + status + " ORDER BY dataentrega ASC";
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql);
+					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaEntradasValorData(id, status));
 					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 					
-					sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
+					String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id;
 					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql);
 					
 					String json = gson.toJson(entradas);
@@ -224,16 +209,12 @@ public class servlet_saida extends servlet_recuperacao_login{
 				    out.print(json1 + "|" + json);
 				    out.flush();
 				}else{
-					String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND status = " + status 
-							+ " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql);
+					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaEntradasValorDataTempo(id, status, dataInicial, dataFinal));
 					
 					Gson gson = new Gson();
 					String json1 = gson.toJson(bean);
 
-					sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql);
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaEntradasTempo(id, status, dataInicial, dataFinal));
 					
 					String json = gson.toJson(entradas);
 					PrintWriter out = response.getWriter();
