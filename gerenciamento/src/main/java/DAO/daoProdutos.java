@@ -46,12 +46,11 @@ public class daoProdutos {
 		}
 	}
 	
-	public void excluirProduto(String id) {
+	public void excluirProduto(Long id) {
 		try {
-			String sql = "DELETE FROM produtos WHERE id = ?";
+			String sql = "DELETE FROM produtos WHERE id = " + id;
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setLong(1, Long.parseLong(id));
 			statement.executeUpdate();
 			
 			connection.commit();
@@ -62,13 +61,13 @@ public class daoProdutos {
 		}
 	}
 	
-	public ModelProdutos consultaProduto(Long id, int userLogado) {
+	public ModelProdutos consultaProduto(Long id_Produto, int userLogado) {
 		ModelProdutos modelProduto = new ModelProdutos();
 		try {
 			String sql = "SELECT*FROM produtos WHERE id = ? AND usuario_pai_id = ?";
 
 			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
+			statement.setLong(1, id_Produto);
 			statement.setLong(2, userLogado);
 			ResultSet resultado = statement.executeQuery();
 
@@ -179,7 +178,7 @@ public class daoProdutos {
 		return pagina.intValue();
 	}
 	
-	public ModelProdutos adicionaProdutoCaixa(int id, int quantidade) throws SQLException {
+	public ModelProdutos adicionaProdutoCaixa(Long id, int quantidade) throws SQLException {
 		String sql = "UPDATE produtos SET quantidade = quantidade + " + quantidade + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		

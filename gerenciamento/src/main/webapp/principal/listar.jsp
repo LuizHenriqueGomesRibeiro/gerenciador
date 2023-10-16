@@ -330,6 +330,9 @@
 	}
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
+		alert(id1);
+		alert(id2);
+		alert(quantidade);
 		var urlAction = document.getElementById('formularioFornecimento').action;
 		var capturarData = document.getElementById('capturarData').value;
 		
@@ -365,6 +368,7 @@
 	jQuery("#tabelaHistoricoPedidos").hide();
 	
 	function loadPedidos(id){
+		alert(id);
 		jQuery("#tabelaFornecedores").hide();
 		jQuery("#tabelaHistoricoPedidos").show();
 		

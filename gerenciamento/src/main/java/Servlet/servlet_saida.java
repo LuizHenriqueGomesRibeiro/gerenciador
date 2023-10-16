@@ -53,15 +53,16 @@ public class servlet_saida extends servlet_recuperacao_login {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String acao = request.getParameter("acao");
 		try {
-			int id = super.getUsuarioLogado(request).getId();
 			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("caixaListar")) {
 
+				int id = super.getUsuarioLogado(request).getId();
 				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id), id);
 				request.setAttribute("produtos", produtos);
 
 				request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
+				int id = super.getUsuarioLogado(request).getId();
 				int valor = dao.converterDinheiroInteger(request.getParameter("valor"));// R$####,00;
 				int quantidade = Integer.parseInt(request.getParameter("quantidade"));
 				ModelData dataVenda = new ModelData();
@@ -78,7 +79,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 					daoVendasRelatorio.inserirDataEValor(dataVenda);
 				}
 
-				daoproduto.adicionaProdutoCaixa(Integer.parseInt(request.getParameter("idProduto")), -quantidade);
+				daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("idProduto")), -quantidade);
 				ModelVendas venda = new ModelVendas();
 				venda.setProduto_pai(daoproduto.consultaProduto(Long.parseLong(request.getParameter("idProduto")), id));
 				venda.setQuantidade(quantidade);
@@ -88,6 +89,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 				request.setAttribute("produtos", daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id), id));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadProduto")) {
+				int id = super.getUsuarioLogado(request).getId();
 				ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(request.getParameter("id")), id);
 				Double medias = daoFornecimento.mediaValoresFornecimento(Long.parseLong(request.getParameter("id")));
 
@@ -103,7 +105,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 				despache.forward(request, response);
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaVendas")) {
-
+				int id = super.getUsuarioLogado(request).getId();
 				String dataInicial = request.getParameter("dataInicial");
 				String dataFinal = request.getParameter("dataFinal");
 
@@ -150,6 +152,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 					out.flush();
 				}
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
+				int id = super.getUsuarioLogado(request).getId();
 				String dataInicial = request.getParameter("dataInicial");
 				String dataFinal = request.getParameter("dataFinal");
 

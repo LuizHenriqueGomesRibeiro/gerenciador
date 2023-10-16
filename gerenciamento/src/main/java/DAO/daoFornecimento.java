@@ -20,14 +20,14 @@ public class daoFornecimento {
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, Long tempoentrega, Long valor_R$Long) {
+	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, int tempoentrega, int valor) {
 		try {
 			String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES (?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, nome);
 			statement.setLong(2, produtos_pai_id.getId());
-			statement.setLong(3, tempoentrega);
-			statement.setLong(4, valor_R$Long);
+			statement.setInt(3, tempoentrega);
+			statement.setInt(4, valor);
 			statement.execute();
 			connection.commit();
 
@@ -56,10 +56,10 @@ public class daoFornecimento {
 		return retorno;
 	}
 	
-	public ModelFornecimento consultaFornecedor(Long id, Long produtoId, int usuarioId) {
+	public ModelFornecimento consultaFornecedor(Long id, Long id_Produto, int usuarioId) {
 		ModelFornecimento modelFornecimento = new ModelFornecimento();
 		try {
-			String sql = "SELECT* FROM fornecimento WHERE id = " + id + " AND produtos_pai_id = " + produtoId;
+			String sql = "SELECT* FROM fornecimento WHERE id = " + id + " AND produtos_pai_id = " + id_Produto;
 			PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet resultado = statement.executeQuery();
 
@@ -69,7 +69,7 @@ public class daoFornecimento {
 				modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
 				modelFornecimento.setNome(resultado.getString("nome"));
 				modelFornecimento.setValor(resultado.getLong("valor"));
-				modelFornecimento.setProduto_pai_id(daoprodutos.consultaProduto(produtoId, usuarioId));		
+				modelFornecimento.setProduto_pai_id(daoprodutos.consultaProduto(id_Produto, usuarioId));		
 			}
 			return modelFornecimento;
 		} catch (Exception e) {

@@ -68,7 +68,7 @@ public class daoPedidos {
 			ModelPedidos pedido = new ModelPedidos();
 			pedido.setQuantidadeTotal(dao.somaQuantidade(sql.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setValores(dao.somaValores(sql.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
-			pedido.setId(resultado.getLong("id"));
+			pedido.setId(resultado.getInt("id"));
 			pedido.setQuantidade(resultado.getLong("quantidade"));
 			pedido.setValorTotal(resultado.getLong("valortotal"));
 			pedido.setDataentrega(dao.converterDatas(resultado.getString("dataentrega")));
