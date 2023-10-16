@@ -112,7 +112,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 				int status = 2;
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
 					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorData(id));
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaEntradasValorData(id, status));
+					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaPedidosValorData(id, status));
 
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -131,7 +131,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 
 				} else {
 					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorDataTempo(id, dataInicial, dataFinal));
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaEntradasValorDataTempo(id, status, dataInicial, dataFinal));
+					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
 
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -158,21 +158,18 @@ public class servlet_saida extends servlet_recuperacao_login {
 
 				int status = 2;
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaEntradasValorData(id, status));
 
-					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaEntradasValorData(id, status));
+					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaPedidosValorData(id, status));
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaPedidosValorData(id, status));
 
-					PrintWriter out = response.getWriter();
-					out.print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
-					out.flush();
+					response.getWriter().print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
+					response.getWriter().flush();
 				} else {
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaEntradasValorDataTempo(id, status, dataInicial, dataFinal));
+					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaPedidosUsuarioIdTempo(id, status, dataInicial, dataFinal));
 
-					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaEntradasTempo(id, status, dataInicial, dataFinal));
-
-					PrintWriter out = response.getWriter();
-					out.print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
-					out.flush();
+					response.getWriter().print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
+					response.getWriter().flush();
 				}
 			}
 		} catch (Exception e) {

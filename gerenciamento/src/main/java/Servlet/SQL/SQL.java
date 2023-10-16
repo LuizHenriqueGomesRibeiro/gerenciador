@@ -2,7 +2,6 @@ package Servlet.SQL;
 
 public class SQL {
 	
-	
 	public String listaProdutosLIMIT10(int id) {
 		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " LIMIT 10";
 		return sql;
@@ -33,22 +32,12 @@ public class SQL {
 		return sql;
 	}
 	
-	public String listaEntradas(int id, int status) {
-		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id;
-		return sql;
-	}
-	
-	public String listaEntradasTempo(int id, int status, String dataInicial, String dataFinal) {
-		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-		return sql;
-	}
-	
-	public String listaEntradasValorData(int id, int status) {
+	public String listaPedidosValorData(int id, int status) {
 		String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + id + " AND status = " + status + " ORDER BY dataentrega ASC";
 		return sql;
 	}
 	
-	public String listaEntradasValorDataTempo(int id, int status, String dataInicial, String dataFinal) {
+	public String listaPedidosValorDataTempo(int id, int status, String dataInicial, String dataFinal) {
 		String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + id + " AND status = " + status + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
 		return sql;
 	}
@@ -83,8 +72,18 @@ public class SQL {
 		return sql;
 	}
 	
-	public String listaPedidos(int id, int status) {
+	public String listaPedidosProdutoId(int id, String status) {
 		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
+		return sql;
+	}
+	
+	public String listaPedidosUsuarioId(int id, int status) {
+		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id;
+		return sql;
+	}
+
+	public String listaPedidosUsuarioIdTempo(int id, int status, String dataInicial, String dataFinal) {
+		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id + " AND dataentrega >= " + dataInicial + " AND dataentrega <= " + dataFinal;
 		return sql;
 	}
 	

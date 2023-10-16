@@ -90,11 +90,11 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			    out.flush();
 			    
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
-				int status = 0;
+				String status = "0";
 				PrintWriter printWriter = response.getWriter();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daopedidos.listarPedidos(sql.listaPedidos(Integer.parseInt(request.getParameter("id")), status))));
+				printWriter.write(new Gson().toJson(daopedidos.listarPedidos(sql.listaPedidosProdutoId(Integer.parseInt(request.getParameter("id")), status))));
 				printWriter.close();
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){

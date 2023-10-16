@@ -2,26 +2,18 @@ package Servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.List;
-
 import com.google.gson.Gson;
-import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-
-import DAO.DAOGeneric;
 import DAO.DaoGenerico;
 import DAO.daoPedidos;
 import DAO.daoVendas;
+import Servlet.SQL.SQL;
 import Util.ReportUtil;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelPedidos;
 import model.ModelVendas;
-import java.io.OutputStream;
 
 /**
  * Servlet implementation class ServletRelatorios
@@ -32,7 +24,7 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 	daoVendas daoVendas = new daoVendas();
 	daoPedidos daoPedidos = new daoPedidos();
 	DaoGenerico dao = new DaoGenerico();
-       
+    SQL sql = new SQL();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -45,182 +37,99 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String acao = request.getParameter("acao");
-		if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("irParaRelatorios")) {
-			
-			request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
-			
-		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
-			
-			try {
-				String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
-				Gson gson = new Gson();
-				String json = gson.toJson(vendas);
+		try {
+			int id = super.getUsuarioLogado(request).getId();
+			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("irParaRelatorios")) {
+
+				request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
+
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
+
 				PrintWriter printWriter = response.getWriter();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
+				printWriter.write(new Gson().toJson(daoVendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id))));
 				printWriter.close();
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
-			try {
-				String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				List<ModelPedidos> entregas = daoPedidos.listarPedidos(sql);
-				Gson gson = new Gson();
-				String json = gson.toJson(entregas);
+
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
+
 				PrintWriter printWriter = response.getWriter();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
+				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosProdutoId(id, "2"))));
 				printWriter.close();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("pedidos")) {
-			
-			try {
-				String sql = "SELECT * FROM pedidos WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				List<ModelPedidos> pedidos = daoPedidos.listarPedidos(sql);
-				Gson gson = new Gson();
-				String json = gson.toJson(pedidos);
+
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("pedidos")) {
+
 				PrintWriter printWriter = response.getWriter();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
+				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosProdutoId(id, "0, 1, 2"))));
 				printWriter.close();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelamentos")) {
-			try {
-				String sql = "SELECT * FROM pedidos WHERE status = " + 1L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-				List<ModelPedidos> cancelamentos = daoPedidos.listarPedidos(sql);
-				Gson gson = new Gson();
-				String json = gson.toJson(cancelamentos);
+
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelamentos")) {
+
 				PrintWriter printWriter = response.getWriter();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
-				printWriter.write(json);
+				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosUsuarioId(id, 1))));
 				printWriter.close();
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
-			
-			String dataInicial = request.getParameter("dataInicial");
-			String dataFinal = request.getParameter("dataFinal");
-			
-			try{
-				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
+
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
+
+				String dataInicial = request.getParameter("dataInicial");
+				String dataFinal = request.getParameter("dataFinal");
+
+				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
+					List<ModelVendas> vendas = daoVendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id));
+
+					byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
+
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+					response.setContentType("application/octet-stream");
+					response.getOutputStream().write(relatorio);
+					response.getOutputStream().flush();
 					
-					ReportUtil reportUtil = new ReportUtil();
-					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
+				} else {
+					String sqlListaVendas = sql.listaVendasTempo(id, dataInicial, dataFinal); 
+					String sqlSomaValores = sql.somaValoresVendasTempo(id, dataInicial, dataFinal);
+					String sqlSomaQuantidade = sql.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
+					List<ModelVendas> vendas = daoVendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
 
-					if (relatorio != null) {
-						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-			            response.setContentType("application/octet-stream");
+					byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 
-			            try (OutputStream outputStream = response.getOutputStream()) {
-			                outputStream.write(relatorio);
-			                outputStream.flush();
-			            }
-			        } else {
-			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			        }
-				}else {
-					String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					String sqlSomaValores = "SELECT SUM(valortotal) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					String sqlSomaQuantidade = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + super.getUsuarioLogado(request).getId() + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
-					List<ModelVendas> vendas = daoVendas.listarVendas(sql, sqlSomaValores, sqlSomaQuantidade);
-					
-					ReportUtil reportUtil = new ReportUtil();
-					byte[] relatorio = reportUtil.geraReltorioPDF(vendas, "vendas", request.getServletContext());
-
-					if (relatorio != null) {
-						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-			            response.setContentType("application/octet-stream");
-
-			            try (OutputStream outputStream = response.getOutputStream()) {
-			                outputStream.write(relatorio);
-			                outputStream.flush();
-			            }
-			        } else {
-			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			        }
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+					response.setContentType("application/octet-stream");
+					response.getOutputStream().write(relatorio);
+					response.getOutputStream().flush();
 				}
-				
-			}catch (Exception e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormEntradasPDF")) {
-			String dataInicial = request.getParameter("dataInicial");
-			String dataFinal = request.getParameter("dataFinal");
-			
-			try{
-				if(dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()){
-					String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId();
-					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
+			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormEntradasPDF")) {
+				String dataInicial = request.getParameter("dataInicial");
+				String dataFinal = request.getParameter("dataFinal");
+
+				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
+
+					byte[] relatorio = new ReportUtil().geraReltorioPDF(daoPedidos.listarPedidos(sql.listaPedidosUsuarioId(id, 2)), "entradas", request.getServletContext());
+
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+					response.setContentType("application/octet-stream");
+					response.getOutputStream().write(relatorio);
+					response.getOutputStream().flush();
 					
-					ReportUtil reportUtil = new ReportUtil();
-					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());
+				} else {
+					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql.listaPedidosUsuarioIdTempo(id, 2, dataInicial, dataFinal));
 
-					if (relatorio != null) {
-						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-			            response.setContentType("application/octet-stream");
-
-			            try (OutputStream outputStream = response.getOutputStream()) {
-			                outputStream.write(relatorio);
-			                outputStream.flush();
-			            }
-			        } else {
-			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			        }
-				}else {
-					String sql = "SELECT * FROM pedidos WHERE status = " + 2L + " AND usuario_pai_id = " + super.getUsuarioLogado(request).getId() 
-							+ " AND dataentrega >= " + dao.converterDatas(dataInicial) + " AND dataentrega <= " + dao.converterDatas(dataFinal);
-					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql);
-					
-					ReportUtil reportUtil = new ReportUtil();
-					byte[] relatorio = reportUtil.geraReltorioPDF(entradas, "entradas", request.getServletContext());
-
-					if (relatorio != null) {
-						response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-			            response.setContentType("application/octet-stream");
-
-			            try (OutputStream outputStream = response.getOutputStream()) {
-			                outputStream.write(relatorio);
-			                outputStream.flush();
-			            }
-			        } else {
-			            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			        }
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
+					response.setContentType("application/octet-stream");
+					response.getOutputStream().write(new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext()));
+					response.getOutputStream().flush();
 				}
-				
-			}catch (Exception e){
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 	}
 
 	/**

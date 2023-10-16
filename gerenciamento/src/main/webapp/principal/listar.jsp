@@ -317,7 +317,6 @@
 		var id_fornecedor = document.getElementById('id_fornecedor').value;
 		
 		jQuery.ajax({
-
 			method : "get",
 			url : urlAction,
 			data : '&idProduto='+ idProduto + '&dataPedido=' + dataPedido + '&quantidade=' + quantidade + '&fornecimento_pai_id=' + id_fornecedor + '&acao=incluirPedido',
@@ -330,9 +329,6 @@
 	}
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
-		alert(id1);
-		alert(id2);
-		alert(quantidade);
 		var urlAction = document.getElementById('formularioFornecimento').action;
 		var capturarData = document.getElementById('capturarData').value;
 		
@@ -368,7 +364,6 @@
 	jQuery("#tabelaHistoricoPedidos").hide();
 	
 	function loadPedidos(id){
-		alert(id);
 		jQuery("#tabelaFornecedores").hide();
 		jQuery("#tabelaHistoricoPedidos").show();
 		
@@ -437,7 +432,6 @@
 	}
 	
 	function adicionarFornecedor() {
-		
 		var urlAction = document.getElementById('formularioFornecimento').action;
 		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
 		var tempoentrega = document.getElementById('tempoentrega').value;
@@ -445,7 +439,6 @@
 		var id = document.getElementById('configuracoesId').value;
 		
 		jQuery.ajax({
-
 			method : "post",
 			url : urlAction,
 			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id=' + id,
@@ -510,7 +503,6 @@
 			jQuery("#tabelaHistoricoPedidos").hide();
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
-
 				method : "get",
 				url : urlAction,
 				data : '&id=' + id + '&acao=configuracoes',
@@ -554,10 +546,8 @@
 		}
 			
 		function excData(id) {
-			
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
-
 				method : "get",
 				url : urlAction,
 				data : '&id=' + id + '&acao=exclusaoAjax',
