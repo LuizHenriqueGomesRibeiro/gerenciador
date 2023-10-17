@@ -1,7 +1,5 @@
 package model;
 
-import DAO.DaoGenerico;
-import DAO.daoProdutos;
 
 public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
@@ -16,23 +14,30 @@ public class ModelPedidos {
 	private int valores;
 	private int quantidadeTotal;
 	private ModelUsuarios usuario_pai_id;
+	private ModelProdutos produto_pai_id;
+	private Long id_fornecedor;
+	private Long id_produto;
 	
-	public ModelPedidos setPedido(ModelFornecimento fornecedor, ModelParametros parametros, ModelUsuarios usuario, ModelPedidos modelPedidos) {
-		
-		DaoGenerico dao = new DaoGenerico();
-		daoProdutos daoproduto = new daoProdutos();
-		
-		modelPedidos.setFornecedor_pai_id(fornecedor);
-		modelPedidos.setQuantidade(Long.parseLong(dao.tirarPonto(parametros.getQuantidade())));
-		modelPedidos.setDatapedido(parametros.getDataPedido());
-		modelPedidos.setDataentrega(dao.plusDias(parametros.getDataPedido(), fornecedor.getTempoentrega()));
-		modelPedidos.setValor(fornecedor.getValor());
-		modelPedidos.setNome(daoproduto.consultaProduto(parametros.getId_produto(), usuario.getId()).getNome());
-		modelPedidos.setUsuario_pai_id(usuario);
-		
-		return modelPedidos;
+	
+	
+	public Long getId_produto() {
+		return id_produto;
 	}
-	
+	public void setId_produto(Long id_produto) {
+		this.id_produto = id_produto;
+	}
+	public Long getId_fornecedor() {
+		return id_fornecedor;
+	}
+	public void setId_fornecedor(Long id_fornecedor) {
+		this.id_fornecedor = id_fornecedor;
+	}
+	public ModelProdutos getProduto_pai_id() {
+		return produto_pai_id;
+	}
+	public void setProduto_pai_id(ModelProdutos produto_pai_id) {
+		this.produto_pai_id = produto_pai_id;
+	}
 	public ModelUsuarios getUsuario_pai_id() {
 		return usuario_pai_id;
 	}
@@ -56,8 +61,11 @@ public class ModelPedidos {
 	@Override
 	public String toString() {
 		return "ModelPedidos [fornecedor_pai_id=" + fornecedor_pai_id + ", id=" + id + ", datapedido=" + datapedido
-			+ ", datacancelamento=" + datacancelamento + ", dataentrega=" + dataentrega + ", quantidade="
-			+ quantidade + ", valor=" + valor + ", valorTotal=" + valorTotal + ", nome=" + nome + "]";
+				+ ", datacancelamento=" + datacancelamento + ", dataentrega=" + dataentrega + ", quantidade="
+				+ quantidade + ", valor=" + valor + ", valorTotal=" + valorTotal + ", nome=" + nome + ", valores="
+				+ valores + ", quantidadeTotal=" + quantidadeTotal + ", usuario_pai_id=" + usuario_pai_id
+				+ ", produto_pai_id=" + produto_pai_id + ", id_fornecedor=" + id_fornecedor + ", id_produto="
+				+ id_produto + "]";
 	}
 	
 	public String getDatacancelamento() {

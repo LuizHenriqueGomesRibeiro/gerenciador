@@ -59,33 +59,28 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
 				
-				ModelParametros parametros = api.parametrosIncluirPedido(request);
-				ModelFornecimento fornecedor = new ModelFornecimento().setFornecedor(parametros, id, usuario);
-				ModelPedidos modelPedidos = new ModelPedidos();
+				ModelPedidos modelPedidos = api.parametrosConfirmarPedidoTeste(request, usuario);
 
-				pedido.gravarPedido(modelPedidos.setPedido(fornecedor, parametros, usuario, modelPedidos));
+				pedido.gravarPedido(modelPedidos);
 				api.setarAtributos(request, usuario);
-					
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-				String quantidade = request.getParameter("quantidade");
-				String data = request.getParameter("data");
-				int status = 2;
 				
-				ModelData modelData = new ModelData();
-				modelData.setDatavenda(data);
-				modelData.setUsuario_pai_id(super.getUsuarioLogado(request));
-
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
+								
+				ModelParametros parametros = api.parametrosConfirmarPedido(request);
+				
+				ModelData modelData = new ModelData().getModelData(parametros, request);
+				modelData.setDatavenda(parametros.getDataEntrega());
+				modelData.setUsuario_pai_id(usuario);
 				modelData.setValortotal(daopedidos.listarPedidos(sqlpedidos.procuraPedido(Long.parseLong(request.getParameter("id")))).get(0).getValorTotal());
-				boolean booleana = daoEntradaRelatorio.buscarData(modelData);
 
-				if (booleana) {
+				if (daoEntradaRelatorio.buscarData(modelData)) {
 					daoEntradaRelatorio.atualizarDataEValor(modelData);
 				} else {
 					daoEntradaRelatorio.inserirDataEValor(modelData);
 				}
 
-				daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(quantidade));
-				daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), status);
+				daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(parametros.getQuantidade()));
+				daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), parametros.getStatus());
 					
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 				Long id_pedido = Long.parseLong(request.getParameter("id"));

@@ -53,6 +53,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			String acao = request.getParameter("acao");
 			int id = super.getUsuarioLogado(request).getId();
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
+			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
@@ -69,6 +70,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 				
 				Long id_produto = Long.parseLong(request.getParameter("id"));
 				daoproduto.excluirProduto(id_produto);
+				
 				api.setarAtributos(request, usuario);
 				request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
 				
@@ -84,22 +86,15 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			    out.flush();
 			    
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
+
 				String status = "0";
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(Integer.parseInt(request.getParameter("id")), status))));
-				printWriter.close();
+				api.impressaoJSONPedidos(response, daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(Integer.parseInt(request.getParameter("id")), status)));
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
 				
 				Long id_produto = Long.parseLong(request.getParameter("id"));
 				ModelProdutos dadosJsonUser = daoproduto.consultaProduto(id_produto, id);
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(dadosJsonUser));
-				printWriter.close();
+				api.impressaoJSONProdutos(response, dadosJsonUser);
 				
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
 
@@ -123,6 +118,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 		try {
 			int id = super.getUsuarioLogado(request).getId();
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
+			
 			ModelProdutos modelProduto = new ModelProdutos();
 			
 			modelProduto.setNome(request.getParameter("nome"));

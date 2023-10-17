@@ -336,7 +336,7 @@
 
 			method : "get",
 			url : urlAction,
-			data : '&data=' + capturarData + '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
+			data : '&dataEntrega=' + capturarData + '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
 				location.reload();
 			}

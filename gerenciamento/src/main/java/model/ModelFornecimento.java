@@ -14,15 +14,15 @@ public class ModelFornecimento {
 	private Long tempoentrega;
 	private Long valor;
 	
-	public ModelFornecimento setFornecedor(ModelParametros parametros, int id, ModelUsuarios usuario) throws SQLException {
+	public ModelFornecimento setFornecedor(ModelPedidos pedido) throws SQLException {
 		
 		daoProdutos daoproduto = new daoProdutos();
 		daoFornecimento daofornecimento = new daoFornecimento();
 		
 		ModelFornecimento fornecedor = new ModelFornecimento();
-		fornecedor.setId(parametros.getId_fornecedor());
-		fornecedor.setUsuario_pai_id(usuario);
-		fornecedor.setProduto_pai_id(daoproduto.consultaProduto(parametros.getId_produto(), id));
+		fornecedor.setId(pedido.getId_fornecedor());
+		fornecedor.setUsuario_pai_id(pedido.getUsuario_pai_id());
+		fornecedor.setProduto_pai_id(daoproduto.consultaProduto(pedido.getId_produto(), pedido.getUsuario_pai_id().getId()));
 		fornecedor = daofornecimento.consultarFornecedor(fornecedor);
 		
 		return fornecedor;
