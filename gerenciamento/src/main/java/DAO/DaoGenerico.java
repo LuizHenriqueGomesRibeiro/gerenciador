@@ -107,4 +107,10 @@ public class DaoGenerico {
 		
 		return resultado.getInt("soma");
 	}
+	
+	public String plusDias(String dataPedido, Long tempo) {
+		LocalDate data = LocalDate.parse(dataPedido, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		data = data.plusDays(tempo);
+		return data.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+	}
 }

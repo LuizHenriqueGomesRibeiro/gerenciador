@@ -1,5 +1,8 @@
 package model;
 
+import DAO.DaoGenerico;
+import DAO.daoProdutos;
+
 public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
 	private int id;
@@ -13,6 +16,22 @@ public class ModelPedidos {
 	private int valores;
 	private int quantidadeTotal;
 	private ModelUsuarios usuario_pai_id;
+	
+	public ModelPedidos setPedido(ModelFornecimento fornecedor, ModelParametros parametros, ModelUsuarios usuario, ModelPedidos modelPedidos) {
+		
+		DaoGenerico dao = new DaoGenerico();
+		daoProdutos daoproduto = new daoProdutos();
+		
+		modelPedidos.setFornecedor_pai_id(fornecedor);
+		modelPedidos.setQuantidade(Long.parseLong(dao.tirarPonto(parametros.getQuantidade())));
+		modelPedidos.setDatapedido(parametros.getDataPedido());
+		modelPedidos.setDataentrega(dao.plusDias(parametros.getDataPedido(), fornecedor.getTempoentrega()));
+		modelPedidos.setValor(fornecedor.getValor());
+		modelPedidos.setNome(daoproduto.consultaProduto(parametros.getId_produto(), usuario.getId()).getNome());
+		modelPedidos.setUsuario_pai_id(usuario);
+		
+		return modelPedidos;
+	}
 	
 	public ModelUsuarios getUsuario_pai_id() {
 		return usuario_pai_id;

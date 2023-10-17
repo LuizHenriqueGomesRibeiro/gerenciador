@@ -1,16 +1,39 @@
 package model;
 
-import java.util.Date;
+import java.sql.SQLException;
+
+import DAO.daoFornecimento;
+import DAO.daoProdutos;
 
 public class ModelFornecimento {
 	
 	private String nome;
 	private ModelProdutos produto_pai_id;
+	private ModelUsuarios usuario_pai_id;
 	private Long id;
 	private Long tempoentrega;
 	private Long valor;
 	
+	public ModelFornecimento setFornecedor(ModelParametros parametros, int id, ModelUsuarios usuario) throws SQLException {
+		
+		daoProdutos daoproduto = new daoProdutos();
+		daoFornecimento daofornecimento = new daoFornecimento();
+		
+		ModelFornecimento fornecedor = new ModelFornecimento();
+		fornecedor.setId(parametros.getId_fornecedor());
+		fornecedor.setUsuario_pai_id(usuario);
+		fornecedor.setProduto_pai_id(daoproduto.consultaProduto(parametros.getId_produto(), id));
+		fornecedor = daofornecimento.consultarFornecedor(fornecedor);
+		
+		return fornecedor;
+	}
 	
+	public ModelUsuarios getUsuario_pai_id() {
+		return usuario_pai_id;
+	}
+	public void setUsuario_pai_id(ModelUsuarios usuario_pai_id) {
+		this.usuario_pai_id = usuario_pai_id;
+	}
 	public Long getValor() {
 		return valor;
 	}

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import Servlet.SQL.SQL;
+import DAO.SQL.SQLPedidos;
 import Util.BeanChart;
 import conexao.conexao;
 import model.ModelFornecimento;
@@ -19,55 +19,50 @@ public class daoPedidos {
 	private Connection connection;
 	DaoGenerico dao = new DaoGenerico();
 	daoFornecimento daofornecimento = new daoFornecimento();
-	SQL sql = new SQL();
+	SQLPedidos sqlpedidos = new SQLPedidos();
 	
 	public daoPedidos(){
 		connection = conexao.getConnection();
 	}
 	
-	public ModelPedidos gravarPedido(ModelPedidos pedido) {
-		try {
-			Long id_produto = pedido.getFornecedor_pai_id().getProduto_pai_id().getId();
-			ModelFornecimento fornecedor = daofornecimento.consultaFornecedor(pedido.getFornecedor_pai_id().getId(), id_produto, pedido.getUsuario_pai_id().getId());
-			int status = 0;
-			String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
-					" VALUES ('" + dao.converterDatas(pedido.getDatapedido()) + "', " + 
-					pedido.getQuantidade() + ", " + 
-					pedido.getValor() + ", " + 
-					pedido.getQuantidade()*fornecedor.getValor() + ", " + 
-					pedido.getFornecedor_pai_id().getId() + ", '" + 
-					dao.converterDatas(pedido.getDataentrega()) + "', " + 
-					fornecedor.getProduto_pai_id().getId() + ", " + 
-					pedido.getUsuario_pai_id().getId() + ", " + 
-					status + ", '" + 
-					pedido.getNome() + "');";
-			PreparedStatement statement = connection.prepareStatement(sql);
+	public ModelPedidos gravarPedido(ModelPedidos pedido) throws SQLException {
+		ModelFornecimento fornecedor = daofornecimento.consultarFornecedor(pedido.getFornecedor_pai_id());
+		int status = 0;
+		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
+			" VALUES ('" + dao.converterDatas(pedido.getDatapedido()) + "', " + 
+			pedido.getQuantidade() + ", " + 
+			pedido.getValor() + ", " + 
+			pedido.getQuantidade()*fornecedor.getValor() + ", " + 
+			pedido.getFornecedor_pai_id().getId() + ", '" + 
+			dao.converterDatas(pedido.getDataentrega()) + "', " + 
+			fornecedor.getProduto_pai_id().getId() + ", " + 
+			pedido.getUsuario_pai_id().getId() + ", " + 
+			status + ", '" + 
+			pedido.getNome() + "');";
+		PreparedStatement statement = connection.prepareStatement(sql);
 			
-			statement.execute();
-			connection.commit();
+		statement.execute();
+		connection.commit();
 			
-			return pedido;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			
-			return null;
-		}
+		return pedido;
 	}
-
+	
 	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		
-	    return resultadosListagem(resultado);
+	    return objetosListarPedidos(resultado);
+	}
+	
+	public List<ModelPedidos> objetosListarPedidos(ResultSet resultado) throws SQLException{
+		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+		return resultadosListagem(resultado, retorno);
 	}
 		
-	public List<ModelPedidos> resultadosListagem(ResultSet resultado) throws SQLException {
-		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
+	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException {
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
-			pedido.setQuantidadeTotal(dao.somaQuantidade(sql.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
-			pedido.setValores(dao.somaValores(sql.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
+			pedido.setQuantidadeTotal(dao.somaQuantidade(sqlpedidos.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
+			pedido.setValores(dao.somaValores(sqlpedidos.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setId(resultado.getInt("id"));
 			pedido.setQuantidade(resultado.getLong("quantidade"));
 			pedido.setValorTotal(resultado.getLong("valortotal"));
@@ -92,35 +87,37 @@ public class daoPedidos {
 		connection.commit();
 	}
 	
-	public void gravarCancelamento(Long id){
-		try {
-			String sql = "INSERT INTO cancelamentos(datacancelamento, pedido_pai_id) VALUES ('" + LocalDate.now() + "', " + id + ");";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.execute();
-			connection.commit();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+	public void gravarCancelamento(Long id) throws SQLException{
+		String sql = "INSERT INTO cancelamentos(datacancelamento, pedido_pai_id) VALUES ('" + LocalDate.now() + "', " + id + ");";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.execute();
+		connection.commit();
 	}
 	
 	public BeanChart listarEntradasGrafico(String sql) throws SQLException, ParseException{
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
 		ResultSet resultado = statement.executeQuery();
+		return objetosEntradasGrafico(resultado);
+	}
+	
+	public BeanChart objetosEntradasGrafico(ResultSet resultado) throws SQLException {
 		List<Long> valores = new ArrayList<Long>();
 		List<String> datas = new ArrayList<String>();
-		
-		BeanChart beanChart = new BeanChart();
-		
+		return lerResultadosEntradasGrafico(resultado, valores, datas);
+	}
+	
+	public BeanChart lerResultadosEntradasGrafico(ResultSet resultado, List<Long> valores, List<String> datas) throws SQLException {
 		while(resultado.next()) {
 			valores.add(resultado.getLong("valortotal"));
 			datas.add(dao.converterDatas(resultado.getString("dataentrega")));
 		}
-		
+		return setarResultadosEntradasGrafico(valores, datas);
+	}
+
+	public BeanChart setarResultadosEntradasGrafico(List<Long> valores, List<String> datas) {
+		BeanChart beanChart = new BeanChart();
 		beanChart.setDatas(datas);
 		beanChart.setValores(valores);
-		
 		return beanChart;
 	}
 }

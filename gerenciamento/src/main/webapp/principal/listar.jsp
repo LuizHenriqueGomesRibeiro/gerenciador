@@ -319,7 +319,7 @@
 		jQuery.ajax({
 			method : "get",
 			url : urlAction,
-			data : '&idProduto='+ idProduto + '&dataPedido=' + dataPedido + '&quantidade=' + quantidade + '&fornecimento_pai_id=' + id_fornecedor + '&acao=incluirPedido',
+			data : '&id_produto='+ idProduto + '&dataPedido=' + dataPedido + '&quantidade=' + quantidade + '&id_fornecedor=' + id_fornecedor + '&acao=incluirPedido',
 			success : function(json, textStatus, xhr) {
 				location.reload();
 			}

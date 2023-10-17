@@ -3,13 +3,18 @@ package Servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+
 import com.google.gson.Gson;
+
+import DAO.API;
 import DAO.DaoGenerico;
 import DAO.daoPedidos;
 import DAO.daoVendas;
-import Servlet.SQL.SQL;
+import DAO.SQL.SQLPedidos;
+import DAO.SQL.SQLVendas;
 import Util.ReportUtil;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelPedidos;
@@ -24,7 +29,9 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 	daoVendas daoVendas = new daoVendas();
 	daoPedidos daoPedidos = new daoPedidos();
 	DaoGenerico dao = new DaoGenerico();
-    SQL sql = new SQL();
+	SQLVendas sqlvendas = new SQLVendas();
+    SQLPedidos sqlpedidos = new SQLPedidos();
+    API api = new API();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -44,36 +51,20 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vendas")) {
-
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daoVendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id))));
-				printWriter.close();
+				
+				api.impressaoJSONVendas(response, daoVendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id)));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("entradas")) {
 
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosProdutoId(id, "2"))));
-				printWriter.close();
+				api.impressaoJSONPedidos(response, daoPedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id, "2")));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("pedidos")) {
-
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosProdutoId(id, "0, 1, 2"))));
-				printWriter.close();
+				
+				api.impressaoJSONPedidos(response, daoPedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id)));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelamentos")) {
 
-				PrintWriter printWriter = response.getWriter();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				printWriter.write(new Gson().toJson(daoPedidos.listarPedidos(sql.listaPedidosUsuarioId(id, 1))));
-				printWriter.close();
+				api.impressaoJSONPedidos(response, daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id, 1)));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormVendasPDF")) {
 
@@ -81,48 +72,35 @@ public class ServletRelatorios extends servlet_recuperacao_login{
 				String dataFinal = request.getParameter("dataFinal");
 
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-					List<ModelVendas> vendas = daoVendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id));
+					List<ModelVendas> vendas = daoVendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id));
 
 					byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 
-					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-					response.setContentType("application/octet-stream");
-					response.getOutputStream().write(relatorio);
-					response.getOutputStream().flush();
-					
+					api.impressaoRelatorio(response, relatorio);
 				} else {
-					String sqlListaVendas = sql.listaVendasTempo(id, dataInicial, dataFinal); 
-					String sqlSomaValores = sql.somaValoresVendasTempo(id, dataInicial, dataFinal);
-					String sqlSomaQuantidade = sql.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
+					String sqlListaVendas = sqlvendas.listaVendasTempo(id, dataInicial, dataFinal); 
+					String sqlSomaValores = sqlvendas.somaValoresVendasTempo(id, dataInicial, dataFinal);
+					String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
 					List<ModelVendas> vendas = daoVendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
 
 					byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 
-					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-					response.setContentType("application/octet-stream");
-					response.getOutputStream().write(relatorio);
-					response.getOutputStream().flush();
+					api.impressaoRelatorio(response, relatorio);
 				}
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("printFormEntradasPDF")) {
+
 				String dataInicial = request.getParameter("dataInicial");
 				String dataFinal = request.getParameter("dataFinal");
 
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
 
-					byte[] relatorio = new ReportUtil().geraReltorioPDF(daoPedidos.listarPedidos(sql.listaPedidosUsuarioId(id, 2)), "entradas", request.getServletContext());
-
-					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-					response.setContentType("application/octet-stream");
-					response.getOutputStream().write(relatorio);
-					response.getOutputStream().flush();
+					byte[] relatorio = new ReportUtil().geraReltorioPDF(daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id, 2)), "entradas", request.getServletContext());
+					api.impressaoRelatorio(response, relatorio);
 					
 				} else {
-					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sql.listaPedidosUsuarioIdTempo(id, 2, dataInicial, dataFinal));
-
-					response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
-					response.setContentType("application/octet-stream");
-					response.getOutputStream().write(new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext()));
-					response.getOutputStream().flush();
+					List<ModelPedidos> entradas = daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioIdTempo(id, 2, dataInicial, dataFinal));
+					byte[] relatorio = new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext());
+					api.impressaoRelatorio(response, relatorio);
 				}
 			}
 		} catch (Exception e) {

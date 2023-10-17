@@ -479,11 +479,9 @@
 				jQuery("#canvas").append("<canvas id=\"myAreaChart\"></canvas>");
 				
 				var responseArray = response.split("|");
-		        var jsonLista1 = responseArray[0];
-		        var jsonLista2 = responseArray[1];
-		        var jsonLista3 = responseArray[2];
-		        var jsonLista4 = responseArray[3];
-		        var jsonLista5 = responseArray[4];
+		        var jsonLista2 = responseArray[0];
+		        var jsonLista4 = responseArray[1];
+		        var jsonLista5 = responseArray[2];
 		        
 		        var json = JSON.parse(jsonLista2);
 		        

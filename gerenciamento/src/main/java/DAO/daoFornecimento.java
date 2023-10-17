@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import DAO.SQL.SQLFornecimento;
 import conexao.conexao;
 import model.ModelFornecimento;
 import model.ModelProdutos;
@@ -15,90 +16,68 @@ import model.ModelProdutos;
 public class daoFornecimento {
 
 	private Connection connection;
-
+	SQLFornecimento sqlfornecimento = new SQLFornecimento();
+	
 	public daoFornecimento(){
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, int tempoentrega, int valor) {
-		try {
-			String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES (?, ?, ?, ?);";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, nome);
-			statement.setLong(2, produtos_pai_id.getId());
-			statement.setInt(3, tempoentrega);
-			statement.setInt(4, valor);
-			statement.execute();
-			connection.commit();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
+	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, int tempoentrega, int valor) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.gravar(nome, produtos_pai_id, tempoentrega, valor));
+		statement.execute();
+		connection.commit();
 	}
 	
 	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
-		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
-		String sql = "SELECT * FROM fornecimento WHERE produtos_pai_id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
+		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.lista(id));
 		ResultSet resultado = statement.executeQuery();
-		
+		return objetosListarFornecedores(resultado);
+	}
+	
+	public List<ModelFornecimento> objetosListarFornecedores(ResultSet resultado) throws SQLException{
+		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
+		ModelFornecimento fornecedores = new ModelFornecimento();
+		return lerResultadoListarFornecedores(retorno, fornecedores, resultado);
+	}
+	
+	public List<ModelFornecimento> lerResultadoListarFornecedores(List<ModelFornecimento> retorno, ModelFornecimento fornecedores, ResultSet resultado) throws SQLException{
 		while(resultado.next()){
-			ModelFornecimento fornecedores = new ModelFornecimento();
-			
 			fornecedores.setId(resultado.getLong("id"));
 			fornecedores.setNome(resultado.getString("nome"));
 			fornecedores.setTempoentrega(resultado.getLong("tempoentrega"));
 			fornecedores.setValor(resultado.getLong("valor"));
-			
 			retorno.add(fornecedores);
 		}
 		return retorno;
 	}
 	
-	public ModelFornecimento consultaFornecedor(Long id, Long id_Produto, int usuarioId) {
-		ModelFornecimento modelFornecimento = new ModelFornecimento();
-		try {
-			String sql = "SELECT* FROM fornecimento WHERE id = " + id + " AND produtos_pai_id = " + id_Produto;
-			PreparedStatement statement = connection.prepareStatement(sql);
-			ResultSet resultado = statement.executeQuery();
-
-			while (resultado.next()) {
-				daoProdutos daoprodutos = new daoProdutos();
-				modelFornecimento.setId(resultado.getLong("id"));
-				modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
-				modelFornecimento.setNome(resultado.getString("nome"));
-				modelFornecimento.setValor(resultado.getLong("valor"));
-				modelFornecimento.setProduto_pai_id(daoprodutos.consultaProduto(id_Produto, usuarioId));		
-			}
-			return modelFornecimento;
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return null;
+	public ModelFornecimento consultarFornecedor(ModelFornecimento modelFornecedor) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.consulta(modelFornecedor.getId(), modelFornecedor.getProduto_pai_id().getId()));
+		ResultSet resultado = statement.executeQuery();
+		return lerResultadoConsultarFornecedor(resultado, modelFornecedor);
 	}
 	
-	public void excluirFornecedor(String id) {
-		try {
-			String sql = "DELETE FROM fornecimento WHERE id = " + Long.parseLong(id);
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
-			connection.commit();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+	public ModelFornecimento lerResultadoConsultarFornecedor(ResultSet resultado, ModelFornecimento modelFornecimento) throws SQLException{
+		while (resultado.next()) {
+			modelFornecimento.setId(resultado.getLong("id"));
+			modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
+			modelFornecimento.setNome(resultado.getString("nome"));
+			modelFornecimento.setValor(resultado.getLong("valor"));
+			modelFornecimento.setProduto_pai_id(modelFornecimento.getProduto_pai_id());		
 		}
+		return modelFornecimento;
+	}
+	
+	public void excluirFornecedor(Long id) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.exclui(id));
+		statement.executeUpdate();
+		connection.commit();
 	}
 	
 	public Double mediaValoresFornecimento(Long produto) throws Exception{
-		String sql = "SELECT AVG(valor) AS media FROM fornecimento WHERE produtos_pai_id = " + produto;
-		PreparedStatement statement = connection.prepareStatement(sql);
+		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.media(produto));
 		ResultSet resultado = statement.executeQuery();
 		resultado.next();
-		Double total = resultado.getDouble("media");
-		
-		return total;
+		return resultado.getDouble("media");
 	}
 }

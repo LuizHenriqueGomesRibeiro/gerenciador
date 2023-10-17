@@ -1,5 +1,6 @@
 package model;
 
+
 public class ModelProdutos {
 	
 	private int quantidade;

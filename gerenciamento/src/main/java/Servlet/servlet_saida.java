@@ -1,18 +1,8 @@
 package Servlet;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import model.ModelData;
-import model.ModelPedidos;
-import model.ModelProdutos;
-import model.ModelVendas;
-
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -25,8 +15,19 @@ import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.daoVendas;
 import DAO.daoVendasRelatorio;
-import Servlet.SQL.SQL;
+import DAO.SQL.SQLPedidos;
+import DAO.SQL.SQLProdutos;
+import DAO.SQL.SQLVendas;
 import Util.BeanChart;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import model.ModelData;
+import model.ModelPedidos;
+import model.ModelProdutos;
+import model.ModelVendas;
 
 /**
  * Servlet implementation class servletLogin
@@ -43,7 +44,9 @@ public class servlet_saida extends servlet_recuperacao_login {
 	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
 	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
 	DaoGenerico dao = new DaoGenerico();
-	SQL sql = new SQL();
+	SQLVendas sqlvendas = new SQLVendas();
+	SQLPedidos sqlpedidos = new SQLPedidos();
+	SQLProdutos sqlprodutos = new SQLProdutos();
 
 	public servlet_saida() {
 		super();
@@ -56,7 +59,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("caixaListar")) {
 
 				int id = super.getUsuarioLogado(request).getId();
-				List<ModelProdutos> produtos = daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id), id);
+				List<ModelProdutos> produtos = daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id), id);
 				request.setAttribute("produtos", produtos);
 
 				request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
@@ -86,7 +89,7 @@ public class servlet_saida extends servlet_recuperacao_login {
 				venda.setDataentrega(dao.converterDatas(request.getParameter("dataVenda")));
 				venda.setValortotal(valor * quantidade);
 				daovendas.gravarVenda(venda, id);
-				request.setAttribute("produtos", daoproduto.listarProdutos(sql.listaProdutosLIMIT10(id), id));
+				request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id), id));
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadProduto")) {
 				int id = super.getUsuarioLogado(request).getId();
@@ -111,8 +114,8 @@ public class servlet_saida extends servlet_recuperacao_login {
 
 				int status = 2;
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorData(id));
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaPedidosValorData(id, status));
+					//BeanChart bean = daovendas.listarVendasGrafico(sqlvendas.listaVendasValorData(id));
+					//BeanChart entradas = daopedidos.listarEntradasGrafico(sqlpedidos.listaPedidosValorData(id, status));
 
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -122,16 +125,17 @@ public class servlet_saida extends servlet_recuperacao_login {
 					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
 					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
 
-					List<ModelVendas> vendas = daovendas.listarVendas(sql.listaVendas(id), sql.somaValoresVendas(id), sql.somaQuantidadeVendas(id));
+					List<ModelVendas> vendas = daovendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id));
 
 					PrintWriter out = response.getWriter();
 					Gson gson = new Gson();
-					out.print(gson.toJson(bean) + "|" + gson.toJson(vendas) + "|" + gson.toJson(entradas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
+					out.print(gson.toJson(vendas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
+					//out.print(gson.toJson(bean) + "|" + gson.toJson(vendas) + "|" + gson.toJson(entradas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
 					out.flush();
 
 				} else {
-					BeanChart bean = daovendas.listarVendasGrafico(sql.listaVendasValorDataTempo(id, dataInicial, dataFinal));
-					BeanChart entradas = daopedidos.listarEntradasGrafico(sql.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
+					//BeanChart bean = daovendas.listarVendasGrafico(sqlvendas.listaVendasValorDataTempo(id, dataInicial, dataFinal));
+					//BeanChart entradas = daopedidos.listarEntradasGrafico(sqlpedidos.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
 
 					ModelData dataVenda = new ModelData();
 					dataVenda.setUsuario_pai_id(super.getUsuarioLogado(request));
@@ -141,14 +145,15 @@ public class servlet_saida extends servlet_recuperacao_login {
 					dataEntrada.setUsuario_pai_id(super.getUsuarioLogado(request));
 					List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
 
-					String listaVendasTempo = sql.listaVendasTempo(id, dataInicial, dataFinal);
-					String somaValoresVendasTempo = sql.somaValoresVendasTempo(id, dataInicial, dataFinal);
-					String somaQuantidadeVendasTempo = sql.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
+					String listaVendasTempo = sqlvendas.listaVendasTempo(id, dataInicial, dataFinal);
+					String somaValoresVendasTempo = sqlvendas.somaValoresVendasTempo(id, dataInicial, dataFinal);
+					String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
 					List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
 
 					PrintWriter out = response.getWriter();
 					Gson gson = new Gson();
-					out.print(gson.toJson(bean) + "|" + gson.toJson(vendas) + "|" + gson.toJson(entradas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
+					out.print(gson.toJson(vendas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
+					//out.print(gson.toJson(bean) + "|" + gson.toJson(vendas) + "|" + gson.toJson(entradas) + "|" + gson.toJson(dataVendas) + "|" + gson.toJson(dataEntradas));
 					out.flush();
 				}
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
@@ -159,14 +164,14 @@ public class servlet_saida extends servlet_recuperacao_login {
 				int status = 2;
 				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
 
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaPedidosValorData(id, status));
-					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaPedidosValorData(id, status));
+					BeanChart bean = daopedidos.listarEntradasGrafico(sqlpedidos.listaPedidosValorData(id, status));
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sqlpedidos.listaPedidosValorData(id, status));
 
 					response.getWriter().print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
 					response.getWriter().flush();
 				} else {
-					BeanChart bean = daopedidos.listarEntradasGrafico(sql.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
-					List<ModelPedidos> entradas = daopedidos.listarPedidos(sql.listaPedidosUsuarioIdTempo(id, status, dataInicial, dataFinal));
+					BeanChart bean = daopedidos.listarEntradasGrafico(sqlpedidos.listaPedidosValorDataTempo(id, status, dataInicial, dataFinal));
+					List<ModelPedidos> entradas = daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioIdTempo(id, status, dataInicial, dataFinal));
 
 					response.getWriter().print(new Gson().toJson(bean) + "|" + new Gson().toJson(entradas));
 					response.getWriter().flush();
