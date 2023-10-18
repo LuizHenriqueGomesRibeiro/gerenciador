@@ -29,7 +29,8 @@ public class daoPedidos {
 		ModelFornecimento fornecedor = daofornecimento.consultarFornecedor(pedido.getFornecedor_pai_id());
 		int status = 0;
 		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
-			" VALUES ('" + dao.converterDatas(pedido.getDatapedido()) + "', " + 
+			" VALUES ('" + 
+			dao.converterDatas(pedido.getDatapedido()) + "', " + 
 			pedido.getQuantidade() + ", " + 
 			pedido.getValor() + ", " + 
 			pedido.getQuantidade()*fornecedor.getValor() + ", " + 
@@ -45,6 +46,22 @@ public class daoPedidos {
 		connection.commit();
 			
 		return pedido;
+	}
+	
+	public ModelPedidos buscarPedido(Long id) throws SQLException {
+		
+		ModelPedidos pedido = new ModelPedidos();
+		
+		String sql = "SELECT * FROM pedidos WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		
+		while(resultado.next()){
+			pedido.setDataentrega(resultado.getString("dataentrega"));
+	        pedido.setDatapedido(resultado.getString("datapedido"));
+	        pedido.setId(resultado.getInt("id"));
+		}
+		return pedido;	
 	}
 	
 	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {

@@ -25,6 +25,14 @@ public class daoEntradasRelatorio {
 		connection = conexao.getConnection();
 	}
 	
+	public void alternarData(ModelData modelData) throws SQLException, ParseException {
+		if (buscarData(modelData)) {
+			atualizarDataEValor(modelData);
+		} else {
+			inserirDataEValor(modelData);
+		}
+	}
+	
 	public Boolean buscarData(ModelData dataEntrada) throws SQLException, ParseException {
 		String sql = "SELECT COUNT(*) FROM dataentrada WHERE usuario_pai_id = ? AND dataentrada = ?;";
 		PreparedStatement statement = connection.prepareStatement(sql);

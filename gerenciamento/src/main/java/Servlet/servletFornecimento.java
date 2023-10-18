@@ -1,8 +1,6 @@
 package Servlet;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import DAO.API;
 import DAO.DaoGenerico;
@@ -18,8 +16,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelData;
-import model.ModelFornecimento;
-import model.ModelParametros;
 import model.ModelPedidos;
 import model.ModelProdutos;
 import model.ModelUsuarios;
@@ -58,30 +54,9 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			int id = super.getUsuarioLogado(request).getId();
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
-				
-				ModelPedidos modelPedidos = api.parametrosConfirmarPedidoTeste(request, usuario);
-
-				pedido.gravarPedido(modelPedidos);
-				api.setarAtributos(request, usuario);
-				
+				incluirPedido(request, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-								
-				ModelParametros parametros = api.parametrosConfirmarPedido(request);
-				
-				ModelData modelData = new ModelData().getModelData(parametros, request);
-				modelData.setDatavenda(parametros.getDataEntrega());
-				modelData.setUsuario_pai_id(usuario);
-				modelData.setValortotal(daopedidos.listarPedidos(sqlpedidos.procuraPedido(Long.parseLong(request.getParameter("id")))).get(0).getValorTotal());
-
-				if (daoEntradaRelatorio.buscarData(modelData)) {
-					daoEntradaRelatorio.atualizarDataEValor(modelData);
-				} else {
-					daoEntradaRelatorio.inserirDataEValor(modelData);
-				}
-
-				daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(parametros.getQuantidade()));
-				daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), parametros.getStatus());
-					
+				confirmarPedido(request, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 				Long id_pedido = Long.parseLong(request.getParameter("id"));
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarFornecedor")){
@@ -112,5 +87,17 @@ public class servletFornecimento extends servlet_recuperacao_login {
 			// TODO: handle exception
 		}
 	}
+	
+	protected void incluirPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
+		ModelPedidos modelPedido = api.parametrosIncluirPedido(request, usuario);
+		pedido.gravarPedido(modelPedido);
+		api.setarAtributos(request, usuario);
+	}
 
+	public void confirmarPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
+		ModelData modelData = api.parametrosConfirmarPedido(request, usuario);
+		daoEntradaRelatorio.alternarData(modelData);
+		daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(request.getParameter("quantidade")));
+		daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 2);
+	}
 }

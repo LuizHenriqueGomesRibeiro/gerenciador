@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import Servlet.servletFornecimento;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,37 +26,33 @@ public class API {
 	DaoGenerico dao = new DaoGenerico();
 	daoFornecimento daofornecedor = new daoFornecimento();
 	
-	public ModelPedidos parametrosConfirmarPedidoTeste(HttpServletRequest request, ModelUsuarios usuario) throws SQLException {
-		ModelPedidos modelPedidos = new ModelPedidos();
-		modelPedidos.setQuantidade(Long.parseLong(request.getParameter("quantidade")));
-		modelPedidos.setDatapedido(request.getParameter("dataPedido"));
-		modelPedidos.setId_produto(Long.parseLong(request.getParameter("id_produto")));
-		modelPedidos.setId_fornecedor(Long.parseLong(request.getParameter("id_fornecedor")));
-		modelPedidos.setProduto_pai_id(daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), usuario.getId()));
-		ModelFornecimento fornecimento = new ModelFornecimento();
-		fornecimento.setProduto_pai_id(daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), usuario.getId()));
-		fornecimento.setId(Long.parseLong(request.getParameter("id_fornecedor")));
-		modelPedidos.setFornecedor_pai_id(daofornecedor.consultarFornecedor(fornecimento));
-		modelPedidos.setUsuario_pai_id(usuario);
-		return modelPedidos;
+	public ModelPedidos parametrosIncluirPedido(HttpServletRequest request, ModelUsuarios usuario) throws SQLException {
+		return fornecedorIncluirPedido(request, usuario);
 	}
 	
-	public ModelParametros parametrosIncluirPedido(HttpServletRequest request) {
-		ModelParametros modelParametros = new ModelParametros();
-		modelParametros.setQuantidade(request.getParameter("quantidade"));
-		modelParametros.setDataPedido(request.getParameter("dataPedido").replaceAll("\\/", "-"));
-		modelParametros.setId_produto(Long.parseLong(request.getParameter("id_produto")));
-		modelParametros.setId_fornecedor(Long.parseLong(request.getParameter("id_fornecedor")));
-		return modelParametros;
+	public ModelPedidos fornecedorIncluirPedido(HttpServletRequest request, ModelUsuarios usuario) throws SQLException {
+		ModelFornecimento modelFornecedor = new ModelFornecimento();
+		modelFornecedor.setId(Long.parseLong(request.getParameter("id_fornecedor")));
+		modelFornecedor.setProduto_pai_id(daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), usuario.getId()));
+		return pedidoIncluirPedido(request, modelFornecedor, usuario);
 	}
 	
-	public ModelParametros parametrosConfirmarPedido(HttpServletRequest request) throws Exception {
-		ModelParametros modelParametros = new ModelParametros();
-		modelParametros.setStatus(2);
-		modelParametros.setQuantidade(request.getParameter("quantidade"));
-		modelParametros.setDataEntrega(request.getParameter("dataEntrega"));
-		modelParametros.setUsuario(new servletFornecimento().getUsuarioLogado(request));
-		return modelParametros;
+	public ModelPedidos pedidoIncluirPedido(HttpServletRequest request, ModelFornecimento modelFornecedor, ModelUsuarios usuario) throws SQLException {
+		ModelPedidos modelPedido = new ModelPedidos();
+		modelPedido.setFornecedor_pai_id(daofornecedor.consultarFornecedor(modelFornecedor));
+		modelPedido.setQuantidade(Long.parseLong(request.getParameter("quantidade")));
+		modelPedido.setDatapedido(request.getParameter("dataPedido"));
+		modelPedido.setDataentrega(dao.plusDias(request.getParameter("dataPedido"), modelFornecedor.getTempoentrega()));
+		modelPedido.setProduto_pai_id(daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), usuario.getId()));
+		return modelPedido;
+	}
+	
+	public ModelData parametrosConfirmarPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
+		ModelData modelData = new ModelData();
+		modelData.setDatavenda(request.getParameter("data"));
+		modelData.setUsuario_pai_id(usuario);
+		modelData.setValortotal(daopedidos.buscarPedido(Long.parseLong(request.getParameter("id"))).getValorTotal());
+		return modelData;
 	}
 	
 	public HttpServletRequest setarAtributos(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
