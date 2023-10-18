@@ -22,8 +22,8 @@ public class daoFornecimento {
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarNovoFornecedor(String nome, ModelProdutos produtos_pai_id, int tempoentrega, int valor) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.gravar(nome, produtos_pai_id, tempoentrega, valor));
+	public void gravarNovoFornecedor(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.execute();
 		connection.commit();
 	}

@@ -75,30 +75,31 @@ public class daoProdutos {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		ModelProdutos produtos = new ModelProdutos();
 		while(resultado.next()){
-			alternarSomaValores(produtos, id);
-	        alternarSomaQuantidade(produtos, id);
 	        produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
 			retorno.add(produtos);
+			alternarSomaValores(produtos, id);
+			alternarSomaQuantidade(produtos, id);
 		}
 		return retorno;
 	}
 	
 	public void alternarSomaValores(ModelProdutos produtos, int id) throws SQLException {
-		if(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
-        	produtos.setValorTotalString("Sem valores");
+		System.out.println(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0));
+		if(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0)) == 0) {
+			produtos.setValorTotalString("Sem valores");
         }else {
-        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0))));
+        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0))));
         }
 	}
 	
 	public void alternarSomaQuantidade(ModelProdutos produtos, int id) throws SQLException {
-		if(dao.somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
+		if(dao.somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0)) == 0) {
         	produtos.setQuantidadePedidaString("Sem quantidades");
         }else {
-        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(id, 0)))) + " unidades");
+        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(produtos.getId(), 0)))) + " unidades");
         }
 	}
 	

@@ -9,6 +9,7 @@ import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
+import DAO.SQL.SQLFornecimento;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import Servlet.API.Extends.APIFornecimento;
@@ -36,6 +37,7 @@ public class servletFornecimento extends APIFornecimento {
 	DaoGenerico dao = new DaoGenerico();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
+	SQLFornecimento sqlFornecimento = new SQLFornecimento();
     
     /**
      * @see HttpServlet#HttpServlet()
@@ -73,11 +75,11 @@ public class servletFornecimento extends APIFornecimento {
 		try {
 			String nomeFornecedor = request.getParameter("nomeFornecedor");
 			String tempoentrega = request.getParameter("tempoentrega");
+			int valor = dao.converterDinheiroInteger(request.getParameter("valor"));
 			
 			ModelProdutos modelProdutos = new ModelProdutos();
 			modelProdutos.setId(request.getParameter("id") != null && !request.getParameter("id").isEmpty() ? Long.parseLong(request.getParameter("id")) : null);
-			
-			new daoFornecimento().gravarNovoFornecedor(nomeFornecedor, modelProdutos, Integer.parseInt(tempoentrega), dao.converterDinheiroInteger(request.getParameter("valor")));
+			new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor, modelProdutos, Integer.parseInt(tempoentrega), valor));
 			
 			super.setarAtributos(request, super.getUsuarioLogado(request));
 			request.getRequestDispatcher("principal/listar.jsp").forward(request, response);

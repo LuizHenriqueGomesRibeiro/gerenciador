@@ -14,7 +14,8 @@ public class SQLProdutos {
 	}
 	
 	public String gravaProduto(String nome, int id) {
-		String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade) VALUES (" + nome + ", " + id + ", " + 0 + ");";
+		String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade) VALUES ('" + nome + "', " + id + ", " + 0 + ");";
+		System.out.println(sql);
 		return sql;
 	}
 	

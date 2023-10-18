@@ -37,6 +37,7 @@ public class APIDespache extends servlet_recuperacao_login {
 	
 	public HttpServletRequest plusAtributos(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
 		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(usuario.getId()));
+		System.out.println(dao.converterIntegerDinheiro(daoproduto.somaProdutos(usuario.getId())));
 		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(usuario.getId())));
 		request.setAttribute("usuario", usuario);
 		return request;

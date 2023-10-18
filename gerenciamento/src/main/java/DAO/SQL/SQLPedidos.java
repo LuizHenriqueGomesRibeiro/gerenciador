@@ -21,12 +21,12 @@ public class SQLPedidos {
 		return sql;
 	}
 	
-	public String somaValoresPedidoProdutoId(int id, int status) {
+	public String somaValoresPedidoProdutoId(Long id, int status) {
 		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = " + id + " AND status = " + status;
 		return sql;
 	}
 	
-	public String somaQuantidadePedidoProdutId(int id, int status) {
+	public String somaQuantidadePedidoProdutId(Long id, int status) {
 		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + id + " AND status = " + status;
 		return sql;
 	}

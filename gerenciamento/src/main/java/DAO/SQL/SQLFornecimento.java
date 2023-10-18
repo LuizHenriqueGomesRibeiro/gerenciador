@@ -5,7 +5,8 @@ import model.ModelProdutos;
 public class SQLFornecimento {
 	
 	public String gravar(String nome, ModelProdutos produtos_pai_id, int tempoentrega, int valor) {
-		String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES (" + nome + "," + produtos_pai_id + "," + tempoentrega + "," + valor + ");";
+		String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES ('" + nome + "'," + produtos_pai_id.getId() + "," 
+			+ tempoentrega + "," + valor + ");";
 		return sql;
 	}
 	
