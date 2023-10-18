@@ -1,12 +1,12 @@
 package Servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.List;
 
 import com.google.gson.Gson;
 
-import DAO.API;
+import DAO.Despache;
 import DAO.DaoGenerico;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
@@ -14,6 +14,7 @@ import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
+import Servlet.API.Extends.APIProdutos;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ import model.ModelUsuarios;
 /**
  * Servlet implementation class servlet_cadastro_e_atualizacao_produtos
  */
-public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao_login {
+public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	private static final long serialVersionUID = 1L;
 	
 	daoLogin daologin = new daoLogin();
@@ -35,7 +36,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	DaoGenerico dao = new DaoGenerico();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
-	API api = new API();
+	Despache api = new Despache();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -51,60 +52,25 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String acao = request.getParameter("acao");
-			int id = super.getUsuarioLogado(request).getId();
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
-			
 			request.setAttribute("usuario", super.getUsuarioLogado(request));
 			
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
-
-				api.setarAtributos(request, usuario);
-				request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-				
+				listar(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")){
-				
-				api.setarAtributosOFFSET(request, usuario);
-				request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-				
+				paginar(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("excluir")){
-				
-				Long id_produto = Long.parseLong(request.getParameter("id"));
-				daoproduto.excluirProduto(id_produto);
-				
-				api.setarAtributos(request, usuario);
-				request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-				
+				excluir(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("configuracoes")){
-
-				Long id_produto = Long.parseLong(request.getParameter("id"));
-				api.setarAtributos(request, usuario);
-
-				ModelProdutos dadosJsonUser1 = daoproduto.consultaProduto(id_produto, id);
-				List<ModelFornecimento> dadosJsonUser2 = daoFornecimento.listarFornecedores(Long.parseLong(request.getParameter("id")));
-				PrintWriter out = response.getWriter();
-			    out.print(new Gson().toJson(dadosJsonUser1) + "|" + new Gson().toJson(dadosJsonUser2));
-			    out.flush();
-			    
+				configuracoes(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
-
-				String status = "0";
-				api.impressaoJSONPedidos(response, daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(Integer.parseInt(request.getParameter("id")), status)));
-				
+				historicoPedidos(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
-				
-				Long id_produto = Long.parseLong(request.getParameter("id"));
-				ModelProdutos dadosJsonUser = daoproduto.consultaProduto(id_produto, id);
-				api.impressaoJSONProdutos(response, dadosJsonUser);
-				
+				exclusaoAjax(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-
-				daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), id);
-				daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(request.getParameter("quantidade")));
-				daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 2);
-				
+				confirmarPedido(request, response, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
-				
-				daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 1);
+				cancelarPedido(request, response, usuario);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -120,24 +86,60 @@ public class servlet_cadastro_e_atualizacao_produtos extends servlet_recuperacao
 			ModelUsuarios usuario = super.getUsuarioLogado(request);
 			
 			ModelProdutos modelProduto = new ModelProdutos();
-			
 			modelProduto.setNome(request.getParameter("nome"));
 			modelProduto.setUsuario_pai_id(daologin.consultaUsuarioLogadoId(id));
 			
-			if(modelProduto.isNovo()) {
-				daoproduto.gravarProduto(modelProduto);
-			}else {
-				daoproduto.atualizarProduto(modelProduto);
-			}
-			
-			api.setarAtributos(request, usuario);
+			daoproduto.alternarProduto(modelProduto);
+
+			super.setarAtributos(request, usuario);
 			request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-			
 		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
 			request.getRequestDispatcher("principal/principal.jsp").forward(request, response);
 		}
-		
+	}
+	
+	protected void listar(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws Exception {
+		super.setarAtributos(request, usuario);
+		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
+	}
+	
+	protected void paginar(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws Exception {
+		super.setarAtributosOFFSET(request, usuario);
+		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
+	}
+	
+	protected void excluir(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws Exception {
+		Long id_produto = Long.parseLong(request.getParameter("id"));
+		daoproduto.excluirProduto(id_produto);
+		super.setarAtributos(request, usuario);
+		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
+	}
+	
+	protected void configuracoes(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws Exception {
+		Long id_produto = Long.parseLong(request.getParameter("id"));
+		super.setarAtributos(request, usuario);
+		String json = new Gson().toJson(daoproduto.consultaProduto(id_produto, usuario.getId())) + "|" + new Gson().toJson(daoFornecimento.listarFornecedores(id_produto));
+		super.impressaoJSON(response, json);
+	}
+
+	protected void historicoPedidos(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws IOException, NumberFormatException, SQLException {
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(Integer.parseInt(request.getParameter("id")), 0)));
+		super.impressaoJSON(response, json);
+	}
+	
+	protected void exclusaoAjax(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws IOException, NumberFormatException, SQLException {
+		Long id_produto = Long.parseLong(request.getParameter("id"));
+		String json = new Gson().toJson(daoproduto.consultaProduto(id_produto, usuario.getId()));
+		super.impressaoJSON(response, json);
+	}
+	
+	protected void confirmarPedido(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws IOException, NumberFormatException, SQLException {
+		daoproduto.consultaProduto(Long.parseLong(request.getParameter("id_produto")), usuario.getId());
+		daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(request.getParameter("quantidade")));
+		daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 2);
+	}
+	
+	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response, ModelUsuarios usuario) throws IOException, NumberFormatException, SQLException {
+		daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 1);
 	}
 }

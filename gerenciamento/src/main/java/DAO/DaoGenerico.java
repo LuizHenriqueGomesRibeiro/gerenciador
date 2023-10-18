@@ -109,8 +109,8 @@ public class DaoGenerico {
 	}
 	
 	public String plusDias(String dataPedido, Long tempo) {
-		LocalDate data = LocalDate.parse(dataPedido, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		LocalDate data = LocalDate.parse(dataPedido, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		data = data.plusDays(tempo);
-		return data.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
 }

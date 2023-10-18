@@ -12,16 +12,6 @@ public class ModelData {
 	private String datavenda;
 	private Long valortotal;
 	
-	public ModelData getModelData(ModelParametros parametros, HttpServletRequest request) throws NumberFormatException, SQLException {
-		daoPedidos daopedidos = new daoPedidos();
-		SQLPedidos sqlpedidos = new SQLPedidos();
-		ModelData modelData = new ModelData();
-		modelData.setDatavenda(parametros.getDataVenda());
-		modelData.setUsuario_pai_id(parametros.getUsuario());
-		modelData.setValortotal(daopedidos.listarPedidos(sqlpedidos.procuraPedido(Long.parseLong(request.getParameter("id")))).get(0).getValorTotal());
-		return modelData;
-	}
-	
 	public Long getId() {
 		return id;
 	}

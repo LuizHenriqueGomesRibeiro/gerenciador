@@ -6,7 +6,7 @@ public class SQLPedidos {
 		return sql;
 	}
 	
-	public String listaPedidosValorDataTempo(int id, int status, String dataInicial, String dataFinal) {
+	public String listaPedidosValorData(int id, int status, String dataInicial, String dataFinal) {
 		String sql = "SELECT valortotal, dataentrega FROM pedidos WHERE usuario_pai_id = " + id + " AND status = " + status + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
 		return sql;
 	}
@@ -21,12 +21,22 @@ public class SQLPedidos {
 		return sql;
 	}
 	
+	public String somaValoresPedidoProdutoId(int id, int status) {
+		String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = " + id + " AND status = " + status;
+		return sql;
+	}
+	
+	public String somaQuantidadePedidoProdutId(int id, int status) {
+		String sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + id + " AND status = " + status;
+		return sql;
+	}
+	
 	public String listaPedidosProdutoId(int id) {
 		String sql = "SELECT * FROM pedidos WHERE produtos_pai_id = " + id;
 		return sql;
 	}
 
-	public String listaPedidosProdutoId(int id, String status) {
+	public String listaPedidosProdutoId(int id, int status) {
 		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
 		return sql;
 	}
@@ -36,7 +46,7 @@ public class SQLPedidos {
 		return sql;
 	}
 
-	public String listaPedidosUsuarioIdTempo(int id, int status, String dataInicial, String dataFinal) {
+	public String listaPedidosUsuarioId(int id, int status, String dataInicial, String dataFinal) {
 		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND usuario_pai_id = " + id + " AND dataentrega >= " + dataInicial + " AND dataentrega <= " + dataFinal;
 		return sql;
 	}

@@ -89,4 +89,14 @@
     <servlet-name>ServletRelatorios</servlet-name>
     <url-pattern>/ServletRelatorios</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>APIFornecimento</display-name>
+    <servlet-name>APIFornecimento</servlet-name>
+    <servlet-class>Servlet.API.APIFornecimento</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>APIFornecimento</servlet-name>
+    <url-pattern>/APIFornecimento</url-pattern>
+  </servlet-mapping>
 </web-app>

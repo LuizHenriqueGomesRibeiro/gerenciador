@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import DAO.SQL.SQLPedidos;
-import Util.BeanChart;
 import conexao.conexao;
 import model.ModelFornecimento;
 import model.ModelPedidos;
@@ -40,6 +39,7 @@ public class daoPedidos {
 			pedido.getUsuario_pai_id().getId() + ", " + 
 			status + ", '" + 
 			pedido.getNome() + "');";
+		System.out.println(sql);
 		PreparedStatement statement = connection.prepareStatement(sql);
 			
 		statement.execute();
@@ -111,30 +111,5 @@ public class daoPedidos {
 		connection.commit();
 	}
 	
-	public BeanChart listarEntradasGrafico(String sql) throws SQLException, ParseException{
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-		return objetosEntradasGrafico(resultado);
-	}
 	
-	public BeanChart objetosEntradasGrafico(ResultSet resultado) throws SQLException {
-		List<Long> valores = new ArrayList<Long>();
-		List<String> datas = new ArrayList<String>();
-		return lerResultadosEntradasGrafico(resultado, valores, datas);
-	}
-	
-	public BeanChart lerResultadosEntradasGrafico(ResultSet resultado, List<Long> valores, List<String> datas) throws SQLException {
-		while(resultado.next()) {
-			valores.add(resultado.getLong("valortotal"));
-			datas.add(dao.converterDatas(resultado.getString("dataentrega")));
-		}
-		return setarResultadosEntradasGrafico(valores, datas);
-	}
-
-	public BeanChart setarResultadosEntradasGrafico(List<Long> valores, List<String> datas) {
-		BeanChart beanChart = new BeanChart();
-		beanChart.setDatas(datas);
-		beanChart.setValores(valores);
-		return beanChart;
-	}
 }

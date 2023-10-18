@@ -4,14 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import DAO.SQL.SQLPedidos;
+import DAO.SQL.SQLProdutos;
 import conexao.conexao;
-import model.ModelUsuarios;
-import model.ModelFornecimento;
-import model.ModelPedidos;
 import model.ModelProdutos;
 
 public class daoProdutos {
@@ -19,131 +16,90 @@ public class daoProdutos {
 	private Connection connection;
 	DaoGenerico dao = new DaoGenerico();
 	daoLogin daoLogin = new daoLogin();
-
+	SQLProdutos sqlprodutos = new SQLProdutos();
+	SQLPedidos sqlpedidos = new SQLPedidos();
+	
 	public daoProdutos() {
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarProduto(ModelProdutos modelProduto) {
-
-		try {
-			String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade) VALUES (?, ?, ?);";
-			
-			ModelUsuarios usuario_pai_id = modelProduto.getUsuario_pai_id();
-			
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, modelProduto.getNome());
-			statement.setLong(2, usuario_pai_id.getId());
-			int a = 0;
-			statement.setInt(3, a);
-			
-			statement.execute();
-			connection.commit();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+	public void alternarProduto(ModelProdutos modelProduto) throws SQLException {
+		if(modelProduto.isNovo()) {
+			gravarProduto(sqlprodutos.gravaProduto(modelProduto.getNome(), modelProduto.getUsuario_pai_id().getId()));
+		}else {
+			atualizarProduto(sqlprodutos.atualizaProduto(modelProduto));
 		}
 	}
 	
-	public void excluirProduto(Long id) {
-		try {
-			String sql = "DELETE FROM produtos WHERE id = " + id;
-			
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.executeUpdate();
-			
-			connection.commit();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			
-		}
+	public void gravarProduto(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.execute();
+		connection.commit();
 	}
 	
-	public ModelProdutos consultaProduto(Long id_Produto, int userLogado) {
+	public void excluirProduto(Long id) throws SQLException {
+		String sql = "DELETE FROM produtos WHERE id = " + id;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		connection.commit();
+	}
+	
+	public ModelProdutos consultaProduto(Long id_produto, int userLogado) throws SQLException {
 		ModelProdutos modelProduto = new ModelProdutos();
-		try {
-			String sql = "SELECT*FROM produtos WHERE id = ? AND usuario_pai_id = ?";
-
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setLong(1, id_Produto);
-			statement.setLong(2, userLogado);
-			ResultSet resultado = statement.executeQuery();
-
-			while (resultado.next()) {
-				modelProduto.setId(resultado.getLong("id"));
-				modelProduto.setNome(resultado.getString("nome"));
-				modelProduto.setPreco(resultado.getInt("preco"));
-				modelProduto.setQuantidade(resultado.getInt("quantidade"));
-				modelProduto.setValorTotal(resultado.getInt("preco")*resultado.getInt("quantidade"));
-			}
-			return modelProduto;
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+		String sql = "SELECT*FROM produtos WHERE id = " + id_produto + " AND usuario_pai_id = " + userLogado;
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		while (resultado.next()) {
+			modelProduto.setId(resultado.getLong("id"));
+			modelProduto.setNome(resultado.getString("nome"));
+			modelProduto.setPreco(resultado.getInt("preco"));
+			modelProduto.setQuantidade(resultado.getInt("quantidade"));
+			modelProduto.setValorTotal(resultado.getInt("preco") * resultado.getInt("quantidade"));
 		}
-		return null;
+		return modelProduto;
 	}
 	
-	public void atualizarProduto(ModelProdutos modelProduto) {
-		try {
-			String sql = "UPDATE produtos SET preco = ?, quantidade = ?, nome = ?, valortotal = ? WHERE id = ?";
-			
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setInt(1, modelProduto.getPreco());
-			statement.setInt(2, modelProduto.getQuantidade());
-			statement.setString(3, modelProduto.getNome());
-			statement.setInt(4, modelProduto.getQuantidade()*modelProduto.getPreco());
-			statement.setLong(5, modelProduto.getId());
-
-			statement.executeUpdate();
-			connection.commit();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-			
-		}
+	public void atualizarProduto(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		connection.commit();
 	}
 
 	public List<ModelProdutos> listarProdutos(String sql, int id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		
 		return resultadosListagem(resultado, id);
 	}
 	
 	public List<ModelProdutos> resultadosListagem(ResultSet resultado, int id) throws SQLException {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
+		ModelProdutos produtos = new ModelProdutos();
 		while(resultado.next()){
-			ModelProdutos produtos = new ModelProdutos();
-			DaoGenerico dao = new DaoGenerico(); 
-			
-			int status = 0;
-			String sql = "SELECT SUM(valortotal) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
-			if(dao.somaValores(sql) == 0) {
-	        	produtos.setValorTotalString("Sem valores");
-	        }else {
-	        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sql)));
-	        }
-	        
-	        if(dao.somaQuantidade(sql) == 0) {
-	        	produtos.setQuantidadePedidaString("Sem quantidades");
-	        }else {
-	        	sql = "SELECT SUM(quantidade) AS soma FROM pedidos WHERE produtos_pai_id = " + resultado.getLong("id") + " AND status = " + status;
-	        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sql))) + " unidades");
-	        }
-	       
+			alternarSomaValores(produtos, id);
+	        alternarSomaQuantidade(produtos, id);
 	        produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
 			produtos.setNome(resultado.getString("nome"));
-
 			retorno.add(produtos);
 		}
 		return retorno;
+	}
+	
+	public void alternarSomaValores(ModelProdutos produtos, int id) throws SQLException {
+		if(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
+        	produtos.setValorTotalString("Sem valores");
+        }else {
+        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0))));
+        }
+	}
+	
+	public void alternarSomaQuantidade(ModelProdutos produtos, int id) throws SQLException {
+		if(dao.somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
+        	produtos.setQuantidadePedidaString("Sem quantidades");
+        }else {
+        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(id, 0)))) + " unidades");
+        }
 	}
 	
 	public int somaProdutos(int usuario_pai_id) throws Exception{
@@ -181,11 +137,9 @@ public class daoProdutos {
 	public ModelProdutos adicionaProdutoCaixa(Long id, int quantidade) throws SQLException {
 		String sql = "UPDATE produtos SET quantidade = quantidade + " + quantidade + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		
 		ModelProdutos produto = new ModelProdutos();
 		statement.executeUpdate();
 		connection.commit();
-		
 		return produto;
 	}
 }	

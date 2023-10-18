@@ -1,16 +1,12 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import Util.BeanChart;
 import conexao.conexao;
 import model.ModelProdutos;
 import model.ModelVendas;
@@ -70,23 +66,4 @@ public class daoVendas {
 		
 		return retorno;
 	}
-	
-	public BeanChart listarVendasGrafico(String sql) throws SQLException, ParseException{
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-		List<Long> valores = new ArrayList<Long>();
-		List<String> datas = new ArrayList<String>();
-		
-		BeanChart beanChart = new BeanChart();
-		
-		while(resultado.next()) {
-			valores.add(resultado.getLong("valortotal"));
-			datas.add(dao.converterDatas(resultado.getString("dataentrega")));
-		}
-		
-		beanChart.setDatas(datas);
-		beanChart.setValores(valores);
-		
-		return beanChart;
-	}	
 }
