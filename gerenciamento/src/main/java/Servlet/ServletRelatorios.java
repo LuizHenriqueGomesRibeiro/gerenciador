@@ -70,65 +70,36 @@ public class ServletRelatorios extends APIRelatorios{
 	}
 
 	protected void irParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
+		super.setarAtributosirParaRelatorios(request, response);
 	}
 	
 	protected void vendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		super.impressaoJSON(response, new Gson().toJson(daoVendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id))));
+		String json = super.vendas(request);
+		super.impressaoJSON(response, json);
 	}
 	
 	protected void entradas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		super.impressaoJSON(response, new Gson().toJson(daoPedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id, 2))));
+		String json = super.entradas(request);
+		super.impressaoJSON(response, json);
 	}
 	
 	protected void pedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		super.impressaoJSON(response, new Gson().toJson(daoPedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id))));
+		String json = super.pedidos(request);
+		super.impressaoJSON(response, json);
 	}
 	
 	protected void cancelamentos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		super.impressaoJSON(response, new Gson().toJson(daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id, 1))));
+		String json = super.cancelamentos(request);
+		super.impressaoJSON(response, json);
 	}
 	
 	protected void printFormVendasPDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		String dataInicial = request.getParameter("dataInicial");
-		String dataFinal = request.getParameter("dataFinal");
-
-		if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-			List<ModelVendas> vendas = daoVendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id));
-			byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
-			super.impressaoPDF(response, relatorio);
-		} else {
-			String sqlListaVendas = sqlvendas.listaVendasTempo(id, dataInicial, dataFinal); 
-			String sqlSomaValores = sqlvendas.somaValoresVendasTempo(id, dataInicial, dataFinal);
-			String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendasTempo(id, dataInicial, dataFinal);
-			List<ModelVendas> vendas = daoVendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
-
-			byte[] relatorio = new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
-
-			super.impressaoPDF(response, relatorio);
-		}
+		byte[] relatorio = super.alternarPrintFormVendasPDF(request, response);
+		super.impressaoPDF(response, relatorio);
 	}
 	
 	protected void printFormEntradasPDF(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		int id = super.getUsuarioLogado(request).getId();
-		String dataInicial = request.getParameter("dataInicial");
-		String dataFinal = request.getParameter("dataFinal");
-
-		if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-
-			byte[] relatorio = new ReportUtil().geraReltorioPDF(daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id, 2)), "entradas", request.getServletContext());
-			super.impressaoPDF(response, relatorio);
-			
-		} else {
-			List<ModelPedidos> entradas = daoPedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id, 2, dataInicial, dataFinal));
-			byte[] relatorio = new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext());
-			super.impressaoPDF(response, relatorio);
-		}
+		byte[] relatorio = super.alternarPrintFormEntradasPDF(request, response);
+		super.impressaoPDF(response, relatorio);
 	}
-	
 }

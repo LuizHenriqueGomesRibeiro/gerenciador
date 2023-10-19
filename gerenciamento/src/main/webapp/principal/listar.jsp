@@ -222,9 +222,9 @@
 				<div style="margin: 20px;">
 					<form style="position: relative; width: 90%; margin: auto;"
 						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-						method="post" name="formulario_cadastro_produtos" id="formulario">
+						method="get" name="formulario_cadastro_produtos" id="formulario">
 
-						<input type="hidden" value="cadastrar" name="acao">
+						<input type="hidden" value="cadastrarPedido" name="acao">
 
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">nome</label> <input
@@ -254,7 +254,7 @@
 					method="get" name="formulario_cadastro_produtos" id="formulario">
 
 					<input type="hidden" name="acao" id="acao" value="excluir">
-					<input type="hidden" name="id" id="excId">
+					<input type="hidden" name="id_produto" id="excId">
 					<div style="width: 196px; position: relative; left: 50%; transform: translate(-50%, 0%); margin-bottom: 25px;">
 						<input type="submit" value="Excluir" class="btn btn-primary btn-lg"> 
 						<input type="button" value="Fechar" class="btn btn-danger btn-lg" data-dismiss="modal">
@@ -336,7 +336,7 @@
 
 			method : "get",
 			url : urlAction,
-			data : '&dataEntrega=' + capturarData + '&id='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
+			data : '&dataEntrega=' + capturarData + '&id_pedido='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
 			success : function(json, textStatus, xhr) {
 				location.reload();
 			}
@@ -351,7 +351,7 @@
 
 			method : "get",
 			url : urlAction,
-			data : '&id='+ id1 + '&acao=cancelarPedido',
+			data : '&id_pedido='+ id1 + '&acao=cancelarPedido',
 			success : function(json, textStatus, xhr) {
 				location.reload();
 			}
@@ -359,7 +359,6 @@
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 		});
 	}
-	
 	
 	jQuery("#tabelaHistoricoPedidos").hide();
 	
@@ -372,7 +371,7 @@
 
 			method : "get",
 			url : urlAction,
-			data : '&id='+ id + '&acao=historioPedidos',
+			data : '&id_produto='+ id + '&acao=historioPedidos',
 			success : function(json, textStatus, xhr) {
 				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
 				for(var p = 0; p < json.length; p++){	
@@ -505,7 +504,7 @@
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&id=' + id + '&acao=configuracoes',
+				data : '&id_produto=' + id + '&acao=configuracoes',
 				dataType: "text",
 				success : function(response){
 					
@@ -550,7 +549,7 @@
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&id=' + id + '&acao=exclusaoAjax',
+				data : '&id_produto=' + id + '&acao=exclusaoAjax',
 				success : function(json, textStatus, xhr) {
 					jQuery("#excId").val(json.id);
 				}

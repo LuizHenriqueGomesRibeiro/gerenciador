@@ -39,21 +39,10 @@ public class servletFornecimento extends APIFornecimento {
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLFornecimento sqlFornecimento = new SQLFornecimento();
     
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public servletFornecimento() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-		String acao = request.getParameter("acao");
 		try {
-			ModelUsuarios usuario = super.getUsuarioLogado(request);
+			String acao = request.getParameter("acao");
+			ModelUsuarios usuario = super.getUser(request);
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
 				incluirPedido(request, usuario);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
@@ -64,13 +53,9 @@ public class servletFornecimento extends APIFornecimento {
 				deletarFornecedor(request, usuario);
 			}
 		}catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String nomeFornecedor = request.getParameter("nomeFornecedor");
@@ -81,9 +66,7 @@ public class servletFornecimento extends APIFornecimento {
 			modelProdutos.setId(request.getParameter("id") != null && !request.getParameter("id").isEmpty() ? Long.parseLong(request.getParameter("id")) : null);
 			new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor, modelProdutos, Integer.parseInt(tempoentrega), valor));
 			
-			super.setarAtributos(request, super.getUsuarioLogado(request));
-			request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-			
+			super.setarAtributosListar(request, response);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -92,12 +75,11 @@ public class servletFornecimento extends APIFornecimento {
 	protected void incluirPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
 		ModelPedidos modelPedido = super.parametrosIncluirPedido(request, usuario);
 		pedido.gravarPedido(modelPedido);
-		super.setarAtributos(request, usuario);
+		super.setarAtributos(request);
 	}
 
 	protected void confirmarPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
-		ModelData modelData = super.parametrosConfirmarPedido(request, usuario);
-		daoEntradaRelatorio.alternarData(modelData);
+		daoEntradaRelatorio.alternarData(super.parametrosConfirmarPedido(request));
 		daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(request.getParameter("quantidade")));
 		daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 2);
 	}

@@ -17,10 +17,17 @@ public class servlet_recuperacao_login extends HttpServlet implements Serializab
 	
 	daoLogin daologin = new daoLogin();
 	
-    public ModelUsuarios getUsuarioLogado(HttpServletRequest request) throws Exception {
+    public ModelUsuarios getUser(HttpServletRequest request) throws Exception {
     	HttpSession session = request.getSession();	
     	String login = (String) session.getAttribute("login");
 
     	return daologin.consultaLoginString(login);
+    }
+    
+    public int getUserId(HttpServletRequest request) throws Exception {
+    	HttpSession session = request.getSession();	
+    	String login = (String) session.getAttribute("login");
+
+    	return daologin.consultaLoginString(login).getId();
     }
 }

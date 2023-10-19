@@ -31,13 +31,18 @@ public class SQLPedidos {
 		return sql;
 	}
 	
-	public String listaPedidosProdutoId(int id) {
+	public String listaPedidosProdutoId(Long id) {
 		String sql = "SELECT * FROM pedidos WHERE produtos_pai_id = " + id;
 		return sql;
 	}
 
-	public String listaPedidosProdutoId(int id, int status) {
+	public String listaPedidosProdutoId(Long id, int status) {
 		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
+		return sql;
+	}
+	
+	public String listaPedidosUsuarioId(int id) {
+		String sql = "SELECT * FROM pedidos WHERE usuario_pai_id = " + id;
 		return sql;
 	}
 	
