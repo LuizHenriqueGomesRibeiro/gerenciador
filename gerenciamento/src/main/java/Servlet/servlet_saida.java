@@ -113,14 +113,12 @@ public class servlet_saida extends APISaida {
 		venda.setDataentrega(dao.converterDatas(request.getParameter("dataVenda")));
 		venda.setValortotal(valor * quantidade);
 		daovendas.gravarVenda(venda, super.getUserId(request));
-		
 		super.setarAtributos(request);
 	}
 	
 	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, SQLException, Exception {
 		ModelProdutos produto = daoproduto.consultaProduto(Long.parseLong(request.getParameter("id")), super.getUserId(request));
 		Double medias = daoFornecimento.mediaValoresFornecimento(Long.parseLong(request.getParameter("id")));
-
 		String json = new Gson().toJson(produto) + "|" + new Gson().toJson(medias);
 		super.impressaoJSON(response, json);
 	}
@@ -141,7 +139,6 @@ public class servlet_saida extends APISaida {
 			List<ModelVendas> vendas = daovendas.listarVendas(sqlvendas.listaVendas(id), sqlvendas.somaValoresVendas(id), sqlvendas.somaQuantidadeVendas(id));
 			List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda);
 			List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
-
 			String json = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
 			super.impressaoJSON(response, json);
 		} else {
@@ -151,7 +148,6 @@ public class servlet_saida extends APISaida {
 			List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
 			List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(dataVenda, dataInicial, dataFinal);
 			List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(dataEntrada);
-
 			String json = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
 			super.impressaoJSON(response, json);
 		}
