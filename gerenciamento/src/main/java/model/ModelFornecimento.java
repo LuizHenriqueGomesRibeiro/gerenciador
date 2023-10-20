@@ -12,7 +12,7 @@ public class ModelFornecimento {
 	private ModelUsuarios usuario_pai_id;
 	private Long id;
 	private Long tempoentrega;
-	private Long valor;
+	private int valor;
 	
 	public ModelFornecimento setFornecedor(ModelPedidos pedido) throws SQLException {
 		
@@ -34,10 +34,10 @@ public class ModelFornecimento {
 	public void setUsuario_pai_id(ModelUsuarios usuario_pai_id) {
 		this.usuario_pai_id = usuario_pai_id;
 	}
-	public Long getValor() {
+	public int getValor() {
 		return valor;
 	}
-	public void setValor(Long valor) {
+	public void setValor(int valor) {
 		this.valor = valor;
 	}
 	public Long getTempoentrega() {

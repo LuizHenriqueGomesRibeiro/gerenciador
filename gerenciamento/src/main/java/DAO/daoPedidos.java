@@ -82,10 +82,10 @@ public class daoPedidos {
 			pedido.setValores(dao.somaValores(sqlpedidos.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setId(resultado.getInt("id"));
 			pedido.setQuantidade(resultado.getLong("quantidade"));
-			pedido.setValorTotal(resultado.getLong("valortotal"));
+			pedido.setValorTotal(resultado.getInt("valortotal"));
 			pedido.setDataentrega(dao.converterDatas(resultado.getString("dataentrega")));
 			pedido.setDatapedido(dao.converterDatas(resultado.getString("datapedido")));
-			pedido.setValor(resultado.getLong("valor"));
+			pedido.setValor(resultado.getInt("valor"));
 			pedido.setNome(resultado.getString("nome"));
 			retorno.add(pedido);
 		}

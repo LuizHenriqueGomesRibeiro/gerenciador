@@ -74,9 +74,9 @@ public class daoEntradasRelatorio {
 		connection.commit();
 	}
 	
-	public List<ModelData> listarDatasEntradas(ModelData dataEntrada) throws SQLException, ParseException{
+	public List<ModelData> listarDatasEntradas(int id) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
-		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = " + dataEntrada.getUsuario_pai_id().getId() + " ORDER BY dataentrada ASC";
+		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = " + id + " ORDER BY dataentrada ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		
@@ -89,7 +89,7 @@ public class daoEntradasRelatorio {
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
 			dataVendas.setDatavenda(data);
 
-			dataVendas.setValortotal(resultado.getLong("valortotal"));
+			dataVendas.setValortotal(resultado.getInt("valortotal"));
 			
 			retorno.add(dataVendas);
 		}
@@ -97,11 +97,11 @@ public class daoEntradasRelatorio {
 		return retorno;
 	}
 	
-	public List<ModelData> listarDatasEntradas(ModelData dataEntrada, String dataInicial, String dataFinal) throws SQLException, ParseException{
+	public List<ModelData> listarDatasEntradas(int id, String dataInicial, String dataFinal) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		String sql = "SELECT * FROM dataentrada WHERE usuario_pai_id = ? AND dataentrada >= ? AND dataentrada <= ? ORDER BY dataentrada ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataEntrada.getUsuario_pai_id().getId());
+		statement.setInt(1, id);
 		
 		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date dataUtil;
@@ -124,7 +124,7 @@ public class daoEntradasRelatorio {
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
 			dataVendas.setDatavenda(data);
 
-			dataVendas.setValortotal(resultado.getLong("valortotal"));
+			dataVendas.setValortotal(resultado.getInt("valortotal"));
 			
 			retorno.add(dataVendas);
 		}

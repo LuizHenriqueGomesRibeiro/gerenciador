@@ -45,7 +45,7 @@ public class daoFornecimento {
 			fornecedores.setId(resultado.getLong("id"));
 			fornecedores.setNome(resultado.getString("nome"));
 			fornecedores.setTempoentrega(resultado.getLong("tempoentrega"));
-			fornecedores.setValor(resultado.getLong("valor"));
+			fornecedores.setValor(resultado.getInt("valor"));
 			retorno.add(fornecedores);
 		}
 		return retorno;
@@ -62,7 +62,7 @@ public class daoFornecimento {
 			modelFornecimento.setId(resultado.getLong("id"));
 			modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
 			modelFornecimento.setNome(resultado.getString("nome"));
-			modelFornecimento.setValor(resultado.getLong("valor"));
+			modelFornecimento.setValor(resultado.getInt("valor"));
 			modelFornecimento.setProduto_pai_id(modelFornecimento.getProduto_pai_id());		
 		}
 		return modelFornecimento;

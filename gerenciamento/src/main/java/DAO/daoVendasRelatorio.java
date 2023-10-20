@@ -22,6 +22,15 @@ public class daoVendasRelatorio {
 		connection = conexao.getConnection();
 	}
 	
+	public void alternarDataEValor(ModelData dataVenda) throws SQLException, ParseException {
+		boolean booleana = buscarData(dataVenda);
+		if (booleana) {
+			atualizarDataEValor(dataVenda);
+		} else {
+			inserirDataEValor(dataVenda);
+		}
+	}
+	
 	public Boolean buscarData(ModelData dataVenda) throws SQLException, ParseException {
 		String sql = "SELECT COUNT(*) FROM datavenda WHERE usuario_pai_id = " + dataVenda.getUsuario_pai_id().getId() + " AND datavenda = '" + dataVenda.getDatavenda() + "'";
 		PreparedStatement statement = connection.prepareStatement(sql);
@@ -57,11 +66,11 @@ public class daoVendasRelatorio {
 		connection.commit();
 	}
 	
-	public List<ModelData> listarDatasVendas(ModelData dataVenda) throws SQLException, ParseException{
+	public List<ModelData> listarDatasVendas(int id) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = ? ORDER BY datavenda ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
+		statement.setInt(1, id);
 		ResultSet resultado = statement.executeQuery();
 		
 		while(resultado.next()) {
@@ -73,7 +82,7 @@ public class daoVendasRelatorio {
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
 			dataVendas.setDatavenda(data);
 
-			dataVendas.setValortotal(resultado.getLong("valortotal"));
+			dataVendas.setValortotal(resultado.getInt("valortotal"));
 			
 			retorno.add(dataVendas);
 		}
@@ -81,11 +90,11 @@ public class daoVendasRelatorio {
 		return retorno;
 	}
 	
-	public List<ModelData> listarDatasVendas(ModelData dataVenda, String dataInicial, String dataFinal) throws SQLException, ParseException{
+	public List<ModelData> listarDatasVendas(int id, String dataInicial, String dataFinal) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = ? AND datavenda >= ? AND datavenda <= ? ORDER BY datavenda ASC";
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, dataVenda.getUsuario_pai_id().getId());
+		statement.setInt(1, id);
 		
 		SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date dataUtil;
@@ -108,7 +117,7 @@ public class daoVendasRelatorio {
 			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
 			dataVendas.setDatavenda(data);
 
-			dataVendas.setValortotal(resultado.getLong("valortotal"));
+			dataVendas.setValortotal(resultado.getInt("valortotal"));
 			
 			retorno.add(dataVendas);
 		}

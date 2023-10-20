@@ -75,6 +75,15 @@ public class APIDespache extends servlet_recuperacao_login {
 	}
 	// <-------------------------------------------------------------------- ServletRelatorios ---------------------------------------------------------------------------> //
 	
+	// <---------------------------------------------------------------------- Servlet_Saida -----------------------------------------------------------------------------> //
+		public void setarAtributosVender(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+			request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
+			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
+			request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
+			request.setAttribute("usuario", id(request));
+		}
+	// <---------------------------------------------------------------------- Servlet_Saida -----------------------------------------------------------------------------> //
+		
 	public HttpServletRequest setarAtributos(HttpServletRequest request) throws Exception {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		return plusAtributos(request);

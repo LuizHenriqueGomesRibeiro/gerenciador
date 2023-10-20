@@ -183,7 +183,7 @@
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&acao=loadProduto&id=' + id,
+				data : '&acao=loadProduto&id_produto=' + id,
 				success : function(response) {
 					var responseArray = response.split("|");
 			        var stringLista1 = responseArray[0];
@@ -218,7 +218,7 @@
 			jQuery.ajax({
 				method : "get",
 				url : urlAction,
-				data : '&dataVenda=' + dataVenda + '&valor=' + valor + '&idProduto=' + id + '&quantidade=' + quantidade + '&acao=vender',
+				data : '&dataVenda=' + dataVenda + '&valor=' + valor + '&id_produto=' + id + '&quantidade=' + quantidade + '&acao=vender',
 				success : function(json, textStatus, xhr) {
 					location.reload();
 				}

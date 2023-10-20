@@ -8,8 +8,8 @@ public class ModelPedidos {
 	private String datacancelamento;
 	private String dataentrega;
 	private Long quantidade;
-	private Long valor;
-	private Long valorTotal;
+	private int valor;
+	private int valorTotal;
 	private String nome;
 	private int valores;
 	private int quantidadeTotal;
@@ -104,22 +104,22 @@ public class ModelPedidos {
 	public void setQuantidade(Long quantidade) {
 		this.quantidade = quantidade;
 	}
-	public Long getValor() {
-		return valor;
-	}
-	public void setValor(Long valor) {
-		this.valor = valor;
-	}
-	public Long getValorTotal() {
-		return valorTotal;
-	}
-	public void setValorTotal(Long valorTotal) {
-		this.valorTotal = valorTotal;
-	}
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	public int getValor() {
+		return valor;
+	}
+	public void setValor(int valor) {
+		this.valor = valor;
+	}
+	public int getValorTotal() {
+		return valorTotal;
+	}
+	public void setValorTotal(int valorTotal) {
+		this.valorTotal = valorTotal;
 	}
 }
