@@ -84,6 +84,10 @@ public class APIDespache extends servlet_recuperacao_login {
 		}
 	// <---------------------------------------------------------------------- Servlet_Saida -----------------------------------------------------------------------------> //
 		
+	
+		
+	
+		
 	public HttpServletRequest setarAtributos(HttpServletRequest request) throws Exception {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		return plusAtributos(request);
@@ -107,6 +111,14 @@ public class APIDespache extends servlet_recuperacao_login {
 		request.setAttribute("usuario", id(request));
 		return request;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// <------------------------------------------------------------------- genéricos / universais -----------------------------------------------------------------------> //
 	public HttpServletResponse cabecarioImpressaoPDF(HttpServletResponse response) {

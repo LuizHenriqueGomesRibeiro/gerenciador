@@ -7,7 +7,7 @@ public class ModelPedidos {
 	private String datapedido;
 	private String datacancelamento;
 	private String dataentrega;
-	private Long quantidade;
+	private int quantidade;
 	private int valor;
 	private int valorTotal;
 	private String nome;
@@ -98,10 +98,10 @@ public class ModelPedidos {
 	public void setDataentrega(String dataentrega) {
 		this.dataentrega = dataentrega;
 	}
-	public Long getQuantidade() {
+	public int getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(Long quantidade) {
+	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
 	public String getNome() {

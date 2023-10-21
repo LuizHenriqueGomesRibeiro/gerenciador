@@ -92,7 +92,7 @@ public class servlet_saida extends APISaida {
 		super.setarAtributos(request);
 	}
 	
-	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, SQLException, Exception {
+	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = super.parametrosLoadProduto(request);
 		super.impressaoJSON(response, json);
 	}

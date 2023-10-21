@@ -24,9 +24,8 @@ public class daoPedidos {
 		connection = conexao.getConnection();
 	}
 	
-	public ModelPedidos gravarPedido(ModelPedidos pedido) throws SQLException {
+	public void gravarPedido(ModelPedidos pedido) throws SQLException {
 		ModelFornecimento fornecedor = daofornecimento.consultarFornecedor(pedido.getFornecedor_pai_id());
-		int status = 0;
 		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
 			" VALUES ('" + 
 			dao.converterDatas(pedido.getDatapedido()) + "', " + 
@@ -37,25 +36,19 @@ public class daoPedidos {
 			dao.converterDatas(pedido.getDataentrega()) + "', " + 
 			fornecedor.getProduto_pai_id().getId() + ", " + 
 			pedido.getUsuario_pai_id().getId() + ", " + 
-			status + ", '" + 
+			0 + ", '" + 
 			pedido.getNome() + "');";
-		System.out.println(sql);
 		PreparedStatement statement = connection.prepareStatement(sql);
 			
 		statement.execute();
 		connection.commit();
-			
-		return pedido;
 	}
 	
 	public ModelPedidos buscarPedido(Long id) throws SQLException {
-		
 		ModelPedidos pedido = new ModelPedidos();
-		
 		String sql = "SELECT * FROM pedidos WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		
 		while(resultado.next()){
 			pedido.setDataentrega(resultado.getString("dataentrega"));
 	        pedido.setDatapedido(resultado.getString("datapedido"));
@@ -81,7 +74,7 @@ public class daoPedidos {
 			pedido.setQuantidadeTotal(dao.somaQuantidade(sqlpedidos.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setValores(dao.somaValores(sqlpedidos.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
 			pedido.setId(resultado.getInt("id"));
-			pedido.setQuantidade(resultado.getLong("quantidade"));
+			pedido.setQuantidade(resultado.getInt("quantidade"));
 			pedido.setValorTotal(resultado.getInt("valortotal"));
 			pedido.setDataentrega(dao.converterDatas(resultado.getString("dataentrega")));
 			pedido.setDatapedido(dao.converterDatas(resultado.getString("datapedido")));

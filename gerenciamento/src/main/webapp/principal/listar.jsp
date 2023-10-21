@@ -438,9 +438,9 @@
 		var id = document.getElementById('configuracoesId').value;
 		
 		jQuery.ajax({
-			method : "post",
+			method : "get",
 			url : urlAction,
-			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id=' + id,
+			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id=' + id_produto + '&acao=cadastrarFornecedor',
 			success : function(json, textStatus, xhr) {
 				jQuery('#nomeFornecedor').val('');
 				jQuery('#tempoentrega').val('');

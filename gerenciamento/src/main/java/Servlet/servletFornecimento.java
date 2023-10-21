@@ -44,47 +44,35 @@ public class servletFornecimento extends APIFornecimento {
 			String acao = request.getParameter("acao");
 			ModelUsuarios usuario = super.getUser(request);
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
-				incluirPedido(request, usuario);
+				incluirPedido(request);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-				confirmarPedido(request, usuario);
+				confirmarPedido(request);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 				//Long id_pedido = Long.parseLong(request.getParameter("id"));
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarFornecedor")){
-				deletarFornecedor(request, usuario);
+				deletarFornecedor(request);
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarFornecedor")){
+				cadastrarFornecedor(request, response);
 			}
 		}catch (Exception e) {
 		}
 	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			String nomeFornecedor = request.getParameter("nomeFornecedor");
-			String tempoentrega = request.getParameter("tempoentrega");
-			int valor = dao.converterDinheiroInteger(request.getParameter("valor"));
-			
-			ModelProdutos modelProdutos = new ModelProdutos();
-			modelProdutos.setId(request.getParameter("id") != null && !request.getParameter("id").isEmpty() ? Long.parseLong(request.getParameter("id")) : null);
-			new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor, modelProdutos, Integer.parseInt(tempoentrega), valor));
-			
-			super.setarAtributosListar(request, response);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+	
+	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		parametrosCadastrarFornecedor(request);
+		setarAtributosListar(request, response);
 	}
 	
-	protected void incluirPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
-		ModelPedidos modelPedido = super.parametrosIncluirPedido(request, usuario);
-		pedido.gravarPedido(modelPedido);
-		super.setarAtributos(request);
+	protected void incluirPedido(HttpServletRequest request) throws Exception {
+		parametrosIncluirPedido(request);
+		setarAtributos(request);
 	}
 
-	protected void confirmarPedido(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
-		daoEntradaRelatorio.alternarData(super.parametrosConfirmarPedido(request));
-		daoproduto.adicionaProdutoCaixa(Long.parseLong(request.getParameter("id_produto")), Integer.parseInt(request.getParameter("quantidade")));
-		daopedidos.mudarStatus(Long.parseLong(request.getParameter("id")), 2);
+	protected void confirmarPedido(HttpServletRequest request) throws Exception {
+		//parametrosConfirmarPedido(request);
 	}
 	
-	protected void deletarFornecedor(HttpServletRequest request, ModelUsuarios usuario) throws Exception {
+	protected void deletarFornecedor(HttpServletRequest request) throws Exception {
 		daofornecimento.excluirFornecedor(Long.parseLong(request.getParameter("id")));
 	}
 }
