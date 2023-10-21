@@ -45,6 +45,10 @@ public class APIProdutos extends APIDespache{
 		return Integer.parseInt(request.getParameter("quantidade"));
 	}
 	
+	public String nome(HttpServletRequest request) {
+		return request.getParameter("nome");
+	}
+	
 	public void excluir(HttpServletRequest request) throws SQLException {
 		daoproduto.excluirProduto(id_produto(request));
 	}
@@ -66,10 +70,11 @@ public class APIProdutos extends APIDespache{
 		return json;
 	}
 	
-	public void confirmarPedido(HttpServletRequest request) throws Exception {
-		daoproduto.consultaProduto(id_produto(request), id(request));
-		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
-		daopedidos.mudarStatus(id_pedido(request), 2);
+	public void cadastrarProduto(HttpServletRequest request) throws Exception {
+		ModelProdutos modelProduto = new ModelProdutos();
+		modelProduto.setNome(nome(request));
+		modelProduto.setUsuario_pai_id(user(request));
+		daoproduto.alternarProduto(modelProduto);
 	}
 	
 	public void cancelarPedido(HttpServletRequest request) throws SQLException {

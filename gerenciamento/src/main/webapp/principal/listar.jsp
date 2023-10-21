@@ -142,8 +142,9 @@
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
-					<form action="<%=request.getContextPath()%>/servletFornecimento" method="post" name="formularioFornecimento"
+					<form action="<%=request.getContextPath()%>/servletFornecimento" method="get" name="formularioFornecimento"
 					id="formularioFornecimento">
+						<input type="hidden" value="cadastrarFornecedor" name="acao" />
 						<div class="form-group">
 							<div id="insiraNomeFornecedor"></div>
 							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" 
@@ -224,7 +225,7 @@
 						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
 						method="get" name="formulario_cadastro_produtos" id="formulario">
 
-						<input type="hidden" value="cadastrarPedido" name="acao">
+						<input type="hidden" value="cadastrarProduto" name="acao">
 
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">nome</label> <input
@@ -308,6 +309,27 @@
 		</table>
 	</div>
 	<script type="text/javascript">
+	
+	function adicionarFornecedor() {
+		var urlAction = document.getElementById('formularioFornecimento').action;
+		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
+		var tempoentrega = document.getElementById('tempoentrega').value;
+		var valor = document.getElementById('valor').value;
+		var id = document.getElementById('configuracoesId').value;
+		
+		jQuery.ajax({
+			method : "get",
+			url : urlAction,
+			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id_produto=' + id + '&acao=cadastrarFornecedor',
+			success : function(json, textStatus, xhr) {
+				jQuery('#nomeFornecedor').val('');
+				jQuery('#tempoentrega').val('');
+				jQuery('#valor').val('');
+			}
+		}).fail(function(xhr, status, errorThrown) {
+			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+		});
+	}
 	
 	function pedido(){
 		var urlAction = document.getElementById('formularioFornecimento').action;
@@ -424,27 +446,6 @@
 			data : '&acao=deletarFornecedor&id=' + id,
 			success : function(json, textStatus, xhr) {
 
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	function adicionarFornecedor() {
-		var urlAction = document.getElementById('formularioFornecimento').action;
-		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
-		var tempoentrega = document.getElementById('tempoentrega').value;
-		var valor = document.getElementById('valor').value;
-		var id = document.getElementById('configuracoesId').value;
-		
-		jQuery.ajax({
-			method : "get",
-			url : urlAction,
-			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id=' + id_produto + '&acao=cadastrarFornecedor',
-			success : function(json, textStatus, xhr) {
-				jQuery('#nomeFornecedor').val('');
-				jQuery('#tempoentrega').val('');
-				jQuery('#valor').val('');
 			}
 		}).fail(function(xhr, status, errorThrown) {
 			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);

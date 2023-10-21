@@ -89,7 +89,7 @@ public class servlet_saida extends APISaida {
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		super.parametrosVender(request);
-		super.setarAtributos(request);
+		super.setarAtributosComAjax(request);
 	}
 	
 	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {

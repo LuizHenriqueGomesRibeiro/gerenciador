@@ -40,7 +40,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String acao = request.getParameter("acao");
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
@@ -55,12 +55,14 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 				historicoPedidos(request, response);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("exclusaoAjax")){
 				exclusaoAjax(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
-				confirmarPedido(request, response);
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarProduto")){
+				cadastrarProduto(request, response);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
 				cancelarPedido(request, response);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarPedido")){
 				cadastrarPedido(request, response);
+			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarFornecedor")){
+				System.out.println("Teste");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -68,16 +70,16 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	}
 	
 	protected void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributosListar(request, response);
+		super.setarAtributosSemOffset(request, response);
 	}
 	
 	protected void paginar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributosPaginar(request, response);	
+		super.setarAtributosSemOffset(request, response);	
 	}
 	
 	protected void excluir(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		super.excluir(request);
-		super.setarAtributosExcluir(request, response);
+		super.setarAtributosSemOffset(request, response);
 	}
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -85,7 +87,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 		super.impressaoJSON(response, json);
 	}
 
-	protected void historicoPedidos(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException, SQLException {
+	protected void historicoPedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = super.historicoPedidos(request);
 		super.impressaoJSON(response, json);
 	}
@@ -95,16 +97,17 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 		super.impressaoJSON(response, json);
 	}
 	
-	protected void confirmarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.confirmarPedido(request);
+	protected void cadastrarProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		super.cadastrarProduto(request);
+		super.setarAtributosSemOffset(request, response);
 	}
 	
-	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response) throws IOException, NumberFormatException, SQLException {
+	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		super.cancelarPedido(request);
 	}
 
 	protected void cadastrarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		super.cadastrarPedido(request);
-		super.setarAtributosCadastrar(request, response);
+		super.setarAtributosSemOffset(request, response);
 	}
 }

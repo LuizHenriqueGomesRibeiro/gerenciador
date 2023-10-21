@@ -40,23 +40,13 @@ public class APIDespache extends servlet_recuperacao_login {
 	}
 	
 	// <-----------------------------------------------------------Servlet_cadastro_e_atualizacao_produtos ---------------------------------------------------------------> //
-	public void setarAtributosListar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void setarAtributosSemOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		plusAtributos(request, response);
 	}
 	
-	public void setarAtributosPaginar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void setarAtributosComOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
-		plusAtributos(request, response);
-	}
-	
-	public void setarAtributosExcluir(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
-		plusAtributos(request, response);
-	}
-
-	public void setarAtributosCadastrar(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		plusAtributos(request, response);
 	}
 	
@@ -67,7 +57,6 @@ public class APIDespache extends servlet_recuperacao_login {
 		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
 	}
 	// <----------------------------------------------------------- Servlet_cadastro_e_atualizacao_produtos --------------------------------------------------------------> //
-	
 	
 	// <-------------------------------------------------------------------- ServletRelatorios ---------------------------------------------------------------------------> //
 	public void setarAtributosirParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,7 +77,7 @@ public class APIDespache extends servlet_recuperacao_login {
 		
 	
 		
-	public HttpServletRequest setarAtributos(HttpServletRequest request) throws Exception {
+	public HttpServletRequest setarAtributosComAjax(HttpServletRequest request) throws Exception {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		return plusAtributos(request);
 	}
@@ -100,7 +89,6 @@ public class APIDespache extends servlet_recuperacao_login {
 	}
 	
 	public HttpServletRequest setarAtributosOFFSET(HttpServletRequest request) throws Exception {
-		int id = super.getUserId(request);
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
 		return plusAtributos(request);
 	}

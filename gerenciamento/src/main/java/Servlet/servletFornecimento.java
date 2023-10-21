@@ -42,7 +42,6 @@ public class servletFornecimento extends APIFornecimento {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		try {
 			String acao = request.getParameter("acao");
-			ModelUsuarios usuario = super.getUser(request);
 			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
 				incluirPedido(request);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
@@ -55,21 +54,22 @@ public class servletFornecimento extends APIFornecimento {
 				cadastrarFornecedor(request, response);
 			}
 		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		parametrosCadastrarFornecedor(request);
-		setarAtributosListar(request, response);
+		setarAtributosSemOffset(request, response);
 	}
 	
 	protected void incluirPedido(HttpServletRequest request) throws Exception {
 		parametrosIncluirPedido(request);
-		setarAtributos(request);
+		setarAtributosComAjax(request);
 	}
 
 	protected void confirmarPedido(HttpServletRequest request) throws Exception {
-		//parametrosConfirmarPedido(request);
+		parametrosConfirmarPedido(request);
 	}
 	
 	protected void deletarFornecedor(HttpServletRequest request) throws Exception {

@@ -69,7 +69,7 @@ public class APIFornecimento extends APIDespache {
 	
 	public void parametrosCadastrarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
 		ModelProdutos modelProdutos = new ModelProdutos();
-		modelProdutos.setId(id_produto(request) != null ? id_produto(request) : null);
+		modelProdutos.setId(id_produto(request));
 		new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), modelProdutos, tempoEntrega(request), valor(request)));
 	}
 	
@@ -103,7 +103,7 @@ public class APIFornecimento extends APIDespache {
 		return modelPedido;
 	}
 	
-	public void parametrosConfirmarPedido(HttpServletRequest request, ModelData modelData) throws ParseException, Exception {
+	public void parametrosConfirmarPedido(HttpServletRequest request) throws ParseException, Exception {
 		daoproduto.consultaProduto(id_produto(request), id(request));
 		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
 		daopedidos.mudarStatus(id_pedido(request), 2);
