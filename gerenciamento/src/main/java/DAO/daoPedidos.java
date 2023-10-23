@@ -24,37 +24,26 @@ public class daoPedidos {
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarPedido(ModelPedidos pedido) throws SQLException {
-		ModelFornecimento fornecedor = daofornecimento.consultarFornecedor(pedido.getFornecedor_pai_id());
-		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
-			" VALUES ('" + 
-			dao.converterDatas(pedido.getDatapedido()) + "', " + 
-			pedido.getQuantidade() + ", " + 
-			pedido.getValor() + ", " + 
-			pedido.getQuantidade()*fornecedor.getValor() + ", " + 
-			pedido.getFornecedor_pai_id().getId() + ", '" + 
-			dao.converterDatas(pedido.getDataentrega()) + "', " + 
-			fornecedor.getProduto_pai_id().getId() + ", " + 
-			pedido.getUsuario_pai_id().getId() + ", " + 
-			0 + ", '" + 
-			pedido.getNome() + "');";
+	public void gravarPedido(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
-			
 		statement.execute();
 		connection.commit();
 	}
 	
-	public ModelPedidos buscarPedido(Long id) throws SQLException {
-		ModelPedidos pedido = new ModelPedidos();
-		String sql = "SELECT * FROM pedidos WHERE id = " + id;
+	public ModelPedidos buscarPedido(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
+		return buscarPedidoResultado(resultado);	
+	}
+	
+	public ModelPedidos buscarPedidoResultado(ResultSet resultado) throws SQLException {
+		ModelPedidos pedido = new ModelPedidos();
 		while(resultado.next()){
 			pedido.setDataentrega(resultado.getString("dataentrega"));
 	        pedido.setDatapedido(resultado.getString("datapedido"));
 	        pedido.setId(resultado.getInt("id"));
 		}
-		return pedido;	
+		return pedido;
 	}
 	
 	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {
@@ -87,7 +76,7 @@ public class daoPedidos {
 	
 	public void mudarStatus(Long id, int status) throws SQLException{
 		if(status == 1) {
-			gravarCancelamento(id);
+			gravarCancelamento(sqlpedidos.gravarCancelamento(id));
 		}
 		String sql = "UPDATE pedidos SET status = " + status + " WHERE id = " + id;
 		
@@ -97,12 +86,9 @@ public class daoPedidos {
 		connection.commit();
 	}
 	
-	public void gravarCancelamento(Long id) throws SQLException{
-		String sql = "INSERT INTO cancelamentos(datacancelamento, pedido_pai_id) VALUES ('" + LocalDate.now() + "', " + id + ");";
+	public void gravarCancelamento(String sql) throws SQLException{
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.execute();
 		connection.commit();
 	}
-	
-	
 }

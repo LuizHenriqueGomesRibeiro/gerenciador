@@ -37,18 +37,6 @@ public class APIRelatorios extends APIDespache {
 	SQLVendas sqlvendas = new SQLVendas();
 	daoVendas daovendas = new daoVendas();
 
-	public int id(HttpServletRequest request) throws Exception {
-		return super.getUser(request).getId();
-	}
-	
-	public String dataInicial(HttpServletRequest request) {
-		return request.getParameter("dataInicial");
-	}
-	
-	public String dataFinal(HttpServletRequest request) {
-		return request.getParameter("dataFinal");
-	}
-	
 	public String vendas(HttpServletRequest request) throws SQLException, ParseException, Exception {
 		Gson gson = new Gson();
 		return gson.toJson(daovendas.listarVendas(sqlvendas.listaVendas(id(request)), sqlvendas.somaValoresVendas(id(request)), sqlvendas.somaQuantidadeVendas(id(request))));

@@ -47,7 +47,7 @@ public class servletFornecimento extends APIFornecimento {
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
 				confirmarPedido(request);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
-				//Long id_pedido = Long.parseLong(request.getParameter("id"));
+				cancelarPedido(request, response);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarFornecedor")){
 				deletarFornecedor(request);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarFornecedor")){
@@ -60,19 +60,23 @@ public class servletFornecimento extends APIFornecimento {
 	
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		parametrosCadastrarFornecedor(request);
-		setarAtributosSemOffset(request, response);
+		setarAtributos(request, response);
 	}
 	
 	protected void incluirPedido(HttpServletRequest request) throws Exception {
 		parametrosIncluirPedido(request);
-		setarAtributosComAjax(request);
+		setarAtributosAjax(request);
 	}
 
 	protected void confirmarPedido(HttpServletRequest request) throws Exception {
 		parametrosConfirmarPedido(request);
 	}
 	
+	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		parametrosCancelarPedido(request);
+	}
+
 	protected void deletarFornecedor(HttpServletRequest request) throws Exception {
-		daofornecimento.excluirFornecedor(Long.parseLong(request.getParameter("id")));
+		parametrosDeletarFornecedor(request);
 	}
 }

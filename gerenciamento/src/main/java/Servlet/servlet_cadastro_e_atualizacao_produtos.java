@@ -57,12 +57,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 				exclusaoAjax(request, response);
 			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarProduto")){
 				cadastrarProduto(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
-				cancelarPedido(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarPedido")){
-				cadastrarPedido(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarFornecedor")){
-				System.out.println("Teste");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -70,44 +64,35 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	}
 	
 	protected void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributosSemOffset(request, response);
+		super.setarAtributos(request, response);
 	}
 	
 	protected void paginar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributosSemOffset(request, response);	
+		super.setarAtributos(request, response);	
 	}
 	
 	protected void excluir(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		super.excluir(request);
-		super.setarAtributosSemOffset(request, response);
+		super.setarAtributos(request, response);
 	}
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.configuracoes(request);
+		String json = parametrosConfiguracoes(request);
 		super.impressaoJSON(response, json);
 	}
 
 	protected void historicoPedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.historicoPedidos(request);
+		String json = parametrosHistoricoPedidos(request);
 		super.impressaoJSON(response, json);
 	}
 	
 	protected void exclusaoAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.exclusaoAjax(request);
+		String json = parametrosExclusaoAjax(request);
 		super.impressaoJSON(response, json);
 	}
 	
 	protected void cadastrarProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.cadastrarProduto(request);
-		super.setarAtributosSemOffset(request, response);
-	}
-	
-	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.cancelarPedido(request);
-	}
-
-	protected void cadastrarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.cadastrarPedido(request);
-		super.setarAtributosSemOffset(request, response);
+		parametrosCadastrarProduto(request);
+		super.setarAtributos(request, response);
 	}
 }

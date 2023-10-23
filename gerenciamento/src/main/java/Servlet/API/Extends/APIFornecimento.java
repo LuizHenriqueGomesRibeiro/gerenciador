@@ -9,6 +9,7 @@ import DAO.daoFornecimento;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.SQL.SQLFornecimento;
+import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import Servlet.API.APIDespache;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,45 +28,10 @@ public class APIFornecimento extends APIDespache {
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLFornecimento sqlFornecimento = new SQLFornecimento();
+	SQLPedidos sqlpedidos = new SQLPedidos();
 	DaoGenerico dao = new DaoGenerico();
 	daoFornecimento daofornecedor = new daoFornecimento();
 	daoEntradasRelatorio daoEntradaRelatorio = new daoEntradasRelatorio();
-	
-	public Long id_produto(HttpServletRequest request) {
-		return Long.parseLong(request.getParameter("id_produto"));
-	}
-	
-	public Long id_fornecedor(HttpServletRequest request) {
-		return Long.parseLong(request.getParameter("id_fornecedor"));
-	}
-	
-	public int quantidade(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("quantidade"));
-	}
-	
-	public Long id_pedido(HttpServletRequest request) {
-		return Long.parseLong(request.getParameter("id_pedido"));
-	}
-	
-	public String dataPedido(HttpServletRequest request) {
-		return request.getParameter("dataPedido");
-	}
-	
-	public String nomeFornecedor(HttpServletRequest request) {
-		return request.getParameter("nomeFornecedor");
-	}
-	
-	public int tempoEntrega(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("tempoentrega"));
-	}
-	
-	public int valor(HttpServletRequest request) {
-		return dao.converterDinheiroInteger(request.getParameter("valor"));
-	}
-	
-	public String dataEntrega(HttpServletRequest request) {
-		return request.getParameter("dataEntrega");
-	}
 	
 	public void parametrosCadastrarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
 		ModelProdutos modelProdutos = new ModelProdutos();
@@ -99,7 +65,7 @@ public class APIFornecimento extends APIDespache {
 	}
 	
 	public ModelPedidos persistenciaIncluirPedido(HttpServletRequest request, ModelPedidos modelPedido) throws SQLException {
-		daopedidos.gravarPedido(modelPedido);
+		daopedidos.gravarPedido(sqlpedidos.gravarPedido(modelPedido));
 		return modelPedido;
 	}
 	
@@ -116,5 +82,11 @@ public class APIFornecimento extends APIDespache {
 		return modelProduto;
 	}
 	
+	public void parametrosCancelarPedido(HttpServletRequest request) throws SQLException {
+		daopedidos.mudarStatus(id_pedido(request), 1);
+	}
 	
+	public void parametrosDeletarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
+		daofornecedor.excluirFornecedor(id_fornecedor(request));
+	}
 }

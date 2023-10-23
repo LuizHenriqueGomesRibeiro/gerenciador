@@ -73,8 +73,8 @@ public class daoProdutos {
 	
 	public List<ModelProdutos> resultadosListagem(ResultSet resultado, int id) throws SQLException {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
-		ModelProdutos produtos = new ModelProdutos();
 		while(resultado.next()){
+			ModelProdutos produtos = new ModelProdutos();
 	        produtos.setId(resultado.getLong("id"));
 			produtos.setQuantidade(resultado.getInt("quantidade"));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));

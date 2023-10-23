@@ -443,7 +443,7 @@
 
 			method : "get",
 			url : urlAction,
-			data : '&acao=deletarFornecedor&id=' + id,
+			data : '&acao=deletarFornecedor&id_fornecedor=' + id,
 			success : function(json, textStatus, xhr) {
 
 			}

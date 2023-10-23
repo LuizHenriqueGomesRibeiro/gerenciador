@@ -84,17 +84,17 @@ public class servlet_saida extends APISaida {
 	}
 
 	protected void caixaListar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributosSaida(request, response);
+		setarAtributosSaida(request, response);
 	}
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.parametrosVender(request);
-		super.setarAtributosComAjax(request);
+		parametrosVender(request);
+		setarAtributosAjax(request);
 	}
 	
 	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.parametrosLoadProduto(request);
-		super.impressaoJSON(response, json);
+		String json = parametrosLoadProduto(request);
+		impressaoJSON(response, json);
 	}
 	
 	protected void financeiro(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -103,6 +103,6 @@ public class servlet_saida extends APISaida {
 	
 	protected void carregarListaVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = super.parametrosCarregarListaVendas(request, response);
-		super.impressaoJSON(response, json);
+		impressaoJSON(response, json);
 	}
 }

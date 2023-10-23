@@ -9,13 +9,12 @@ import DAO.daoFornecimento;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.SQL.SQLProdutos;
-import Servlet.API.Extends.Final.servlet_recuperacao_login;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ModelUsuarios;
 
-public class APIDespache extends servlet_recuperacao_login {
+public class APIDespache extends APIEntradas {
 	daoPedidos daopedidos = new daoPedidos();
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
@@ -27,88 +26,37 @@ public class APIDespache extends servlet_recuperacao_login {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public ModelUsuarios user(HttpServletRequest request) throws Exception {
-		return super.getUser(request);
-	}
-	
-	public int id(HttpServletRequest request) throws Exception {
-		return super.getUserId(request);
-	}
-	
-	public int pagina(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("pagina"));
-	}
-	
-	// <-----------------------------------------------------------Servlet_cadastro_e_atualizacao_produtos ---------------------------------------------------------------> //
-	public void setarAtributosSemOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
-		plusAtributos(request, response);
-	}
-	
-	public void setarAtributosComOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
-		plusAtributos(request, response);
-	}
-	
-	public void plusAtributos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
-		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
-		request.setAttribute("usuario", user(request));
+	public void setarAtributos(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		plusProdutos(request);
+		plusAtributosComum(request);
 		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
 	}
-	// <----------------------------------------------------------- Servlet_cadastro_e_atualizacao_produtos --------------------------------------------------------------> //
 	
-	// <-------------------------------------------------------------------- ServletRelatorios ---------------------------------------------------------------------------> //
+	public void setarAtributosOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		plusProdutosOffset(request);
+		plusAtributosComum(request);
+		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
+	}
+
+	public void setarAtributosAjax(HttpServletRequest request) throws Exception {
+		plusProdutos(request);
+		plusAtributosComum(request);
+	}
+
 	public void setarAtributosirParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
 	}
-	// <-------------------------------------------------------------------- ServletRelatorios ---------------------------------------------------------------------------> //
 	
-	// <---------------------------------------------------------------------- Servlet_Saida -----------------------------------------------------------------------------> //
-		public void setarAtributosVender(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-			request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
-			request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
-			request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
-			request.setAttribute("usuario", id(request));
-		}
-	// <---------------------------------------------------------------------- Servlet_Saida -----------------------------------------------------------------------------> //
-		
-	
-		
-	
-		
-	public HttpServletRequest setarAtributosComAjax(HttpServletRequest request) throws Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
-		return plusAtributos(request);
-	}
-	
-	public HttpServletRequest setarAtributosSaida(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
+	public void setarAtributosSaida(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		plusAtributosComum(request);
 		request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
-		return request;
+	}
+
+	public void setarAtributosOffsetAjax(HttpServletRequest request) throws Exception {
+		plusProdutosOffset(request);
+		plusAtributosComum(request);
 	}
 	
-	public HttpServletRequest setarAtributosOFFSET(HttpServletRequest request) throws Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
-		return plusAtributos(request);
-	}
-	
-	public HttpServletRequest plusAtributos(HttpServletRequest request) throws Exception {
-		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
-		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
-		request.setAttribute("usuario", id(request));
-		return request;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	// <------------------------------------------------------------------- genéricos / universais -----------------------------------------------------------------------> //
 	public HttpServletResponse cabecarioImpressaoPDF(HttpServletResponse response) {
 		response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 		response.setContentType("application/octet-stream");
@@ -134,5 +82,21 @@ public class APIDespache extends servlet_recuperacao_login {
 		printWriter.write(json);
 		printWriter.close();
 	}
-	// <------------------------------------------------------------------- genéricos / universais -----------------------------------------------------------------------> //
+
+	public HttpServletRequest plusAtributosComum(HttpServletRequest request) throws Exception {
+		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
+		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
+		request.setAttribute("usuario", user(request));
+		return request;
+	}
+	
+	public HttpServletRequest plusProdutos(HttpServletRequest request) throws SQLException, Exception {
+		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
+		return request;
+	}
+	
+	public HttpServletRequest plusProdutosOffset(HttpServletRequest request) throws SQLException, Exception {
+		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
+		return request;
+	}
 }

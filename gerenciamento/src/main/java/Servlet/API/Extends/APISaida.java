@@ -36,30 +36,6 @@ public class APISaida extends APIDespache {
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	
-	public int valor(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("valor"));
-	}
-	
-	public int quantidade(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("quantidade"));
-	}
-	
-	public String dataVenda(HttpServletRequest request) { 
-		return dao.converterDatas(request.getParameter("dataVenda"));
-	}
-	
-	public Long id_produto(HttpServletRequest request) {
-		return Long.parseLong(request.getParameter("id_produto"));
-	}
-	
-	public String dataInicial(HttpServletRequest request) {
-		return request.getParameter("dataInicial");
-	}
-	
-	public String dataFinal(HttpServletRequest request) {
-		return request.getParameter("dataFinal");
-	}
-	
 	public HttpServletRequest parametrosVender(HttpServletRequest request) throws Exception {
 		return parametrosVenderDataVenda(request);
 	}

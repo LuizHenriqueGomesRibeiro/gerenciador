@@ -70,36 +70,36 @@ public class ServletRelatorios extends APIRelatorios{
 	}
 
 	protected void irParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		super.setarAtributosirParaRelatorios(request, response);
+		setarAtributosirParaRelatorios(request, response);
 	}
 	
 	protected void vendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.vendas(request);
-		super.impressaoJSON(response, json);
+		String json = vendas(request);
+		impressaoJSON(response, json);
 	}
 	
 	protected void entradas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.entradas(request);
-		super.impressaoJSON(response, json);
+		String json = entradas(request);
+		impressaoJSON(response, json);
 	}
 	
 	protected void pedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.pedidos(request);
-		super.impressaoJSON(response, json);
+		String json = pedidos(request);
+		impressaoJSON(response, json);
 	}
 	
 	protected void cancelamentos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.cancelamentos(request);
-		super.impressaoJSON(response, json);
+		String json = cancelamentos(request);
+		impressaoJSON(response, json);
 	}
 	
 	protected void printFormVendasPDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		byte[] relatorio = super.alternarPrintFormVendasPDF(request, response);
-		super.impressaoPDF(response, relatorio);
+		byte[] relatorio = alternarPrintFormVendasPDF(request, response);
+		impressaoPDF(response, relatorio);
 	}
 	
 	protected void printFormEntradasPDF(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		byte[] relatorio = super.alternarPrintFormEntradasPDF(request, response);
-		super.impressaoPDF(response, relatorio);
+		byte[] relatorio = alternarPrintFormEntradasPDF(request, response);
+		impressaoPDF(response, relatorio);
 	}
 }
