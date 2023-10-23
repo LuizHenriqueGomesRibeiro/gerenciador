@@ -1,5 +1,6 @@
 package Servlet.API.Extends;
 
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -83,38 +84,46 @@ public class APISaida extends APIDespache {
 		return json;
 	}
 	
-	public String parametrosCarregarListaVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return parametrosCarregarListaVendasAlternar(request, response);
+	public void parametrosCarregarListaVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		parametrosCarregarListaVendasAlternar(request, response);
 	}
 	
-	public String parametrosCarregarListaVendasAlternar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void parametrosCarregarListaVendasAlternar(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (dataInicial(request) == null || dataInicial(request).isEmpty() || dataFinal(request) == null || dataFinal(request).isEmpty()) {
-			return parametrosCarregarListaVendasJson(request);
+			parametrosCarregarListaVendasJson(request, response);
 		} else {
-			return parametrosCarregarListaVendasJsonTempo(request);
+			parametrosCarregarListaVendasJsonTempo(request, response);
 		}
 	}
 	
-	public String parametrosCarregarListaVendasJson(HttpServletRequest request) throws Exception {
+	public void parametrosCarregarListaVendasJson(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String listaVendasTempo = sqlvendas.listaVendas(id(request));
 		String somaValoresVendasTempo = sqlvendas.somaValoresVendas(id(request));
 		String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendas(id(request));
 		List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
 		List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(id(request));
 		List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(id(request));
-		String json = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
-		return json;
+		Gson gson = new Gson();
+		String json2 = gson.toJson(vendas);
+		String json3 = gson.toJson(dataVendas);
+		String json4 = gson.toJson(dataEntradas);
+		PrintWriter out = response.getWriter();
+	    out.print(json2 + "|" + json3 + "|" + json4);
+	    out.flush();
 	}
 	
-	public String parametrosCarregarListaVendasJsonTempo(HttpServletRequest request) throws Exception {
+	public void parametrosCarregarListaVendasJsonTempo(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String listaVendasTempo = sqlvendas.listaVendasTempo(id(request), dataInicial(request), dataFinal(request));
 		String somaValoresVendasTempo = sqlvendas.somaValoresVendasTempo(id(request), dataInicial(request), dataFinal(request));
 		String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendasTempo(id(request), dataInicial(request), dataFinal(request));
 		List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
 		List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(id(request), dataInicial(request), dataFinal(request));
 		List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(id(request));
-		String json = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
-		return json;
+		PrintWriter printWriter = response.getWriter();
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		printWriter.print(new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas));
+		printWriter.flush();
 	}
 	
 	

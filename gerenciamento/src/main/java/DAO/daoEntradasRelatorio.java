@@ -82,15 +82,8 @@ public class daoEntradasRelatorio {
 		
 		while(resultado.next()) {
 			ModelData dataVendas = new ModelData();
-			
-			String data = resultado.getString("dataentrada");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			dataVendas.setDatavenda(data);
-
+			dataVendas.setDatavenda(resultado.getString("dataentrada"));
 			dataVendas.setValortotal(resultado.getInt("valortotal"));
-			
 			retorno.add(dataVendas);
 		}
 		
@@ -117,36 +110,11 @@ public class daoEntradasRelatorio {
 		
 		while(resultado.next()) {
 			ModelData dataVendas = new ModelData();
-			
-			String data = resultado.getString("dataEntrada");
-			String[] parte = data.split(" ");
-			
-			data = transformarFormatoData(parte[0], "yyyy-MM-dd", "dd/MM/yyyy");
-			dataVendas.setDatavenda(data);
-
+			dataVendas.setDatavenda(resultado.getString("dataEntrada"));
 			dataVendas.setValortotal(resultado.getInt("valortotal"));
-			
 			retorno.add(dataVendas);
 		}
 		
 		return retorno;
 	}
-	
-	public static String transformarFormatoData(String dataString, String formatoOriginal, String novoFormato) {
-		try {
-			SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
-			SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
-
-			java.util.Date data = formatoOriginalData.parse(dataString);
-
-			String dataFormatada = formatoNovoData.format(data);
-
-			return dataFormatada;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
-	}
-	
 }

@@ -87,7 +87,6 @@ public class daoProdutos {
 	}
 	
 	public void alternarSomaValores(ModelProdutos produtos, int id) throws SQLException {
-		System.out.println(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0));
 		if(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0)) == 0) {
 			produtos.setValorTotalString("Sem valores");
         }else {

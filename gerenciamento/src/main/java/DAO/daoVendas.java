@@ -55,9 +55,6 @@ public class daoVendas {
 			vendas.setValortotal(resultado.getInt("valortotal"));
 			vendas.setProduto_pai(produto);
 			vendas.setQuantidade(resultado.getInt("quantidade"));
-			
-			daoVendas daovenda = new daoVendas();
-			
 			vendas.setValores(dao.somaValores(sqlSomaValores));
 			vendas.setQuantidadeTotal(dao.somaQuantidade(sqlSomaQuantidade));
 			

@@ -1,6 +1,7 @@
 package Servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -102,7 +103,6 @@ public class servlet_saida extends APISaida {
 	}
 	
 	protected void carregarListaVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = super.parametrosCarregarListaVendas(request, response);
-		impressaoJSON(response, json);
+		parametrosCarregarListaVendas(request, response);
 	}
 }
