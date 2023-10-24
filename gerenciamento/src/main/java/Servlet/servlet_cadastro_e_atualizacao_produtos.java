@@ -31,7 +31,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 
     public servlet_cadastro_e_atualizacao_produtos() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
