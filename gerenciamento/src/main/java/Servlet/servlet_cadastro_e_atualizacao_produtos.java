@@ -29,10 +29,6 @@ import model.ModelUsuarios;
 public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	private static final long serialVersionUID = 1L;
 
-    public servlet_cadastro_e_atualizacao_produtos() {
-        super();
-    }
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String acao = request.getParameter("acao");
