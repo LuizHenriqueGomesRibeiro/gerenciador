@@ -37,9 +37,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
 			String acao = request.getParameter("acao");
