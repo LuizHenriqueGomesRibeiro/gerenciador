@@ -28,10 +28,7 @@ import model.ModelUsuarios;
  */
 public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public servlet_cadastro_e_atualizacao_produtos() {
         super();
         // TODO Auto-generated constructor stub
