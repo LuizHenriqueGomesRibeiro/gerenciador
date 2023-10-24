@@ -1,3 +1,1 @@
-# gerenciador
-Welcome to the gerenciador repository! It´s a maven program (java) created to be able to manager a storage. The client can start the gerenciador at web, register and acess the system. Gerenciador is able to register new products and suppliers with different prices and times for delivery, accept or delete requests and make a new request when the delivery don´t happen. In addition to buy, the client can sell produts using financial calculation for the prices. All all purchases, delivery and requests are registed by the financial module of the system. The client can list all of these informations, print charts about this issues and records in PDF.
 
