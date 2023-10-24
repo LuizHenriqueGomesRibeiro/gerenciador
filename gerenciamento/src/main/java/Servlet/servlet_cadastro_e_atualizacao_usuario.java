@@ -19,10 +19,7 @@ public class servlet_cadastro_e_atualizacao_usuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	private daoCadastroUsuario daoCadastroUsuario = new daoCadastroUsuario();
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+
     public servlet_cadastro_e_atualizacao_usuario() {
         super();
         // TODO Auto-generated constructor stub
