@@ -36,12 +36,12 @@ public class daoFornecimento {
 	
 	public List<ModelFornecimento> objetosListarFornecedores(ResultSet resultado) throws SQLException{
 		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
-		ModelFornecimento fornecedores = new ModelFornecimento();
-		return lerResultadoListarFornecedores(retorno, fornecedores, resultado);
+		return lerResultadoListarFornecedores(retorno, resultado);
 	}
 	
-	public List<ModelFornecimento> lerResultadoListarFornecedores(List<ModelFornecimento> retorno, ModelFornecimento fornecedores, ResultSet resultado) throws SQLException{
+	public List<ModelFornecimento> lerResultadoListarFornecedores(List<ModelFornecimento> retorno, ResultSet resultado) throws SQLException{
 		while(resultado.next()){
+			ModelFornecimento fornecedores = new ModelFornecimento();
 			fornecedores.setId(resultado.getLong("id"));
 			fornecedores.setNome(resultado.getString("nome"));
 			fornecedores.setTempoentrega(resultado.getLong("tempoentrega"));

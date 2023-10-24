@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 import DAO.DaoGenerico;
-import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
@@ -13,7 +12,6 @@ import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import Servlet.API.APIDespache;
 import jakarta.servlet.http.HttpServletRequest;
-import model.ModelData;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 import model.ModelProdutos;
@@ -31,7 +29,6 @@ public class APIFornecimento extends APIDespache {
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	DaoGenerico dao = new DaoGenerico();
 	daoFornecimento daofornecedor = new daoFornecimento();
-	daoEntradasRelatorio daoEntradaRelatorio = new daoEntradasRelatorio();
 	
 	public void parametrosCadastrarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
 		ModelProdutos modelProdutos = new ModelProdutos();

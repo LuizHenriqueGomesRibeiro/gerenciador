@@ -1,21 +1,15 @@
 package Servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.List;
-
-import com.google.gson.Gson;
 
 import DAO.DaoGenerico;
 import DAO.Despache;
-import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
 import DAO.daoVendas;
-import DAO.daoVendasRelatorio;
+import DAO.DAORelatorio;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import DAO.SQL.SQLVendas;
@@ -24,9 +18,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.ModelData;
-import model.ModelProdutos;
-import model.ModelVendas;
 
 /**
  * Servlet implementation class servletLogin
@@ -40,8 +31,7 @@ public class servlet_saida extends APISaida {
 	daoFornecimento daoFornecimento = new daoFornecimento();
 	daoPedidos daopedidos = new daoPedidos();
 	daoVendas daovendas = new daoVendas();
-	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
-	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
+	DAORelatorio daoVendasRelatorio = new DAORelatorio();
 	DaoGenerico dao = new DaoGenerico();
 	SQLVendas sqlvendas = new SQLVendas();
 	SQLPedidos sqlpedidos = new SQLPedidos();

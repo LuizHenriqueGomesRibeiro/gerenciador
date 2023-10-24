@@ -70,17 +70,16 @@ public class APIDespache extends APIEntradas {
 		return response;
 	}
 	
-	public HttpServletResponse cabecarioImpressaoJSON(HttpServletResponse response) throws IOException {
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		return response;
-	}
-	
 	public void impressaoJSON(HttpServletResponse response, String json) throws IOException {
 		PrintWriter printWriter = response.getWriter();
-		cabecarioImpressaoJSON(response);
 		printWriter.write(json);
 		printWriter.close();
+	}
+	
+	public void impressaoMultiJSON(HttpServletResponse response, String superJson) throws IOException {
+		PrintWriter printWriter = response.getWriter();
+		printWriter.print(superJson);
+		printWriter.flush();
 	}
 
 	public HttpServletRequest plusAtributosComum(HttpServletRequest request) throws Exception {

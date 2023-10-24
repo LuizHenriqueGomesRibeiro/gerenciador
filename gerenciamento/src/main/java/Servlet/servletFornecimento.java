@@ -2,9 +2,7 @@ package Servlet;
 
 import java.io.IOException;
 
-import DAO.Despache;
 import DAO.DaoGenerico;
-import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -14,13 +12,8 @@ import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import Servlet.API.Extends.APIFornecimento;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.ModelData;
-import model.ModelPedidos;
-import model.ModelProdutos;
-import model.ModelUsuarios;
 
 /**
  * Servlet implementation class servletFornecimento
@@ -33,7 +26,6 @@ public class servletFornecimento extends APIFornecimento {
 	daoProdutos daoproduto = new daoProdutos();
 	daoPedidos pedido = new daoPedidos();
 	daoPedidos daopedidos = new daoPedidos();
-	daoEntradasRelatorio daoEntradaRelatorio = new daoEntradasRelatorio();
 	DaoGenerico dao = new DaoGenerico();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();

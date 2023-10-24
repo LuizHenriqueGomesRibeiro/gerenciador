@@ -1,19 +1,18 @@
 package Servlet.API.Extends;
 
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
 import com.google.gson.Gson;
 
 import DAO.DaoGenerico;
-import DAO.daoEntradasRelatorio;
 import DAO.daoFornecimento;
 import DAO.daoProdutos;
 import DAO.daoVendas;
-import DAO.daoVendasRelatorio;
+import DAO.DAORelatorio;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
+import DAO.SQL.SQLRelatorio;
 import DAO.SQL.SQLVendas;
 import Servlet.API.APIDespache;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +28,13 @@ public class APISaida extends APIDespache {
 	private static final long serialVersionUID = 1L;
 	DaoGenerico dao = new DaoGenerico();
 	daoProdutos daoproduto = new daoProdutos();
-	daoEntradasRelatorio daoEntradasRelatorio = new daoEntradasRelatorio();
-	daoVendasRelatorio daoVendasRelatorio = new daoVendasRelatorio();
+	DAORelatorio daoRelatorio = new DAORelatorio();
 	daoVendas daovendas = new daoVendas();
 	daoFornecimento daoFornecimento = new daoFornecimento();
 	SQLVendas sqlvendas = new SQLVendas();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
+	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 	
 	public HttpServletRequest parametrosVender(HttpServletRequest request) throws Exception {
 		return parametrosVenderDataVenda(request);
@@ -50,7 +49,7 @@ public class APISaida extends APIDespache {
 	}
 	
 	public HttpServletRequest parametrosVenderAlternarData(HttpServletRequest request, ModelData dataVenda) throws Exception {
-		daoVendasRelatorio.alternarDataEValor(dataVenda);
+		daoRelatorio.alternarDataEValorVendas(dataVenda);
 		return parametrosVenderAddProdutoCaixa(request);
 	}
 	
@@ -101,15 +100,10 @@ public class APISaida extends APIDespache {
 		String somaValoresVendasTempo = sqlvendas.somaValoresVendas(id(request));
 		String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendas(id(request));
 		List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
-		List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(id(request));
-		List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(id(request));
-		Gson gson = new Gson();
-		String json2 = gson.toJson(vendas);
-		String json3 = gson.toJson(dataVendas);
-		String json4 = gson.toJson(dataEntradas);
-		PrintWriter out = response.getWriter();
-	    out.print(json2 + "|" + json3 + "|" + json4);
-	    out.flush();
+		List<ModelData> dataVendas = daoRelatorio.listarDatasVendas(sqlrelatorio.listaDatasVendas(id(request)));
+		List<ModelData> dataEntradas = daoRelatorio.listarDatasEntradas(sqlrelatorio.listaDatasEntradas(id(request)));
+		String superJson = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
+		impressaoMultiJSON(response, superJson);
 	}
 	
 	public void parametrosCarregarListaVendasJsonTempo(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -117,14 +111,9 @@ public class APISaida extends APIDespache {
 		String somaValoresVendasTempo = sqlvendas.somaValoresVendasTempo(id(request), dataInicial(request), dataFinal(request));
 		String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendasTempo(id(request), dataInicial(request), dataFinal(request));
 		List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
-		List<ModelData> dataVendas = daoVendasRelatorio.listarDatasVendas(id(request), dataInicial(request), dataFinal(request));
-		List<ModelData> dataEntradas = daoEntradasRelatorio.listarDatasEntradas(id(request));
-		PrintWriter printWriter = response.getWriter();
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		printWriter.print(new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas));
-		printWriter.flush();
+		List<ModelData> dataVendas = daoRelatorio.listarDatasVendas(sqlrelatorio.listaDatasVendas(id(request), dataInicial(request), dataFinal(request)));
+		List<ModelData> dataEntradas = daoRelatorio.listarDatasEntradas(sqlrelatorio.listaDatasEntradas(id(request), dataInicial(request), dataFinal(request)));
+		String superJson = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
+		impressaoMultiJSON(response, superJson);
 	}
-	
-	
 }
