@@ -10,7 +10,7 @@ import DAO.daoProdutos;
 import DAO.SQL.SQLFornecimento;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
-import Servlet.API.Extends.APIFornecimento;
+import Servlet.API.APIDespache;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ import model.ModelProdutos;
 /**
  * Servlet implementation class servletFornecimento
  */
-public class servletFornecimento extends APIFornecimento {
+public class servletFornecimento extends APIDespache {
 	private static final long serialVersionUID = 1L;
 	
 	daoLogin daologin = new daoLogin();

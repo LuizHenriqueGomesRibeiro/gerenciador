@@ -57,13 +57,7 @@ public class servlet_saida extends APISaida {
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaVendas")) {
 				carregarListaVendas(request, response);
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
-				String dataInicial = request.getParameter("dataInicial");
-				String dataFinal = request.getParameter("dataFinal");
-				if (dataInicial == null || dataInicial.isEmpty() || dataFinal == null || dataFinal.isEmpty()) {
-					
-				} else {
-					
-				}
+				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

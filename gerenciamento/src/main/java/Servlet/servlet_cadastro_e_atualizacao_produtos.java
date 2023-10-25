@@ -26,6 +26,14 @@ import model.ModelUsuarios;
  * Servlet implementation class servlet_cadastro_e_atualizacao_produtos
  */
 public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
+	daoPedidos daopedidos = new daoPedidos();
+	daoProdutos daoproduto = new daoProdutos();
+	SQLProdutos sqlprodutos = new SQLProdutos();
+	DAOFerramentas dao = new DAOFerramentas();
+	daoFornecimento daofornecedor = new daoFornecimento();
+	SQLPedidos sqlpedidos = new SQLPedidos();
+	daoLogin daologin = new daoLogin();
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
@@ -52,35 +60,40 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIProdutos {
 	}
 	
 	protected void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributos(request, response);
+		setarAtributos(request, response);
 	}
 	
 	protected void paginar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.setarAtributos(request, response);	
+		setarAtributos(request, response);	
 	}
 	
 	protected void excluir(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		super.excluir(request);
-		super.setarAtributos(request, response);
+		daoproduto.excluirProduto(id_produto(request));
+		setarAtributos(request, response);
 	}
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = parametrosConfiguracoes(request);
-		super.impressaoJSON(response, json);
+		String produto = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
+		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(id_produto(request)));
+		String json = produto + "|" + fornecedores;
+		impressaoJSON(response, json);
 	}
 
 	protected void historicoPedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = parametrosHistoricoPedidos(request);
-		super.impressaoJSON(response, json);
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id_produto(request), 0)));
+		impressaoJSON(response, json);
 	}
 	
 	protected void exclusaoAjax(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = parametrosExclusaoAjax(request);
-		super.impressaoJSON(response, json);
+		String json = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
+		impressaoJSON(response, json);
 	}
 	
 	protected void cadastrarProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		parametrosCadastrarProduto(request);
-		super.setarAtributos(request, response);
+		ModelProdutos modelProduto = new ModelProdutos();
+		modelProduto.setNome(nome(request));
+		modelProduto.setUsuario_pai_id(user(request));
+		daoproduto.alternarProduto(modelProduto);
+		setarAtributos(request, response);
 	}
 }

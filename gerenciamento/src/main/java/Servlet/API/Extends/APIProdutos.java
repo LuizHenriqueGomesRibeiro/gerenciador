@@ -28,7 +28,7 @@ public class APIProdutos extends APIDespache{
 	daoFornecimento daofornecedor = new daoFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	daoLogin daologin = new daoLogin();
-	
+	/*
 	public void excluir(HttpServletRequest request) throws SQLException {
 		daoproduto.excluirProduto(id_produto(request));
 	}
@@ -56,4 +56,5 @@ public class APIProdutos extends APIDespache{
 		modelProduto.setUsuario_pai_id(user(request));
 		daoproduto.alternarProduto(modelProduto);
 	}
+	*/
 }
