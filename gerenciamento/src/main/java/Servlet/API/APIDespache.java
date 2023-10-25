@@ -72,8 +72,8 @@ public class APIDespache extends APIEntradas {
 	
 	public void impressaoJSON(HttpServletResponse response, String json) throws IOException {
 		PrintWriter printWriter = response.getWriter();
-		printWriter.write(json);
-		printWriter.close();
+		printWriter.print(json);
+		printWriter.flush();
 	}
 	
 	public void impressaoMultiJSON(HttpServletResponse response, String superJson) throws IOException {

@@ -6,8 +6,7 @@ import java.sql.SQLException;
 import DAO.SQL.SQLProdutos;
 import model.ModelProdutos;
 
-public class DAOEntrada{
-	DAOFerramentas dao = new DAOFerramentas();
+public class DAOEntrada extends DAOFerramentas{
 	SQLProdutos sqlproduto = new SQLProdutos();
 	
 	public Long id(ResultSet resultado) throws SQLException {
@@ -27,11 +26,11 @@ public class DAOEntrada{
 	}
 	
 	public String dataentrega(ResultSet resultado) throws SQLException {
-		return dao.converterDatas(resultado.getString("dataentrega"));
+		return converterDatas(resultado.getString("dataentrega"));
 	}
 
 	public String datapedido(ResultSet resultado) throws SQLException {
-		return dao.converterDatas(resultado.getString("datapedido"));
+		return converterDatas(resultado.getString("datapedido"));
 	}
 	
 	public int usuario_pai_id(ResultSet resultado) throws SQLException {
@@ -59,10 +58,10 @@ public class DAOEntrada{
 	}
 	
 	public String dataentrada(ResultSet resultado) throws SQLException {
-		return dao.converterDatas(resultado.getString("dataentrada"));
+		return converterDatas(resultado.getString("dataentrada"));
 	}
 	
 	public String datavenda(ResultSet resultado) throws SQLException {
-		return dao.converterDatas(resultado.getString("datavenda"));
+		return converterDatas(resultado.getString("datavenda"));
 	}
 }

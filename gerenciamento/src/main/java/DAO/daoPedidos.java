@@ -16,7 +16,6 @@ import model.ModelPedidos;
 
 public class daoPedidos extends DAOComum{
 	private Connection connection;
-	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecimento = new daoFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	
@@ -33,11 +32,10 @@ public class daoPedidos extends DAOComum{
 	public ModelPedidos buscarPedido(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		return buscarPedidoResultado(resultado);	
+		return buscarPedidoResultado(resultado, new ModelPedidos());	
 	}
 	
-	public ModelPedidos buscarPedidoResultado(ResultSet resultado) throws SQLException {
-		ModelPedidos pedido = new ModelPedidos();
+	public ModelPedidos buscarPedidoResultado(ResultSet resultado, ModelPedidos pedido) throws SQLException {
 		while(resultado.next()){
 			pedido.setDataentrega(dataentrega(resultado));
 	        pedido.setDatapedido(datapedido(resultado));
@@ -79,7 +77,6 @@ public class daoPedidos extends DAOComum{
 			gravarCancelamento(sqlpedidos.gravarCancelamento(id));
 		}
 		String sql = "UPDATE pedidos SET status = " + status + " WHERE id = " + id;
-		
 		PreparedStatement statement = connection.prepareStatement(sql);
 
 		statement.executeUpdate();

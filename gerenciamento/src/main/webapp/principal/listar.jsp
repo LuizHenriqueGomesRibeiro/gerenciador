@@ -351,8 +351,11 @@
 	}
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
+		alert("ai princesa");
 		var urlAction = document.getElementById('formularioFornecimento').action;
+		alert(urlAction);
 		var capturarData = document.getElementById('capturarData').value;
+		alert(capturarData);
 		
 		jQuery.ajax({
 
@@ -395,19 +398,15 @@
 			url : urlAction,
 			data : '&id_produto='+ id + '&acao=historioPedidos',
 			success : function(json, textStatus, xhr) {
+				var jsonObj = JSON.parse(json);
 				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-				for(var p = 0; p < json.length; p++){	
-					var string = JSON.stringify(json[p].dataentrega);
-					var substrings = string.split('"');
-					var novaString = substrings.join('');
-					var string2 = JSON.stringify(json[p].datapedido);
-					var substrings2 = string2.split('"');
-					var novaString2 = substrings2.join('');
-					chamarString(string);
+				for(var p = 0; p < jsonObj.length; p++){
+					var string = JSON.stringify(jsonObj[0].dataentrega);
+					var string2 = JSON.stringify(jsonObj[p].datapedido);
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
-						.append('<tr><td>' + novaString + 
-							'</td><td>' + novaString2 + 
-							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(json[p].id)+','+id+','+JSON.stringify(json[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(json[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
+						.append('<tr><td>' + string + 
+							'</td><td>' + string2 + 
+							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
 				}
 			}
 		}).fail(function(xhr, status, errorThrown) {

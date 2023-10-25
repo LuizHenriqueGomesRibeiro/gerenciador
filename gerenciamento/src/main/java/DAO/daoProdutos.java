@@ -14,7 +14,6 @@ import model.ModelProdutos;
 public class daoProdutos extends DAOComum{
 	
 	private Connection connection;
-	DAOFerramentas dao = new DAOFerramentas();
 	daoLogin daoLogin = new daoLogin();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
@@ -92,7 +91,7 @@ public class daoProdutos extends DAOComum{
 		if(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
 			produtos.setValorTotalString("Sem valores");
         }else {
-        	produtos.setValorTotalString(dao.converterIntegerDinheiro(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0))));
+        	produtos.setValorTotalString(converterIntegerDinheiro(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0))));
         }
 	}
 	
@@ -100,7 +99,7 @@ public class daoProdutos extends DAOComum{
 		if(somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
         	produtos.setQuantidadePedidaString("Sem quantidades");
         }else {
-        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(id, 0)))) + " unidades");
+        	produtos.setQuantidadePedidaString(colocarPonto(String.valueOf(somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(id, 0)))) + " unidades");
         }
 	}
 	

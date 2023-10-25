@@ -11,9 +11,8 @@ import DAO.SQL.SQLProdutos;
 import conexao.conexao;
 import model.ModelProdutos;
 
-public class DAOComum extends DAOFerramentas{
+public class DAOComum extends DAOEntrada{
 	private Connection connection;
-	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlproduto = new SQLProdutos();
 	
 	public int somaQuantidade(String sql) throws SQLException {
@@ -34,10 +33,5 @@ public class DAOComum extends DAOFerramentas{
 		resultado.next();
 		
 		return resultado.getInt("soma");
-	}
-	
-	public ModelProdutos produto(ResultSet resultado) throws SQLException {
-		ModelProdutos produto = daoproduto.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado), usuario_pai_id(resultado)));
-		return produto;
 	}
 }

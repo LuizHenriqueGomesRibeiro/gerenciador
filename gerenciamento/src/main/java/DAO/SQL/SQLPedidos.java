@@ -17,7 +17,7 @@ public class SQLPedidos {
 				pedido.getQuantidade()*pedido.getFornecedor_pai_id().getValor() + ", " + 
 				pedido.getFornecedor_pai_id().getId() + ", '" + 
 				dao.converterDatas(pedido.getDataentrega()) + "', " + 
-				pedido.getFornecedor_pai_id().getProduto_pai_id().getId() + ", " + 
+				pedido.getProduto_pai_id().getId() + ", " + 
 				pedido.getUsuario_pai_id().getId() + ", " + 
 				0 + ", '" + 
 				pedido.getNome() + "');";

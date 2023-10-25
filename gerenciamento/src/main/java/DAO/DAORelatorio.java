@@ -14,7 +14,6 @@ import model.ModelData;
 
 public class DAORelatorio extends DAOComum {
 	private Connection connection;
-	DAOFerramentas dao = new DAOFerramentas();
 	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 	
 	public DAORelatorio(){

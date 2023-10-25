@@ -15,7 +15,6 @@ import model.ModelVendas;
 
 public class daoVendas extends DAOComum{
 	private Connection connection;
-	DAOFerramentas dao = new DAOFerramentas();
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlproduto = new SQLProdutos();
 
@@ -27,7 +26,7 @@ public class daoVendas extends DAOComum{
 		String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?);";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setLong(1, venda.getProduto_pai().getId());
-		statement.setString(2, dao.converterDatas(venda.getDataentrega()));
+		statement.setString(2, converterDatas(venda.getDataentrega()));
 		statement.setInt(3, venda.getValortotal()*venda.getQuantidade());
 		statement.setInt(4, venda.getQuantidade());
 		statement.setString(5, venda.getProduto_pai().getNome());
@@ -57,5 +56,10 @@ public class daoVendas extends DAOComum{
 			retorno.add(vendas);
 		}
 		return retorno;
+	}
+	
+	public ModelProdutos produto(ResultSet resultado) throws SQLException {
+		ModelProdutos produto = daoproduto.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado), usuario_pai_id(resultado)));
+		return produto;
 	}
 }

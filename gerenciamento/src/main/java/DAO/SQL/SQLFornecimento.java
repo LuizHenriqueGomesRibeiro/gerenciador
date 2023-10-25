@@ -1,5 +1,6 @@
 package DAO.SQL;
 
+import model.ModelFornecimento;
 import model.ModelProdutos;
 
 public class SQLFornecimento {
@@ -15,8 +16,8 @@ public class SQLFornecimento {
 		return sql;
 	}
 	
-	public String consulta(Long id, Long produtos_pai_id) {
-		String sql = "SELECT* FROM fornecimento WHERE id = " + id + " AND produtos_pai_id = " + produtos_pai_id;
+	public String consulta(Long id) {
+		String sql = "SELECT* FROM fornecimento WHERE id = " + id;
 		return sql;
 	}
 	

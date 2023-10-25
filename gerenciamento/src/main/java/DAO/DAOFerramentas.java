@@ -11,36 +11,30 @@ import java.time.format.DateTimeFormatter;
 
 import conexao.conexao;
 
-public class DAOFerramentas extends DAOEntrada {
-	private Connection connection;
-	
+public class DAOFerramentas {
+
 	public String colocarPonto(String numero) {
 		int posicao = numero.length() - 3;
-			
 		while (posicao > 0) {
 			numero = numero.substring(0, posicao) + "." + numero.substring(posicao);
 			posicao -= 3;
 		}
-		
 		return numero;
     }
 	
 	public String tirarPonto(String numero) {
 		numero = numero.replace(".", "");
-		
 		return numero;
     }
 	
 	public int converterDinheiroInteger(String dinheiro) {
 		int integer = Integer.parseInt(dinheiro.replace(".", "").replace("R$", "").replace(",00", ""));
-		
 		return integer;
     }
 	
 	public String converterIntegerDinheiro(int integer) {
 		String numeroString = String.valueOf(integer);
 		int posicao = numeroString.length() - 3;
-			
 		while (posicao > 0) {
 			numeroString = numeroString.substring(0, posicao) + "." + numeroString.substring(posicao);
 			posicao -= 3;
@@ -50,10 +44,8 @@ public class DAOFerramentas extends DAOEntrada {
     }
 	
 	public String converterDatas(String data) {
-		
 		String[] parte = data.split(" ");
 		data = parte[0];
-
 		if (verificarFormatoData(data, "yyyy-MM-dd")) {
 			data = transformarFormatoData(data, "yyyy-MM-dd", "dd/MM/yyyy");
         } else if (verificarFormatoData(data, "dd/MM/yyyy")) {
@@ -75,11 +67,8 @@ public class DAOFerramentas extends DAOEntrada {
 		try {
 			SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
 			SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
-
 			java.util.Date data = formatoOriginalData.parse(dataString);
-
 			String dataFormatada = formatoNovoData.format(data);
-
 			return dataFormatada;
 		} catch (ParseException e) {
 			e.printStackTrace();

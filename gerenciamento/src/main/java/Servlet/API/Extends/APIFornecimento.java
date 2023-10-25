@@ -29,26 +29,26 @@ public class APIFornecimento extends APIDespache {
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecedor = new daoFornecimento();
-	
+	/*
 	public void parametrosCadastrarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
 		ModelProdutos modelProdutos = new ModelProdutos();
 		modelProdutos.setId(id_produto(request));
 		new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), modelProdutos, tempoEntrega(request), valor(request)));
 	}
 	
-	public ModelPedidos parametrosIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
-		return fornecedorIncluirPedido(request);
+	public void parametrosIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
+		fornecedorIncluirPedido(request);
 	}
 	
-	public ModelPedidos fornecedorIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
+	public void fornecedorIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
 		ModelFornecimento modelFornecedor = new ModelFornecimento();
 		modelFornecedor.setId(id_fornecedor(request));
 		modelFornecedor.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
-		modelFornecedor = daofornecedor.consultarFornecedor(modelFornecedor);
-		return pedidoIncluirPedido(request, modelFornecedor);
+		modelFornecedor = daofornecedor.consultarFornecedor(sqlFornecimento.consulta(modelFornecedor));
+		pedidoIncluirPedido(request, modelFornecedor);
 	}
 	
-	public ModelPedidos pedidoIncluirPedido(HttpServletRequest request, ModelFornecimento modelFornecedor) throws Exception {
+	public void pedidoIncluirPedido(HttpServletRequest request, ModelFornecimento modelFornecedor) throws Exception {
 		ModelPedidos modelPedido = new ModelPedidos();
 		modelPedido.setValor(modelFornecedor.getValor());
 		modelPedido.setFornecedor_pai_id(modelFornecedor);
@@ -58,7 +58,6 @@ public class APIFornecimento extends APIDespache {
 		modelPedido.setUsuario_pai_id(user(request));
 		modelPedido.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
 		modelPedido.setNome(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))).getNome());
-		return persistenciaIncluirPedido(request, modelPedido);
 	}
 	
 	public ModelPedidos persistenciaIncluirPedido(HttpServletRequest request, ModelPedidos modelPedido) throws SQLException {
@@ -86,4 +85,5 @@ public class APIFornecimento extends APIDespache {
 	public void parametrosDeletarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
 		daofornecedor.excluirFornecedor(id_fornecedor(request));
 	}
+	*/
 }

@@ -31,15 +31,11 @@ public class daoFornecimento extends DAOComum {
 	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.lista(id));
 		ResultSet resultado = statement.executeQuery();
-		return objetosListarFornecedores(resultado);
+		return lerResultadoListarFornecedores(resultado);
 	}
 	
-	public List<ModelFornecimento> objetosListarFornecedores(ResultSet resultado) throws SQLException{
+	public List<ModelFornecimento> lerResultadoListarFornecedores(ResultSet resultado) throws SQLException{
 		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
-		return lerResultadoListarFornecedores(retorno, resultado);
-	}
-	
-	public List<ModelFornecimento> lerResultadoListarFornecedores(List<ModelFornecimento> retorno, ResultSet resultado) throws SQLException{
 		while(resultado.next()){
 			ModelFornecimento fornecedores = new ModelFornecimento();
 			fornecedores.setId(id(resultado));
@@ -51,10 +47,10 @@ public class daoFornecimento extends DAOComum {
 		return retorno;
 	}
 	
-	public ModelFornecimento consultarFornecedor(ModelFornecimento modelFornecedor) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.consulta(modelFornecedor.getId(), modelFornecedor.getProduto_pai_id().getId()));
+	public ModelFornecimento consultarFornecedor(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		return lerResultadoConsultarFornecedor(resultado, modelFornecedor);
+		return lerResultadoConsultarFornecedor(resultado, new ModelFornecimento());
 	}
 	
 	public ModelFornecimento lerResultadoConsultarFornecedor(ResultSet resultado, ModelFornecimento modelFornecimento) throws SQLException{
