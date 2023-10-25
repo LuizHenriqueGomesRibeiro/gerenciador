@@ -351,11 +351,8 @@
 	}
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
-		alert("ai princesa");
 		var urlAction = document.getElementById('formularioFornecimento').action;
-		alert(urlAction);
 		var capturarData = document.getElementById('capturarData').value;
-		alert(capturarData);
 		
 		jQuery.ajax({
 
@@ -403,6 +400,7 @@
 				for(var p = 0; p < jsonObj.length; p++){
 					var string = JSON.stringify(jsonObj[0].dataentrega);
 					var string2 = JSON.stringify(jsonObj[p].datapedido);
+					chamarString(string);
 					jQuery('#tabelaHistoricoPedidos > table > tbody')
 						.append('<tr><td>' + string + 
 							'</td><td>' + string2 + 
