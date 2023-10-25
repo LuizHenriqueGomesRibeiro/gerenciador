@@ -3,7 +3,7 @@ package Servlet.API.Extends;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
@@ -27,7 +27,7 @@ public class APIFornecimento extends APIDespache {
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLFornecimento sqlFornecimento = new SQLFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecedor = new daoFornecimento();
 	
 	public void parametrosCadastrarFornecedor(HttpServletRequest request) throws NumberFormatException, SQLException {
@@ -43,7 +43,7 @@ public class APIFornecimento extends APIDespache {
 	public ModelPedidos fornecedorIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
 		ModelFornecimento modelFornecedor = new ModelFornecimento();
 		modelFornecedor.setId(id_fornecedor(request));
-		modelFornecedor.setProduto_pai_id(daoproduto.consultaProduto(id_produto(request), id(request)));
+		modelFornecedor.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
 		modelFornecedor = daofornecedor.consultarFornecedor(modelFornecedor);
 		return pedidoIncluirPedido(request, modelFornecedor);
 	}
@@ -56,8 +56,8 @@ public class APIFornecimento extends APIDespache {
 		modelPedido.setDatapedido(dataPedido(request));
 		modelPedido.setDataentrega(dao.plusDias(dataPedido(request), modelFornecedor.getTempoentrega()));
 		modelPedido.setUsuario_pai_id(user(request));
-		modelPedido.setProduto_pai_id(daoproduto.consultaProduto(id_produto(request), id(request)));
-		modelPedido.setNome(daoproduto.consultaProduto(id_produto(request), id(request)).getNome());
+		modelPedido.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
+		modelPedido.setNome(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))).getNome());
 		return persistenciaIncluirPedido(request, modelPedido);
 	}
 	
@@ -67,7 +67,7 @@ public class APIFornecimento extends APIDespache {
 	}
 	
 	public void parametrosConfirmarPedido(HttpServletRequest request) throws ParseException, Exception {
-		daoproduto.consultaProduto(id_produto(request), id(request));
+		daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request)));
 		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
 		daopedidos.mudarStatus(id_pedido(request), 2);
 	}

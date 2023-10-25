@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoPedidos;
 import DAO.daoProdutos;
@@ -18,7 +18,7 @@ public class APIDespache extends APIEntradas {
 	daoPedidos daopedidos = new daoPedidos();
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecedor = new daoFornecimento();
 
 	/**

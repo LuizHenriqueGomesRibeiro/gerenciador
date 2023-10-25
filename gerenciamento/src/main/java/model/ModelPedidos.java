@@ -3,7 +3,7 @@ package model;
 
 public class ModelPedidos {
 	private ModelFornecimento fornecedor_pai_id;
-	private int id;
+	private Long id;
 	private String datapedido;
 	private String datacancelamento;
 	private String dataentrega;
@@ -18,8 +18,12 @@ public class ModelPedidos {
 	private Long id_fornecedor;
 	private Long id_produto;
 	
-	
-	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public Long getId_produto() {
 		return id_produto;
 	}
@@ -79,12 +83,6 @@ public class ModelPedidos {
 	}
 	public void setFornecedor_pai_id(ModelFornecimento fornecedor_pai_id) {
 		this.fornecedor_pai_id = fornecedor_pai_id;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public String getDatapedido() {
 		return datapedido;

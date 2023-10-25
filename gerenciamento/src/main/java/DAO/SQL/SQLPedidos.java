@@ -2,11 +2,11 @@ package DAO.SQL;
 
 import java.time.LocalDate;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import model.ModelPedidos;
 
 public class SQLPedidos {
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	
 	public String gravarPedido(ModelPedidos pedido) {
 		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 

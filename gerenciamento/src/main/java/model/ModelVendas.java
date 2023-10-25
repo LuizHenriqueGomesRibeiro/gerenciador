@@ -1,7 +1,7 @@
 package model;
 
 public class ModelVendas {
-	private int id;
+	private Long id;
 	private ModelProdutos produto_pai;
 	private String dataentrega;
 	private int valortotal;
@@ -34,10 +34,10 @@ public class ModelVendas {
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public ModelProdutos getProduto_pai() {

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import conexao.conexao;
 import model.ModelUsuarios;
 
-public class daoCadastroUsuario {
+public class daoCadastroUsuario extends DAOComum {
 	
 	private Connection connection;
 	

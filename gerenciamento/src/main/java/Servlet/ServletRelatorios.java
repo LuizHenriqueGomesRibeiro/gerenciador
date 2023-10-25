@@ -6,8 +6,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import DAO.Despache;
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoPedidos;
 import DAO.daoVendas;
 import DAO.SQL.SQLPedidos;
@@ -30,10 +29,9 @@ public class ServletRelatorios extends APIRelatorios{
 	
 	daoVendas daoVendas = new daoVendas();
 	daoPedidos daoPedidos = new daoPedidos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	SQLVendas sqlvendas = new SQLVendas();
     SQLPedidos sqlpedidos = new SQLPedidos();
-    Despache api = new Despache();
     /**
      * @see HttpServlet#HttpServlet()
      */

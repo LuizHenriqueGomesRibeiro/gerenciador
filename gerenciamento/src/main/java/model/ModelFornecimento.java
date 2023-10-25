@@ -14,20 +14,6 @@ public class ModelFornecimento {
 	private Long tempoentrega;
 	private int valor;
 	
-	public ModelFornecimento setFornecedor(ModelPedidos pedido) throws SQLException {
-		
-		daoProdutos daoproduto = new daoProdutos();
-		daoFornecimento daofornecimento = new daoFornecimento();
-		
-		ModelFornecimento fornecedor = new ModelFornecimento();
-		fornecedor.setId(pedido.getId_fornecedor());
-		fornecedor.setUsuario_pai_id(pedido.getUsuario_pai_id());
-		fornecedor.setProduto_pai_id(daoproduto.consultaProduto(pedido.getId_produto(), pedido.getUsuario_pai_id().getId()));
-		fornecedor = daofornecimento.consultarFornecedor(fornecedor);
-		
-		return fornecedor;
-	}
-	
 	public ModelUsuarios getUsuario_pai_id() {
 		return usuario_pai_id;
 	}

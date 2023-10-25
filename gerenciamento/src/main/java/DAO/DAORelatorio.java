@@ -12,9 +12,9 @@ import DAO.SQL.SQLRelatorio;
 import conexao.conexao;
 import model.ModelData;
 
-public class DAORelatorio {
+public class DAORelatorio extends DAOComum {
 	private Connection connection;
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 	
 	public DAORelatorio(){
@@ -77,8 +77,8 @@ public class DAORelatorio {
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
 			ModelData dataEntrada = new ModelData();
-			dataEntrada.setDatavenda(dao.converterDatas(resultado.getString("dataentrada")));
-			dataEntrada.setValortotal(resultado.getInt("valortotal"));
+			dataEntrada.setDatavenda(dataentrada(resultado));
+			dataEntrada.setValortotal(valortotal(resultado));
 			retorno.add(dataEntrada);
 		}
 		return retorno;
@@ -88,8 +88,8 @@ public class DAORelatorio {
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
 			ModelData dataVendas = new ModelData();
-			dataVendas.setDatavenda(dao.converterDatas(resultado.getString("datavenda")));
-			dataVendas.setValortotal(resultado.getInt("valortotal"));
+			dataVendas.setDatavenda(datavenda(resultado));
+			dataVendas.setValortotal(valortotal(resultado));
 			retorno.add(dataVendas);
 		}
 		return retorno;

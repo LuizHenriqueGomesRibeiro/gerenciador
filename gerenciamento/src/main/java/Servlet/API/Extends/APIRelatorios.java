@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -30,7 +30,7 @@ public class APIRelatorios extends APIDespache {
 	daoPedidos daopedidos = new daoPedidos();
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecedor = new daoFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	daoLogin daologin = new daoLogin();

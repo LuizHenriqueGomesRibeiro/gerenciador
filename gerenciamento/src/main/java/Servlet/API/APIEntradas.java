@@ -1,6 +1,6 @@
 package Servlet.API;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import Servlet.API.Extends.Final.servlet_recuperacao_login;
 import jakarta.servlet.http.HttpServletRequest;
 import model.ModelUsuarios;
@@ -11,7 +11,7 @@ public class APIEntradas extends servlet_recuperacao_login {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	
 	public Long id_produto(HttpServletRequest request) {
 		return Long.parseLong(request.getParameter("id_produto"));

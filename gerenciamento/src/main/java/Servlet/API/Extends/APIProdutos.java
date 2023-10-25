@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import com.google.gson.Gson;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -24,7 +24,7 @@ public class APIProdutos extends APIDespache{
 	daoPedidos daopedidos = new daoPedidos();
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecedor = new daoFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	daoLogin daologin = new daoLogin();
@@ -34,7 +34,7 @@ public class APIProdutos extends APIDespache{
 	}
 	
 	public String parametrosConfiguracoes(HttpServletRequest request) throws Exception {
-		String produto = new Gson().toJson(daoproduto.consultaProduto(id_produto(request), id(request)));
+		String produto = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
 		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(id_produto(request)));
 		String json = produto + "|" + fornecedores;
 		return json;
@@ -46,7 +46,7 @@ public class APIProdutos extends APIDespache{
 	}
 	
 	public String parametrosExclusaoAjax(HttpServletRequest request) throws SQLException, Exception {
-		String json = new Gson().toJson(daoproduto.consultaProduto(id_produto(request), id(request)));
+		String json = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
 		return json;
 	}
 	

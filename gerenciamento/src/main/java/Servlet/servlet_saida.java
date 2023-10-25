@@ -2,8 +2,7 @@ package Servlet;
 
 import java.io.IOException;
 
-import DAO.DaoGenerico;
-import DAO.Despache;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -32,11 +31,10 @@ public class servlet_saida extends APISaida {
 	daoPedidos daopedidos = new daoPedidos();
 	daoVendas daovendas = new daoVendas();
 	DAORelatorio daoVendasRelatorio = new DAORelatorio();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	SQLVendas sqlvendas = new SQLVendas();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
-	Despache api = new Despache();
 
 	public servlet_saida() {
 		super();

@@ -11,10 +11,10 @@ import DAO.SQL.SQLProdutos;
 import conexao.conexao;
 import model.ModelProdutos;
 
-public class daoProdutos {
+public class daoProdutos extends DAOComum{
 	
 	private Connection connection;
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoLogin daoLogin = new daoLogin();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
@@ -44,17 +44,19 @@ public class daoProdutos {
 		connection.commit();
 	}
 	
-	public ModelProdutos consultaProduto(Long id_produto, int userLogado) throws SQLException {
-		ModelProdutos modelProduto = new ModelProdutos();
-		String sql = "SELECT*FROM produtos WHERE id = " + id_produto + " AND usuario_pai_id = " + userLogado;
+	public ModelProdutos consultarProduto(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
+		return resultadoConsultarProduto(resultado, new ModelProdutos());
+	}
+	
+	public ModelProdutos resultadoConsultarProduto(ResultSet resultado, ModelProdutos modelProduto) throws SQLException {
 		while (resultado.next()) {
-			modelProduto.setId(resultado.getLong("id"));
-			modelProduto.setNome(resultado.getString("nome"));
-			modelProduto.setPreco(resultado.getInt("preco"));
-			modelProduto.setQuantidade(resultado.getInt("quantidade"));
-			modelProduto.setValorTotal(resultado.getInt("preco") * resultado.getInt("quantidade"));
+			modelProduto.setId(id(resultado));
+			modelProduto.setNome(nome(resultado));
+			modelProduto.setPreco(preco(resultado));
+			modelProduto.setQuantidade(quantidade(resultado));
+			modelProduto.setValorTotal(preco(resultado) * quantidade(resultado));
 		}
 		return modelProduto;
 	}
@@ -75,35 +77,35 @@ public class daoProdutos {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		while(resultado.next()){
 			ModelProdutos produtos = new ModelProdutos();
-	        produtos.setId(resultado.getLong("id"));
-			produtos.setQuantidade(resultado.getInt("quantidade"));
+	        produtos.setId(id(resultado));
+			produtos.setQuantidade(quantidade(resultado));
 			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
-			produtos.setNome(resultado.getString("nome"));
+			produtos.setNome(nome(resultado));
 			retorno.add(produtos);
-			alternarSomaValores(produtos, id);
-			alternarSomaQuantidade(produtos, id);
+			alternarSomaValores(produtos, id(resultado));
+			alternarSomaQuantidade(produtos, id(resultado));
 		}
 		return retorno;
 	}
 	
-	public void alternarSomaValores(ModelProdutos produtos, int id) throws SQLException {
-		if(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0)) == 0) {
+	public void alternarSomaValores(ModelProdutos produtos, Long id) throws SQLException {
+		if(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
 			produtos.setValorTotalString("Sem valores");
         }else {
-        	produtos.setValorTotalString(dao.converterIntegerDinheiro(dao.somaValores(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0))));
+        	produtos.setValorTotalString(dao.converterIntegerDinheiro(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0))));
         }
 	}
 	
-	public void alternarSomaQuantidade(ModelProdutos produtos, int id) throws SQLException {
-		if(dao.somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(produtos.getId(), 0)) == 0) {
+	public void alternarSomaQuantidade(ModelProdutos produtos, Long id) throws SQLException {
+		if(somaQuantidade(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
         	produtos.setQuantidadePedidaString("Sem quantidades");
         }else {
-        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(dao.somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(produtos.getId(), 0)))) + " unidades");
+        	produtos.setQuantidadePedidaString(dao.colocarPonto(String.valueOf(somaQuantidade(sqlpedidos.somaQuantidadePedidoProdutId(id, 0)))) + " unidades");
         }
 	}
 	
 	public int somaProdutos(int usuario_pai_id) throws Exception{
-		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = " + usuario_pai_id + " AND status = " + 0L;
+		String sql = "SELECT SUM(valortotal) FROM pedidos WHERE usuario_pai_id = " + usuario_pai_id + " AND status = " + 0;
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		if (resultado.next()) {
@@ -134,13 +136,11 @@ public class daoProdutos {
 		return pagina.intValue();
 	}
 	
-	public ModelProdutos adicionaProdutoCaixa(Long id, int quantidade) throws SQLException {
+	public void adicionaProdutoCaixa(Long id, int quantidade) throws SQLException {
 		String sql = "UPDATE produtos SET quantidade = quantidade + " + quantidade + " WHERE id = " + id;
 		PreparedStatement statement = connection.prepareStatement(sql);
-		ModelProdutos produto = new ModelProdutos();
 		statement.executeUpdate();
 		connection.commit();
-		return produto;
 	}
 }	
 

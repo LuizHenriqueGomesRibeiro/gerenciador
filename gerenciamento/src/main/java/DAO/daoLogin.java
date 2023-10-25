@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import conexao.conexao;
 import model.ModelUsuarios;
 
-public class daoLogin {
+public class daoLogin extends DAOComum {
 	private Connection connection;
 	
 	public daoLogin() {
@@ -30,31 +30,19 @@ public class daoLogin {
 		return false;
 	}
 	
-public ModelUsuarios consultaLogin(ModelUsuarios usuario) {
-		
-		try {
-			String sql = "SELECT*FROM usuarios WHERE login = ?";
-			
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setString(1, usuario.getLogin());
-			ResultSet resultado = statement.executeQuery();
-			
-			while(resultado.next()) {
-				usuario.setId(resultado.getInt("id"));
-				usuario.setLogin(resultado.getString("login"));
-				usuario.setSenha(resultado.getString("senha"));
-			}
-			
-			return usuario;
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
+	public ModelUsuarios consultaLogin(ModelUsuarios usuario) throws SQLException {
+		String sql = "SELECT*FROM usuarios WHERE login = " + usuario.getLogin();
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		while(resultado.next()) {
+			usuario.setId(resultado.getInt("id"));
+			usuario.setLogin(resultado.getString("login"));
+			usuario.setSenha(resultado.getString("senha"));
 		}
-		return null;
+		return usuario;
 	}
 
-public ModelUsuarios consultaLoginString(String login) {
+	public ModelUsuarios consultaLoginString(String login) {
 	
 	try {
 		String sql = "SELECT*FROM usuarios WHERE login = ?";

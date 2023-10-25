@@ -2,7 +2,7 @@ package Servlet;
 
 import java.io.IOException;
 
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
@@ -26,7 +26,7 @@ public class servletFornecimento extends APIFornecimento {
 	daoProdutos daoproduto = new daoProdutos();
 	daoPedidos pedido = new daoPedidos();
 	daoPedidos daopedidos = new daoPedidos();
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLFornecimento sqlFornecimento = new SQLFornecimento();

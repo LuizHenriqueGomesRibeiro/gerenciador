@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 import conexao.conexao;
 
-public class DaoGenerico {
+public class DAOFerramentas extends DAOEntrada {
 	private Connection connection;
 	
 	public String colocarPonto(String numero) {
@@ -86,26 +86,6 @@ public class DaoGenerico {
 			
 			return null;
 		}
-	}
-	
-	public int somaQuantidade(String sql) throws SQLException {
-		connection = conexao.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
-	}
-	
-	public int somaValores(String sql) throws SQLException {
-		connection = conexao.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-			
-		resultado.next();
-		
-		return resultado.getInt("soma");
 	}
 	
 	public String plusDias(String dataPedido, Long tempo) {

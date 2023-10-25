@@ -23,4 +23,9 @@ public class SQLProdutos {
 				+ produto.getNome() + ", valortotal = " + produto.getValorTotal() + " WHERE id = " + produto.getId() + "";
 		return sql;
 	}
+	
+	public String consultaProduto(Long id_produto, int i) {
+		String sql = "SELECT*FROM produtos WHERE id = " + id_produto + " AND usuario_pai_id = " + i;
+		return sql;
+	}
 }

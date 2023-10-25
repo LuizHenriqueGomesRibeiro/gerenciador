@@ -14,9 +14,9 @@ import conexao.conexao;
 import model.ModelFornecimento;
 import model.ModelPedidos;
 
-public class daoPedidos {
+public class daoPedidos extends DAOComum{
 	private Connection connection;
-	DaoGenerico dao = new DaoGenerico();
+	DAOFerramentas dao = new DAOFerramentas();
 	daoFornecimento daofornecimento = new daoFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	
@@ -39,9 +39,9 @@ public class daoPedidos {
 	public ModelPedidos buscarPedidoResultado(ResultSet resultado) throws SQLException {
 		ModelPedidos pedido = new ModelPedidos();
 		while(resultado.next()){
-			pedido.setDataentrega(resultado.getString("dataentrega"));
-	        pedido.setDatapedido(resultado.getString("datapedido"));
-	        pedido.setId(resultado.getInt("id"));
+			pedido.setDataentrega(dataentrega(resultado));
+	        pedido.setDatapedido(datapedido(resultado));
+	        pedido.setId(id(resultado));
 		}
 		return pedido;
 	}
@@ -60,15 +60,15 @@ public class daoPedidos {
 	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException {
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
-			pedido.setQuantidadeTotal(dao.somaQuantidade(sqlpedidos.somaQuantidadePedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
-			pedido.setValores(dao.somaValores(sqlpedidos.somaValoresPedido(resultado.getInt("usuario_pai_id"), resultado.getInt("status"))));
-			pedido.setId(resultado.getInt("id"));
-			pedido.setQuantidade(resultado.getInt("quantidade"));
-			pedido.setValorTotal(resultado.getInt("valortotal"));
-			pedido.setDataentrega(dao.converterDatas(resultado.getString("dataentrega")));
-			pedido.setDatapedido(dao.converterDatas(resultado.getString("datapedido")));
-			pedido.setValor(resultado.getInt("valor"));
-			pedido.setNome(resultado.getString("nome"));
+			pedido.setQuantidadeTotal(somaQuantidade(sqlpedidos.somaQuantidadePedido(usuario_pai_id(resultado), status(resultado))));
+			pedido.setValores(somaValores(sqlpedidos.somaValoresPedido(usuario_pai_id(resultado), status(resultado))));
+			pedido.setId(id(resultado));
+			pedido.setQuantidade(quantidade(resultado));
+			pedido.setValorTotal(valortotal(resultado));
+			pedido.setDataentrega(dataentrega(resultado));
+			pedido.setDatapedido(datapedido(resultado));
+			pedido.setValor(valor(resultado));
+			pedido.setNome(nome(resultado));
 			retorno.add(pedido);
 		}
 		return retorno;

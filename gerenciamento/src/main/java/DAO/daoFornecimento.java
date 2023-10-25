@@ -13,7 +13,7 @@ import conexao.conexao;
 import model.ModelFornecimento;
 import model.ModelProdutos;
 
-public class daoFornecimento {
+public class daoFornecimento extends DAOComum {
 
 	private Connection connection;
 	SQLFornecimento sqlfornecimento = new SQLFornecimento();
@@ -42,10 +42,10 @@ public class daoFornecimento {
 	public List<ModelFornecimento> lerResultadoListarFornecedores(List<ModelFornecimento> retorno, ResultSet resultado) throws SQLException{
 		while(resultado.next()){
 			ModelFornecimento fornecedores = new ModelFornecimento();
-			fornecedores.setId(resultado.getLong("id"));
-			fornecedores.setNome(resultado.getString("nome"));
-			fornecedores.setTempoentrega(resultado.getLong("tempoentrega"));
-			fornecedores.setValor(resultado.getInt("valor"));
+			fornecedores.setId(id(resultado));
+			fornecedores.setNome(nome(resultado));
+			fornecedores.setTempoentrega(tempoentrega(resultado));
+			fornecedores.setValor(valor(resultado));
 			retorno.add(fornecedores);
 		}
 		return retorno;
@@ -59,10 +59,10 @@ public class daoFornecimento {
 	
 	public ModelFornecimento lerResultadoConsultarFornecedor(ResultSet resultado, ModelFornecimento modelFornecimento) throws SQLException{
 		while (resultado.next()) {
-			modelFornecimento.setId(resultado.getLong("id"));
-			modelFornecimento.setTempoentrega(resultado.getLong("tempoentrega"));
-			modelFornecimento.setNome(resultado.getString("nome"));
-			modelFornecimento.setValor(resultado.getInt("valor"));
+			modelFornecimento.setId(id(resultado));
+			modelFornecimento.setTempoentrega(tempoentrega(resultado));
+			modelFornecimento.setNome(nome(resultado));
+			modelFornecimento.setValor(valor(resultado));
 			modelFornecimento.setProduto_pai_id(modelFornecimento.getProduto_pai_id());		
 		}
 		return modelFornecimento;

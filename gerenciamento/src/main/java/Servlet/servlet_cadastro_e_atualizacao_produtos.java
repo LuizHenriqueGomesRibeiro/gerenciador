@@ -6,8 +6,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import DAO.Despache;
-import DAO.DaoGenerico;
+import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
 import DAO.daoPedidos;
