@@ -86,7 +86,7 @@ public class APIDespache extends APIEntradas {
 		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
 		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
 		request.setAttribute("usuario", user(request));
-		return request;
+		return plusProdutos(request);
 	}
 	
 	public HttpServletRequest plusProdutos(HttpServletRequest request) throws SQLException, Exception {

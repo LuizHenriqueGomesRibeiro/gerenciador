@@ -52,7 +52,7 @@ public class SQLRelatorio {
 	
 	public String insercaoDataEValorVenda(ModelData dataVenda) {
 		String sql = "INSERT INTO datavenda(datavenda, valortotal, usuario_pai_id) VALUES('" + dataVenda.getDatavenda() + "', " + 
-				dataVenda.getValortotal() + ", ?);";
+				dataVenda.getValortotal() + ", " + dataVenda.getUsuario_pai_id().getId() + ");";
 		return sql;
 	}
 	

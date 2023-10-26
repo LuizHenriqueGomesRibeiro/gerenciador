@@ -22,17 +22,20 @@ public class daoVendas extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarVenda(ModelVendas venda, int usuario_pai_id) throws SQLException {
-		String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?);";
+	public void gravarVenda(String sql, ModelVendas venda, int usuario_pai_id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
+		prepararObjeto(statement, venda, usuario_pai_id).execute();
+		connection.commit();
+	}
+	
+	public PreparedStatement prepararObjeto(PreparedStatement statement, ModelVendas venda, int usuario_pai_id) throws SQLException {
 		statement.setLong(1, venda.getProduto_pai().getId());
-		statement.setString(2, converterDatas(venda.getDataentrega()));
+		statement.setString(2, venda.getDataentrega());
 		statement.setInt(3, venda.getValortotal()*venda.getQuantidade());
 		statement.setInt(4, venda.getQuantidade());
 		statement.setString(5, venda.getProduto_pai().getNome());
 		statement.setInt(6, usuario_pai_id);
-		statement.execute();
-		connection.commit();
+		return statement;
 	}
 	
 	public List<ModelVendas> listarVendas(String sql, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException{

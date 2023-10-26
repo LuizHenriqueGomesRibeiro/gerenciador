@@ -3,9 +3,7 @@ package Servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
 import com.google.gson.Gson;
-
 import DAO.DAOFerramentas;
 import DAO.daoFornecimento;
 import DAO.daoLogin;
@@ -26,13 +24,11 @@ import model.ModelData;
 import model.ModelProdutos;
 import model.ModelVendas;
 
-/**
- * Servlet implementation class servletLogin
- */
 @WebServlet(urlPatterns = { "/servlet_saida" })
 public class servlet_saida extends APIDespache {
 	private static final long serialVersionUID = 1L;
 
+	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 	daoLogin daologin = new daoLogin();
 	daoProdutos daoproduto = new daoProdutos();
 	daoFornecimento daoFornecimento = new daoFornecimento();
@@ -44,7 +40,6 @@ public class servlet_saida extends APIDespache {
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	DAORelatorio daoRelatorio = new DAORelatorio();
-	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String acao = request.getParameter("acao");
@@ -76,6 +71,7 @@ public class servlet_saida extends APIDespache {
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		parametrosVender(request);
+		setarAtributosAjax(request);
 	}
 	
 	public HttpServletRequest parametrosVender(HttpServletRequest request) throws Exception {
@@ -110,8 +106,7 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	public HttpServletRequest parametrosVenderGravarVenda(HttpServletRequest request, ModelVendas venda) throws Exception {
-		daovendas.gravarVenda(venda, id(request));
-		setarAtributosAjax(request);
+		daovendas.gravarVenda(sqlvendas.gravaVenda(), venda, id(request));
 		return request;
 	}
 	
@@ -136,7 +131,6 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	protected void carregarListaVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		System.out.println("carregar lista de vendas");
 		parametrosCarregarListaVendas(request, response);
 	}
 	

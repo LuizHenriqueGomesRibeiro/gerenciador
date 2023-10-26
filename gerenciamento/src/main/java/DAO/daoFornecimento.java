@@ -31,11 +31,10 @@ public class daoFornecimento extends DAOComum {
 	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.lista(id));
 		ResultSet resultado = statement.executeQuery();
-		return lerResultadoListarFornecedores(resultado);
+		return lerResultadoListarFornecedores(resultado, new ArrayList<ModelFornecimento>());
 	}
 	
-	public List<ModelFornecimento> lerResultadoListarFornecedores(ResultSet resultado) throws SQLException{
-		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
+	public List<ModelFornecimento> lerResultadoListarFornecedores(ResultSet resultado, List<ModelFornecimento> retorno) throws SQLException{
 		while(resultado.next()){
 			ModelFornecimento fornecedores = new ModelFornecimento();
 			fornecedores.setId(id(resultado));

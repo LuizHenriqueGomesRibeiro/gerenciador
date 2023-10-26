@@ -47,12 +47,7 @@ public class daoPedidos extends DAOComum{
 	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-	    return objetosListarPedidos(resultado);
-	}
-	
-	public List<ModelPedidos> objetosListarPedidos(ResultSet resultado) throws SQLException{
-		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
-		return resultadosListagem(resultado, retorno);
+	    return resultadosListagem(resultado, new ArrayList<ModelPedidos>());
 	}
 		
 	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException {

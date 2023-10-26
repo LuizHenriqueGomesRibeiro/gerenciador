@@ -1,7 +1,7 @@
 package Servlet.API;
 
 import DAO.DAOFerramentas;
-import Servlet.API.Extends.Final.servlet_recuperacao_login;
+import Servlet.API.Final.servlet_recuperacao_login;
 import jakarta.servlet.http.HttpServletRequest;
 import model.ModelUsuarios;
 

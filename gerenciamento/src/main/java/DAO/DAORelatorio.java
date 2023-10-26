@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import DAO.SQL.SQLRelatorio;
 import conexao.conexao;
 import model.ModelData;
@@ -36,7 +35,7 @@ public class DAORelatorio extends DAOComum {
 		}
 	}
 	
-	public Boolean buscarData(String sql) throws SQLException, ParseException {
+	public boolean buscarData(String sql) throws SQLException, ParseException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		if (resultado.next() && resultado.getInt(1) > 0) {

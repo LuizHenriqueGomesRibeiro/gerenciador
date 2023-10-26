@@ -1,6 +1,11 @@
 package DAO.SQL;
 
 public class SQLVendas {
+	public String gravaVenda() {
+		String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?);";
+		return sql;
+	}
+	
 	public String listaVendas(int id) {
 		String sql = "SELECT * FROM vendas WHERE usuario_pai_id = " + id;
 		return sql;

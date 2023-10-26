@@ -16,7 +16,6 @@ import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import DAO.SQL.SQLVendas;
 import Servlet.API.APIDespache;
-import Servlet.API.Extends.APIRelatorios;
 import Util.ReportUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -66,7 +65,6 @@ public class ServletRelatorios extends APIDespache{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	protected void irParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
