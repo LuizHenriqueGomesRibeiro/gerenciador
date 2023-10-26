@@ -106,7 +106,7 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	public HttpServletRequest parametrosVenderGravarVenda(HttpServletRequest request, ModelVendas venda) throws Exception {
-		daovendas.gravarVenda(sqlvendas.gravaVenda(), venda, id(request));
+		daovendas.gravarVenda(sqlvendas.gravaVenda(venda, id(request)));
 		return request;
 	}
 	

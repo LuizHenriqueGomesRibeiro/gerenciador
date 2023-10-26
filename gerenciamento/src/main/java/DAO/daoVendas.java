@@ -22,9 +22,9 @@ public class daoVendas extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarVenda(String sql, ModelVendas venda, int usuario_pai_id) throws SQLException {
+	public void gravarVenda(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
-		prepararObjeto(statement, venda, usuario_pai_id).execute();
+		statement.execute();
 		connection.commit();
 	}
 	

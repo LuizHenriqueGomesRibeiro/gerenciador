@@ -1,8 +1,12 @@
 package DAO.SQL;
 
+import model.ModelVendas;
+
 public class SQLVendas {
-	public String gravaVenda() {
-		String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (?, ?, ?, ?, ?, ?);";
+	public String gravaVenda(ModelVendas venda, int usuario_pai_id) {
+		String sql = "INSERT INTO vendas(produtos_pai_id, dataentrega, valortotal, quantidade, nome, usuario_pai_id) VALUES (" + venda.getProduto_pai().getId()
+				+ ", '" + venda.getDataentrega() + "', '" + venda.getValortotal()*venda.getQuantidade() + "', " + venda.getQuantidade() 
+				+ ", " + venda.getProduto_pai().getNome() + ", " + usuario_pai_id + ");";
 		return sql;
 	}
 	
