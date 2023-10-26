@@ -36,7 +36,7 @@ public class APIRelatorios extends APIDespache {
 	daoLogin daologin = new daoLogin();
 	SQLVendas sqlvendas = new SQLVendas();
 	daoVendas daovendas = new daoVendas();
-
+	/*
 	public String vendas(HttpServletRequest request) throws SQLException, ParseException, Exception {
 		Gson gson = new Gson();
 		return gson.toJson(daovendas.listarVendas(sqlvendas.listaVendas(id(request)), sqlvendas.somaValoresVendas(id(request)), sqlvendas.somaQuantidadeVendas(id(request))));
@@ -71,9 +71,9 @@ public class APIRelatorios extends APIDespache {
 	}
 	
 	public byte[] printFormVendasPDFComDatas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String sqlListaVendas = sqlvendas.listaVendasTempo(id(request), dataInicial(request), dataFinal(request)); 
-		String sqlSomaValores = sqlvendas.somaValoresVendasTempo(id(request), dataInicial(request), dataFinal(request));
-		String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendasTempo(id(request), dataInicial(request), dataFinal(request));
+		String sqlListaVendas = sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request)); 
+		String sqlSomaValores = sqlvendas.somaValoresVendas(id(request), dataInicial(request), dataFinal(request));
+		String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendas(id(request), dataInicial(request), dataFinal(request));
 		List<ModelVendas> vendas = daovendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
 		return new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
 	}
@@ -93,5 +93,5 @@ public class APIRelatorios extends APIDespache {
 	public byte[] printFormEntradasPDFComDatas(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
 		List<ModelPedidos> entradas = daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request), 2, dataInicial(request), dataFinal(request)));
 		return new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext());
-	}
+	}*/
 }

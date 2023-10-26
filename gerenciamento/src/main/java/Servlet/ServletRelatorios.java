@@ -7,10 +7,15 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import DAO.DAOFerramentas;
+import DAO.daoFornecimento;
+import DAO.daoLogin;
 import DAO.daoPedidos;
+import DAO.daoProdutos;
 import DAO.daoVendas;
 import DAO.SQL.SQLPedidos;
+import DAO.SQL.SQLProdutos;
 import DAO.SQL.SQLVendas;
+import Servlet.API.APIDespache;
 import Servlet.API.Extends.APIRelatorios;
 import Util.ReportUtil;
 import jakarta.servlet.ServletException;
@@ -24,25 +29,22 @@ import model.ModelVendas;
 /**
  * Servlet implementation class ServletRelatorios
  */
-public class ServletRelatorios extends APIRelatorios{
+public class ServletRelatorios extends APIDespache{
 	private static final long serialVersionUID = 1L;
 	
 	daoVendas daoVendas = new daoVendas();
 	daoPedidos daoPedidos = new daoPedidos();
+    daoPedidos daopedidos = new daoPedidos();
+	daoProdutos daoproduto = new daoProdutos();
+	SQLProdutos sqlprodutos = new SQLProdutos();
 	DAOFerramentas dao = new DAOFerramentas();
+	daoFornecimento daofornecedor = new daoFornecimento();
+	SQLPedidos sqlpedidos = new SQLPedidos();
+	daoLogin daologin = new daoLogin();
 	SQLVendas sqlvendas = new SQLVendas();
-    SQLPedidos sqlpedidos = new SQLPedidos();
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ServletRelatorios() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	daoVendas daovendas = new daoVendas();
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String acao = request.getParameter("acao");
 		try {
 			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("irParaRelatorios")) {
@@ -68,26 +70,28 @@ public class ServletRelatorios extends APIRelatorios{
 	}
 
 	protected void irParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		setarAtributosirParaRelatorios(request, response);
+		request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
 	}
 	
 	protected void vendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = vendas(request);
+		Gson gson = new Gson();
+		String json;
+		json = gson.toJson(daovendas.listarVendas(sqlvendas.listaVendas(id(request)), sqlvendas.somaValoresVendas(id(request)), sqlvendas.somaQuantidadeVendas(id(request))));
 		impressaoJSON(response, json);
 	}
 	
 	protected void entradas(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = entradas(request);
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request), 2)));
 		impressaoJSON(response, json);
 	}
 	
 	protected void pedidos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = pedidos(request);
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request))));
 		impressaoJSON(response, json);
 	}
 	
 	protected void cancelamentos(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String json = cancelamentos(request);
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request), 1)));
 		impressaoJSON(response, json);
 	}
 	
@@ -96,8 +100,49 @@ public class ServletRelatorios extends APIRelatorios{
 		impressaoPDF(response, relatorio);
 	}
 	
+	protected byte[] alternarPrintFormVendasPDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		if (dataInicial(request) == null || dataInicial(request).isEmpty() || dataFinal(request) == null || dataFinal(request).isEmpty()) {
+			return printFormVendasPDFSemDatas(request, response);
+		} else {
+			return printFormVendasPDFComDatas(request, response);
+		}
+	}
+	
+	public byte[] printFormVendasPDFSemDatas(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String sqlListaVendas = sqlvendas.listaVendas(id(request)); 
+		String sqlSomaValores = sqlvendas.somaValoresVendas(id(request));
+		String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendas(id(request));
+		List<ModelVendas> vendas = daovendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
+		return new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
+	}
+	
+	public byte[] printFormVendasPDFComDatas(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String sqlListaVendas = sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request)); 
+		String sqlSomaValores = sqlvendas.somaValoresVendas(id(request), dataInicial(request), dataFinal(request));
+		String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendas(id(request), dataInicial(request), dataFinal(request));
+		List<ModelVendas> vendas = daovendas.listarVendas(sqlListaVendas, sqlSomaValores, sqlSomaQuantidade);
+		return new ReportUtil().geraReltorioPDF(vendas, "vendas", request.getServletContext());
+	}
+	
 	protected void printFormEntradasPDF(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
 		byte[] relatorio = alternarPrintFormEntradasPDF(request, response);
 		impressaoPDF(response, relatorio);
+	}
+	
+	public byte[] alternarPrintFormEntradasPDF(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+		if (dataInicial(request) == null || dataInicial(request).isEmpty() || dataFinal(request) == null || dataFinal(request).isEmpty()) {
+			return printFormEntradasPDFSemDatas(request, response);
+		} else {
+			return printFormEntradasPDFComDatas(request, response);
+		}
+	}
+	
+	public byte[] printFormEntradasPDFSemDatas(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+		return new ReportUtil().geraReltorioPDF(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request), 2)), "entradas", request.getServletContext());
+	}
+	
+	public byte[] printFormEntradasPDFComDatas(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+		List<ModelPedidos> entradas = daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(id(request), 2, dataInicial(request), dataFinal(request)));
+		return new ReportUtil().geraReltorioPDF(entradas, "entradas", request.getServletContext());
 	}
 }

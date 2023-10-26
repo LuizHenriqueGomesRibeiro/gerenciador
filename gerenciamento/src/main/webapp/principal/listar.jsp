@@ -142,7 +142,7 @@
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
-					<form action="<%=request.getContextPath()%>/servletFornecimento" method="get" name="formularioFornecimento"
+					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formularioFornecimento"
 					id="formularioFornecimento">
 						<input type="hidden" value="cadastrarFornecedor" name="acao" />
 						<div class="form-group">
@@ -268,7 +268,7 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div style="padding: 0px 20px 20px 20px;">
-				<form action="<%=request.getContextPath()%>/servletFornecimento" method="get" name="formularioFornecimento" id="formularioFornecimento">
+				<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formularioFornecimento" id="formularioFornecimento">
 					<div class="form-group">
 						<div id="capturarId"></div>
 					</div>
@@ -309,6 +309,10 @@
 		</table>
 	</div>
 	<script type="text/javascript">
+	
+	function excData(id) {
+		jQuery("#excId").val(id);
+	}
 	
 	function adicionarFornecedor() {
 		var urlAction = document.getElementById('formularioFornecimento').action;
@@ -542,20 +546,5 @@
 			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id_fornecedor' value=" + id + ">");
 		}
 			
-		function excData(id) {
-			var urlAction = document.getElementById('formulario').action;
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&id_produto=' + id + '&acao=exclusaoAjax',
-				success : function(json, textStatus, xhr) {
-					jQuery("#excId").val(json.id);
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-		
-		
 	</script>
 </html>

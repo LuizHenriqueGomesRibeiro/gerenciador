@@ -36,6 +36,7 @@ public class APISaida extends APIDespache {
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLRelatorio sqlrelatorio = new SQLRelatorio();
 	
+	/*
 	public HttpServletRequest parametrosVender(HttpServletRequest request) throws Exception {
 		return parametrosVenderDataVenda(request);
 	}
@@ -71,6 +72,7 @@ public class APISaida extends APIDespache {
 		daovendas.gravarVenda(venda, id(request));
 		return request;
 	}
+	
 	
 	public String parametrosLoadProduto(HttpServletRequest request) throws NumberFormatException, Exception {
 		ModelProdutos produto = daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request)));
@@ -116,4 +118,5 @@ public class APISaida extends APIDespache {
 		String superJson = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
 		impressaoMultiJSON(response, superJson);
 	}
+	 */
 }
