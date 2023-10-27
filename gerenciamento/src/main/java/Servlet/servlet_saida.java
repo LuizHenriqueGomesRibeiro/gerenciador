@@ -70,12 +70,8 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		parametrosVender(request);
+		parametrosVenderDataVenda(request);
 		setarAtributosAjax(request);
-	}
-	
-	public HttpServletRequest parametrosVender(HttpServletRequest request) throws Exception {
-		return parametrosVenderDataVenda(request);
 	}
 	
 	public HttpServletRequest parametrosVenderDataVenda(HttpServletRequest request) throws Exception {

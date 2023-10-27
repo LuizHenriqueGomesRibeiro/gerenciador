@@ -35,8 +35,11 @@
 		%>
 		<li class="page-item"><button class="page-link">Configurações</button></li>
 		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button class="page-link">Ir para caixa</button></a></li>
+		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button class="page-link">Ir para setor de contabilidade</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
+		
+					</a>
 		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
 	</ul>
 	<div id="json-content"></div>
@@ -118,22 +121,11 @@
 		<thead>
 			<tr>
 				<th>Soma dos valores dos pedidos</th>
-				<th>Setor de contabilidade</th>
-			</tr>
-			<tr>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td><c:out value="${soma}"></c:out></td>
-				<td>
-					<a class="page-link" style="text-decoration: none; padding: 5px 0px 0px 4px; margin: -6px -12px -6px 0px; height: 38px;" 
-						href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro">Ir para setor de contabilidade
-					</a>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
 			</tr>
 		</tbody>
 	</table>

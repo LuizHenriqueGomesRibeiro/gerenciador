@@ -74,10 +74,10 @@ public class DAORelatorio extends DAOComum {
 	public List<ModelData> resultadoListarDatasEntradas(ResultSet resultado) throws SQLException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
-			ModelData dataEntrada = new ModelData();
-			dataEntrada.setDatavenda(dataentrada(resultado));
-			dataEntrada.setValortotal(valortotal(resultado));
-			retorno.add(dataEntrada);
+			ModelData modelData = new ModelData();
+			modelData.setDatavenda(dataentrada(resultado));
+			modelData.setValortotal(valortotal(resultado));
+			retorno.add(modelData);
 		}
 		return retorno;
 	}
@@ -85,10 +85,10 @@ public class DAORelatorio extends DAOComum {
 	public List<ModelData> retultadoListarDatasVendas(ResultSet resultado) throws SQLException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
-			ModelData dataVendas = new ModelData();
-			dataVendas.setDatavenda(datavenda(resultado));
-			dataVendas.setValortotal(valortotal(resultado));
-			retorno.add(dataVendas);
+			ModelData modelData = new ModelData();
+			modelData.setDatavenda(datavenda(resultado));
+			modelData.setValortotal(valortotal(resultado));
+			retorno.add(modelData);
 		}
 		return retorno;
 	}

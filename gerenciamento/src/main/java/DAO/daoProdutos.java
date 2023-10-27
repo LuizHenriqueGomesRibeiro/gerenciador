@@ -46,45 +46,50 @@ public class daoProdutos extends DAOComum{
 	public ModelProdutos consultarProduto(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		return resultadoConsultarProduto(resultado, new ModelProdutos());
+		return resultadoConsultarProduto(resultado);
 	}
 	
-	public ModelProdutos resultadoConsultarProduto(ResultSet resultado, ModelProdutos modelProduto) throws SQLException {
+	public ModelProdutos resultadoConsultarProduto(ResultSet resultado) throws SQLException {
+		ModelProdutos modelProduto = new ModelProdutos();
 		while (resultado.next()) {
-			modelProduto.setId(id(resultado));
-			modelProduto.setNome(nome(resultado));
-			modelProduto.setPreco(preco(resultado));
-			modelProduto.setQuantidade(quantidade(resultado));
-			modelProduto.setValorTotal(preco(resultado) * quantidade(resultado));
+			modelProduto = setProduto(resultado);
 		}
 		return modelProduto;
 	}
 	
-	public void atualizarProduto(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.executeUpdate();
-		connection.commit();
-	}
 
 	public List<ModelProdutos> listarProdutos(String sql, int id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		return resultadosListagem(resultado, id);
+		return resultadosListagem(resultado);
 	}
 	
-	public List<ModelProdutos> resultadosListagem(ResultSet resultado, int id) throws SQLException {
+	public List<ModelProdutos> resultadosListagem(ResultSet resultado) throws SQLException {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		while(resultado.next()){
-			ModelProdutos produtos = new ModelProdutos();
-	        produtos.setId(id(resultado));
-			produtos.setQuantidade(quantidade(resultado));
-			produtos.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(id));
-			produtos.setNome(nome(resultado));
-			retorno.add(produtos);
+			ModelProdutos produtos = setProduto(resultado);
 			alternarSomaValores(produtos, id(resultado));
 			alternarSomaQuantidade(produtos, id(resultado));
+			retorno.add(produtos);
 		}
 		return retorno;
+	}
+	
+	public ModelProdutos setProduto(ResultSet resultado) throws SQLException {
+		ModelProdutos modelProduto = new ModelProdutos();
+		modelProduto.setId(id(resultado));
+		modelProduto.setQuantidade(quantidade(resultado));
+		modelProduto.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(usuario_pai_id(resultado)));
+		modelProduto.setNome(nome(resultado));
+		modelProduto.setPreco(preco(resultado));
+		modelProduto.setValorTotal(preco(resultado) * quantidade(resultado));
+		return modelProduto;
+	}
+
+	public void atualizarProduto(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		connection.commit();
 	}
 	
 	public void alternarSomaValores(ModelProdutos produtos, Long id) throws SQLException {

@@ -14,7 +14,6 @@ import model.ModelFornecimento;
 import model.ModelProdutos;
 
 public class daoFornecimento extends DAOComum {
-
 	private Connection connection;
 	SQLFornecimento sqlfornecimento = new SQLFornecimento();
 	
@@ -31,10 +30,11 @@ public class daoFornecimento extends DAOComum {
 	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.lista(id));
 		ResultSet resultado = statement.executeQuery();
-		return lerResultadoListarFornecedores(resultado, new ArrayList<ModelFornecimento>());
+		return lerResultadoListarFornecedores(resultado);
 	}
 	
-	public List<ModelFornecimento> lerResultadoListarFornecedores(ResultSet resultado, List<ModelFornecimento> retorno) throws SQLException{
+	public List<ModelFornecimento> lerResultadoListarFornecedores(ResultSet resultado) throws SQLException{
+		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
 		while(resultado.next()){
 			ModelFornecimento fornecedores = new ModelFornecimento();
 			fornecedores.setId(id(resultado));

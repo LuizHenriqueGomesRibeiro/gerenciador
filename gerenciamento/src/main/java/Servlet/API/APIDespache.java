@@ -31,32 +31,17 @@ public class APIDespache extends APIEntradas {
 		plusAtributosComum(request);
 		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
 	}
-	
-	public void setarAtributosOffset(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		plusProdutosOffset(request);
-		plusAtributosComum(request);
-		request.getRequestDispatcher("principal/listar.jsp").forward(request, response);
-	}
 
 	public void setarAtributosAjax(HttpServletRequest request) throws Exception {
 		plusProdutos(request);
 		plusAtributosComum(request);
 	}
 
-	public void setarAtributosirParaRelatorios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("principal/relatorios.jsp").forward(request, response);
-	}
-	
 	public void setarAtributosSaida(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		plusAtributosComum(request);
 		request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
 	}
 
-	public void setarAtributosOffsetAjax(HttpServletRequest request) throws Exception {
-		plusProdutosOffset(request);
-		plusAtributosComum(request);
-	}
-	
 	public HttpServletResponse cabecarioImpressaoPDF(HttpServletResponse response) {
 		response.setHeader("Content-Disposition", "attachment;filename=arquivo.pdf");
 		response.setContentType("application/octet-stream");
@@ -94,8 +79,4 @@ public class APIDespache extends APIEntradas {
 		return request;
 	}
 	
-	public HttpServletRequest plusProdutosOffset(HttpServletRequest request) throws SQLException, Exception {
-		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosOFFSET(id(request), pagina(request)), id(request)));
-		return request;
-	}
 }
