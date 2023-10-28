@@ -94,7 +94,7 @@ public class servlet_saida extends APIDespache {
 	
 	public HttpServletRequest parametrosVenderSetarVenda(HttpServletRequest request) throws SQLException, Exception {
 		ModelVendas venda = new ModelVendas();
-		venda.setProduto_pai(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
+		venda.setProduto_pai(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
 		venda.setQuantidade(quantidade(request));
 		venda.setDataentrega(dataVenda(request));
 		venda.setValortotal(valor(request) * quantidade(request));
@@ -112,7 +112,7 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	public String parametrosLoadProduto(HttpServletRequest request) throws NumberFormatException, Exception {
-		ModelProdutos produto = daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request)));
+		ModelProdutos produto = daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request)));
 		Double medias = daoFornecimento.mediaValoresFornecimento(id_produto(request));
 		return parametrosLoadProdutoJson(produto, medias);
 	}

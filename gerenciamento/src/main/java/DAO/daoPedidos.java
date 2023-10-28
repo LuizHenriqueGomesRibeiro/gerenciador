@@ -17,6 +17,7 @@ import model.ModelPedidos;
 public class daoPedidos extends DAOComum{
 	private Connection connection;
 	daoFornecimento daofornecimento = new daoFornecimento();
+	daoProdutos daoprodutos = new daoProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	
 	public daoPedidos(){
@@ -62,6 +63,7 @@ public class daoPedidos extends DAOComum{
 			pedido.setDatapedido(datapedido(resultado));
 			pedido.setValor(valor(resultado));
 			pedido.setNome(nome(resultado));
+			pedido.setProduto_pai_id(daoprodutos.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado))));
 			retorno.add(pedido);
 		}
 		return retorno;

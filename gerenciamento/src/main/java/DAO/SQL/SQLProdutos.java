@@ -24,8 +24,8 @@ public class SQLProdutos {
 		return sql;
 	}
 	
-	public String consultaProduto(Long id_produto, int id) {
-		String sql = "SELECT*FROM produtos WHERE id = " + id_produto + " AND usuario_pai_id = " + id;
+	public String consultaProduto(Long id_produto) {
+		String sql = "SELECT*FROM produtos WHERE id = " + id_produto;
 		return sql;
 	}
 }

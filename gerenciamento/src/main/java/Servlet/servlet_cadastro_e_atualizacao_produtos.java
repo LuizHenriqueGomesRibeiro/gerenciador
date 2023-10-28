@@ -88,7 +88,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String produto = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
+		String produto = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
 		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(id_produto(request)));
 		String json = produto + "|" + fornecedores;
 		impressaoJSON(response, json);
@@ -131,8 +131,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		modelPedido.setDatapedido(dataPedido(request));
 		modelPedido.setDataentrega(dao.plusDias(dataPedido(request), modelFornecedor.getTempoentrega()));
 		modelPedido.setUsuario_pai_id(user(request));
-		modelPedido.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
-		modelPedido.setNome(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))).getNome());
+		modelPedido.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
+		modelPedido.setNome(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))).getNome());
 		persistenciaIncluirPedido(request, response, modelPedido);
 	}
 	
@@ -142,7 +142,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 
 	protected void confirmarPedido(HttpServletRequest request) throws Exception {
-		daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request)));
+		daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request)));
 		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
 		daopedidos.mudarStatus(id_pedido(request), 2);
 	}

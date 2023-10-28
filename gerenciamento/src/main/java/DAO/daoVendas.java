@@ -57,7 +57,7 @@ public class daoVendas extends DAOComum{
 	}
 	
 	public ModelProdutos produto(ResultSet resultado) throws SQLException {
-		ModelProdutos produto = daoproduto.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado), usuario_pai_id(resultado)));
+		ModelProdutos produto = daoproduto.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado)));
 		return produto;
 	}
 }

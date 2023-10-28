@@ -38,8 +38,6 @@
 		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button class="page-link">Ir para setor de contabilidade</button></a></li>
 		<li class="page-item"><button class="page-link">Ajuda</button></li>
 		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		
-					</a>
 		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
 	</ul>
 	<div id="json-content"></div>
@@ -154,7 +152,7 @@
 							<label for="valor" class="form-label">
 							</label> 
 							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="valor" 
-							name="valor" placeholder="valor" onkeypress="$(this).mask('00/00/0000')">
+							name="valor" placeholder="valor">
 						</div>
 						<input id="configuracoesId" name="id" type="hidden">
 						<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
@@ -301,195 +299,101 @@
 		</table>
 	</div>
 	<script type="text/javascript">
-	
-	function excData(id) {
-		jQuery("#excId").val(id);
-	}
-	
-	function adicionarFornecedor() {
-		var urlAction = document.getElementById('formulario').action;
-		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
-		var tempoentrega = document.getElementById('tempoentrega').value;
-		var valor = document.getElementById('valor').value;
-		var id = document.getElementById('configuracoesId').value;
-		
-		jQuery.ajax({
-			method : "get",
-			url : urlAction,
-			data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id_produto=' + id + '&acao=cadastrarFornecedor',
-			success : function(json, textStatus, xhr) {
-				jQuery('#nomeFornecedor').val('');
-				jQuery('#tempoentrega').val('');
-				jQuery('#valor').val('');
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	function pedido(){
-		var urlAction = document.getElementById('formulario').action;
-		var quantidade = document.getElementById('quantidade').value;
-		var dataPedido = document.getElementById('dataPedido').value;
-		var idProduto = document.getElementById('idProduto').value;
-		var id_fornecedor = document.getElementById('id_fornecedor').value;
-		
-		jQuery.ajax({
-			method : "get",
-			url : urlAction,
-			data : '&id_produto='+ idProduto + '&dataPedido=' + dataPedido + '&quantidade=' + quantidade + '&id_fornecedor=' + id_fornecedor + '&acao=incluirPedido',
-			success : function(json, textStatus, xhr) {
-				location.reload();
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	function loadPedidoIdConfirmar(id1, id2, quantidade){
-		var urlAction = document.getElementById('formulario').action;
-		var capturarData = document.getElementById('capturarData').value;
-		
-		jQuery.ajax({
-
-			method : "get",
-			url : urlAction,
-			data : '&dataEntrega=' + capturarData + '&id_pedido='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
-			success : function(json, textStatus, xhr) {
-				location.reload();
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	function loadPedidoIdCancelar(id1, id2){
-		var urlAction = document.getElementById('formulario').action;
-		jQuery.ajax({
-
-			method : "get",
-			url : urlAction,
-			data : '&id_pedido='+ id1 + '&acao=cancelarPedido',
-			success : function(json, textStatus, xhr) {
-				location.reload();
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	jQuery("#tabelaHistoricoPedidos").hide();
-	
-	function loadPedidos(id){
-		jQuery("#tabelaFornecedores").hide();
-		jQuery("#tabelaHistoricoPedidos").show();
-		
-		var urlAction = document.getElementById('formulario').action;
-		jQuery.ajax({
-
-			method : "get",
-			url : urlAction,
-			data : '&id_produto='+ id + '&acao=historioPedidos',
-			success : function(json, textStatus, xhr) {
-				var jsonObj = JSON.parse(json);
-				jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-				for(var p = 0; p < jsonObj.length; p++){
-					var string = JSON.stringify(jsonObj[0].dataentrega);
-					var string2 = JSON.stringify(jsonObj[p].datapedido);
-					chamarString(string);
-					jQuery('#tabelaHistoricoPedidos > table > tbody')
-						.append('<tr><td>' + string + 
-							'</td><td>' + string2 + 
-							'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
+		function adicionarFornecedor() {
+			var urlAction = document.getElementById('formulario').action;
+			var nomeFornecedor = document.getElementById('nomeFornecedor').value;
+			var tempoentrega = document.getElementById('tempoentrega').value;
+			var valor = document.getElementById('valor').value;
+			var id = document.getElementById('configuracoesId').value;
+			
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id_produto=' + id + '&acao=cadastrarFornecedor',
+				success : function(json, textStatus, xhr) {
+					jQuery('#nomeFornecedor').val('');
+					jQuery('#tempoentrega').val('');
+					jQuery('#valor').val('');
 				}
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
-	
-	function chamarString(data){
-		jQuery("#tabelaHistoricoPedidos").append("<input type='hidden' id='capturarData' value=" + data + "></input>");
-	}
-	
-	function funcoes(id){
-		dataAtual();
-		loadPedido(id);
-	}
-	
-	function funcoes2(){
-		
-		var id = document.getElementById('configuracoesId').value;
-		
-		adicionarFornecedor();
-		loadData(id); 
-	}
-	
-	function funcoes3(id){
-		deletarFornecedor(id);
-		loadData(id); 
-	}
-	
-	function deletarFornecedor(id) {
-		var urlAction = document.getElementById('formulario').action;
-		jQuery.ajax({
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
 
-			method : "get",
-			url : urlAction,
-			data : '&acao=deletarFornecedor&id_fornecedor=' + id,
-			success : function(json, textStatus, xhr) {
-
-			}
-		}).fail(function(xhr, status, errorThrown) {
-			alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-		});
-	}
+		function loadPedidoIdConfirmar(id1, id2, quantidade){
+			var urlAction = document.getElementById('formulario').action;
+			var capturarData = document.getElementById('capturarData').value;
+			
+			jQuery.ajax({
 	
-	function dataAtual() {
-		  var input = document.getElementById('dataPedido');
-		  var dataAtual = new Date();
-		  var dia = dataAtual.getDate();
-		  var mes = dataAtual.getMonth() + 1;
-		  var ano = dataAtual.getFullYear();
-
-		  if (dia < 10) {
-		    dia = '0' + dia;
-		  }
-
-		  if (mes < 10) {
-		    mes = '0' + mes;
-		  }
-
-		  input.value = dia + '/' + mes + '/' + ano;
-		};
+				method : "get",
+				url : urlAction,
+				data : '&dataEntrega=' + capturarData + '&id_pedido='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
+				success : function(json, textStatus, xhr) {
+					location.reload();
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
+		
+		function loadPedidoIdCancelar(id1){
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
 	
-		jQuery("#valor").maskMoney({
-			showSymbol : true,	
-			symbol : "R$",
-			decimal : ",",
-			thousands : "."
-		});
+				method : "get",
+				url : urlAction,
+				data : '&id_pedido='+ id1 + '&acao=cancelarPedido',
+				success : function(json, textStatus, xhr) {
+					location.reload();
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
 		
-		jQuery("#preco").maskMoney({
-			showSymbol : true,	
-			symbol : "R$",
-			decimal : ",",
-			thousands : "."
-		});
+		function loadPedidos(id){
+			jQuery("#tabelaFornecedores").hide();
+			jQuery("#tabelaHistoricoPedidos").show();
+			
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+	
+				method : "get",
+				url : urlAction,
+				data : '&id_produto='+ id + '&acao=historioPedidos',
+				success : function(json, textStatus, xhr) {
+					var jsonObj = JSON.parse(json);
+					jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
+					for(var p = 0; p < jsonObj.length; p++){
+						var string = JSON.stringify(jsonObj[0].dataentrega);
+						var string2 = JSON.stringify(jsonObj[p].datapedido);
+						chamarString(string);
+						jQuery('#tabelaHistoricoPedidos > table > tbody')
+							.append('<tr><td>' + string + 
+								'</td><td>' + string2 + 
+								'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></tr>');
+					}
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
 		
-		jQuery("#configuracoesPreco").maskMoney({
-			showSymbol : true,	
-			symbol : "R$",
-			decimal : ",",
-			thousands : "."
-		});
-		
-		jQuery("#atualizacaoPreco").maskMoney({
-			showSymbol : true,	
-			symbol : "R$",
-			decimal : ",",
-			thousands : "."
-		});
+		function deletarFornecedor(id) {
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+	
+				method : "get",
+				url : urlAction,
+				data : '&acao=deletarFornecedor&id_fornecedor=' + id,
+				success : function(json, textStatus, xhr) {
+	
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
 
 		function loadData(id) {
 			jQuery("#tabelaFornecedores").show();
@@ -535,6 +439,8 @@
 		}
 		
 		function loadTodosPedidos(){
+			jQuery("#tabelaFornecedores").hide();
+			jQuery("#tabelaHistoricoPedidos").show();
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
 				method : "get",
@@ -546,27 +452,90 @@
 					for(var p = 0; p < jsonObj.length; p++){
 						var string = JSON.stringify(jsonObj[p].dataentrega);
 						var string2 = JSON.stringify(jsonObj[p].datapedido);
-						jQuery('#tabelaHistoricoPedidos > table > tbody')
-						.append('<tr><td>' + string + '</td><td>' + string2 + '</td><td></td>');
-						/*
-							chamarString(string);
-							jQuery('#tabelaHistoricoPedidos > table > tbody')
-							.append('<tr><td>' + string + 
-								'</td><td>' + string2 + 
-								'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
-						*/
+						jQuery('#tabelaHistoricoPedidos > table > tbody').append('<tr><td>' + string + '</td><td>' + string2 + '</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+JSON.stringify(jsonObj[p].produto_pai_id.id)+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></td>');
 					}
 				}
-				/*	
-				*/
 			}).fail(function(xhr, status, errorThrown) {
 				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
 			});
 		}
 		
+		function dataAtual() {
+			var input = document.getElementById('dataPedido');
+			var dataAtual = new Date();
+			var dia = dataAtual.getDate();
+			var mes = dataAtual.getMonth() + 1;
+			var ano = dataAtual.getFullYear();
+
+			if (dia < 10) {
+				dia = '0' + dia;
+			}
+
+			if (mes < 10) {
+				mes = '0' + mes;
+			}
+
+			input.value = dia + '/' + mes + '/' + ano;
+		};
+
+		jQuery("#valor").maskMoney({
+			showSymbol: true,
+			symbol: "R$",
+			decimal: ",",
+			thousands: "."
+		});
+
+		jQuery("#preco").maskMoney({
+			showSymbol: true,
+			symbol: "R$",
+			decimal: ",",
+			thousands: "."
+		});
+
+		jQuery("#configuracoesPreco").maskMoney({
+			showSymbol: true,
+			symbol: "R$",
+			decimal: ",",
+			thousands: "."
+		});
+
+		jQuery("#atualizacaoPreco").maskMoney({
+			showSymbol: true,
+			symbol: "R$",
+			decimal: ",",
+			thousands: "."
+		});
+
 		function loadPedido(id) {
 			jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
 		}
-			
+
+		function chamarString(data) {
+			jQuery("#tabelaHistoricoPedidos").append("<input type='hidden' id='capturarData' value=" + data + "></input>");
+		}
+
+		function funcoes(id) {
+			dataAtual();
+			loadPedido(id);
+		}
+
+		function funcoes2() {
+
+			var id = document.getElementById('configuracoesId').value;
+
+			adicionarFornecedor();
+			loadData(id);
+		}
+
+		function funcoes3(id) {
+			deletarFornecedor(id);
+			loadData(id);
+		}
+
+		jQuery("#tabelaHistoricoPedidos").hide();
+
+		function excData(id) {
+			jQuery("#excId").val(id);
+		}
 	</script>
 </html>
