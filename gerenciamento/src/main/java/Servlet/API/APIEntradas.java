@@ -13,6 +13,10 @@ public class APIEntradas extends servlet_recuperacao_login {
 	
 	DAOFerramentas dao = new DAOFerramentas();
 	
+	public String acao(HttpServletRequest request) {
+		return request.getParameter("acao");
+	}
+	
 	public Long id_produto(HttpServletRequest request) {
 		return Long.parseLong(request.getParameter("id_produto"));
 	}
@@ -22,7 +26,7 @@ public class APIEntradas extends servlet_recuperacao_login {
 	}
 	
 	public int quantidade(HttpServletRequest request) {
-		return Integer.parseInt(request.getParameter("quantidade"));
+		return Integer.parseInt(dao.tirarPonto(request.getParameter("quantidade")));
 	}
 	
 	public Long id_pedido(HttpServletRequest request) {

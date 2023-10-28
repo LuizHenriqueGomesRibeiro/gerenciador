@@ -1,5 +1,7 @@
 package Servlet;
 
+import java.sql.SQLException;
+
 import com.google.gson.Gson;
 
 import DAO.DAOFerramentas;
@@ -34,32 +36,41 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			String acao = request.getParameter("acao");
-			if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listar")) {
+			if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("listar")) {
 				listar(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("paginar")){
 				paginar(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("excluir")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("excluir")){
 				excluir(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("configuracoes")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("configuracoes")){
 				configuracoes(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("historioPedidos")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("historioPedidos")){
 				historicoPedidos(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarProduto")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarProduto")){
 				cadastrarProduto(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("incluirPedido")) {
-				incluirPedido(request);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("confirmarPedido")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("confirmarPedido")){
 				confirmarPedido(request);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cancelarPedido")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cancelarPedido")){
 				cancelarPedido(request, response);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarFornecedor")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("deletarFornecedor")){
 				deletarFornecedor(request);
-			}else if(acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("cadastrarFornecedor")){
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarFornecedor")){
 				cadastrarFornecedor(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarTodosPedidos")){
+				carregarTodosPedidos(request, response);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+		}
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("incluirPedido")) {
+				incluirPedido(request, response);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -103,16 +114,16 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		setarAtributos(request, response);
 	}
 	
-	protected void incluirPedido(HttpServletRequest request) throws Exception {
-		fornecedorIncluirPedido(request);
+	protected void incluirPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		fornecedorIncluirPedido(request, response);
 	}
 	
-	public void fornecedorIncluirPedido(HttpServletRequest request) throws NumberFormatException, Exception {
+	public void fornecedorIncluirPedido(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, Exception {
 		ModelFornecimento modelFornecedor = daofornecedor.consultarFornecedor(sqlFornecimento.consulta(id_fornecedor(request)));
-		pedidoIncluirPedido(request, modelFornecedor);
+		pedidoIncluirPedido(request, response, modelFornecedor);
 	}
 	
-	public void pedidoIncluirPedido(HttpServletRequest request, ModelFornecimento modelFornecedor) throws Exception {
+	public void pedidoIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelFornecimento modelFornecedor) throws Exception {
 		ModelPedidos modelPedido = new ModelPedidos();
 		modelPedido.setValor(modelFornecedor.getValor());
 		modelPedido.setFornecedor_pai_id(modelFornecedor);
@@ -122,12 +133,12 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		modelPedido.setUsuario_pai_id(user(request));
 		modelPedido.setProduto_pai_id(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))));
 		modelPedido.setNome(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request), id(request))).getNome());
-		persistenciaIncluirPedido(request, modelPedido);
+		persistenciaIncluirPedido(request, response, modelPedido);
 	}
 	
-	public void persistenciaIncluirPedido(HttpServletRequest request, ModelPedidos modelPedido) throws Exception {
+	public void persistenciaIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelPedidos modelPedido) throws Exception {
 		daopedidos.gravarPedido(sqlpedidos.gravarPedido(modelPedido));
-		setarAtributosAjax(request);
+		setarAtributos(request, response);
 	}
 
 	protected void confirmarPedido(HttpServletRequest request) throws Exception {
@@ -142,5 +153,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 
 	protected void deletarFornecedor(HttpServletRequest request) throws Exception {
 		daofornecedor.excluirFornecedor(id_fornecedor(request));
+	}
+	
+	protected void carregarTodosPedidos(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0)));
+		impressaoJSON(response, json);
 	}
 }

@@ -117,15 +117,17 @@
 			});
 		</script>
 	</div>
-	<table class="table table-striped table-sm">
+	<table style="position: relative; margin-bottom: 26px;" class="table table-striped table-sm">
 		<thead>
 			<tr>
 				<th>Soma dos valores dos pedidos</th>
+				<th>Abrir todos os pedidos</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td><c:out value="${soma}"></c:out></td>
+				<td><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; width: 180px;" href="#" onclick="loadTodosPedidos()">Abrir</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -134,8 +136,8 @@
 			<div class="row">
 			<div style="width: 400px;">
 				<div class="col-sm">
-					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formularioFornecimento"
-					id="formularioFornecimento">
+					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario"
+					id="formulario">
 						<input type="hidden" value="cadastrarFornecedor" name="acao" />
 						<div class="form-group">
 							<div id="insiraNomeFornecedor"></div>
@@ -170,8 +172,8 @@
 								<th>Pedidos</th>
 							</tr>
 						</thead>
-							<tbody>	
-							</tbody>
+						<tbody>	
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -260,27 +262,25 @@
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div style="padding: 0px 20px 20px 20px;">
-				<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formularioFornecimento" id="formularioFornecimento">
-					<div class="form-group">
+					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="post" name="formulario" id="formulario">
+						<div class="form-group">
+							<div id="capturarId"></div>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">quantidade</label>
+							<input class="form-control" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
+							<div class="form-text">...............................</div>
+						</div>
+						<div class="mb-3">
+							<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
+							<input class="form-control" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')">
+							<div class="form-text">...............................</div>
+						</div>
+						<input type="hidden" name="acao" value="incluirPedido">
+						<div id="produtoIdIncluir"></div>
 						<div id="capturarId"></div>
-					</div>
-					<div class="mb-3">
-						<label for="exampleInputEmail1" class="form-label">quantidade</label>
-						<input class="form-control" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
-						<div class="form-text">...............................</div>
-					</div>
-					<div class="mb-3">
-					<!-- aqui teremos um api -->
-						<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
-						<input class="form-control" id="dataPedido" name="dataPedido" 
-						onkeypress="$(this).mask('00/00/0000')">
-						<div class="form-text">...............................</div>
-					</div>
-					<input type="hidden" name="acao" value="incluirPedido">
-					<div id="produtoIdIncluir"></div>
-					<div id="capturarId"></div>
-					<button type="button" onclick="pedido()" class="btn btn-primary">Submit</button>
-				</form>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -307,7 +307,7 @@
 	}
 	
 	function adicionarFornecedor() {
-		var urlAction = document.getElementById('formularioFornecimento').action;
+		var urlAction = document.getElementById('formulario').action;
 		var nomeFornecedor = document.getElementById('nomeFornecedor').value;
 		var tempoentrega = document.getElementById('tempoentrega').value;
 		var valor = document.getElementById('valor').value;
@@ -328,7 +328,7 @@
 	}
 	
 	function pedido(){
-		var urlAction = document.getElementById('formularioFornecimento').action;
+		var urlAction = document.getElementById('formulario').action;
 		var quantidade = document.getElementById('quantidade').value;
 		var dataPedido = document.getElementById('dataPedido').value;
 		var idProduto = document.getElementById('idProduto').value;
@@ -347,7 +347,7 @@
 	}
 	
 	function loadPedidoIdConfirmar(id1, id2, quantidade){
-		var urlAction = document.getElementById('formularioFornecimento').action;
+		var urlAction = document.getElementById('formulario').action;
 		var capturarData = document.getElementById('capturarData').value;
 		
 		jQuery.ajax({
@@ -364,7 +364,7 @@
 	}
 	
 	function loadPedidoIdCancelar(id1, id2){
-		var urlAction = document.getElementById('formularioFornecimento').action;
+		var urlAction = document.getElementById('formulario').action;
 		jQuery.ajax({
 
 			method : "get",
@@ -431,7 +431,7 @@
 	}
 	
 	function deletarFornecedor(id) {
-		var urlAction = document.getElementById('formularioFornecimento').action;
+		var urlAction = document.getElementById('formulario').action;
 		jQuery.ajax({
 
 			method : "get",
@@ -518,7 +518,7 @@
 			        jQuery('#produtoIdIncluir > input').remove();
 			        
 			        jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objetoNovamenteNome + '</p>');
-			        jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="idProduto" value="' + objetoNovamenteId + '">');
+			        jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="id_produto" value="' + objetoNovamenteId + '">');
 			        
 			        for(var p = 0; p < jsonObj.length; p++){
 			        	
@@ -534,8 +534,38 @@
 			});
 		}
 		
+		function loadTodosPedidos(){
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=carregarTodosPedidos',
+				success : function(json, textStatus, xhr) {
+					jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
+					var jsonObj = JSON.parse(json);
+					for(var p = 0; p < jsonObj.length; p++){
+						var string = JSON.stringify(jsonObj[p].dataentrega);
+						var string2 = JSON.stringify(jsonObj[p].datapedido);
+						jQuery('#tabelaHistoricoPedidos > table > tbody')
+						.append('<tr><td>' + string + '</td><td>' + string2 + '</td><td></td>');
+						/*
+							chamarString(string);
+							jQuery('#tabelaHistoricoPedidos > table > tbody')
+							.append('<tr><td>' + string + 
+								'</td><td>' + string2 + 
+								'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+','+id+')">Cancelar entrega</a></td></tr>');
+						*/
+					}
+				}
+				/*	
+				*/
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
+		}
+		
 		function loadPedido(id) {
-			jQuery("#capturarId").append("<input type='hidden' name='fornecimento_pai_id' id='id_fornecedor' value=" + id + ">");
+			jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
 		}
 			
 	</script>
