@@ -64,7 +64,7 @@ public class SQLRelatorio {
 	}
 	
 	public String buscaData(int usuario_pai_id) {
-		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = " + usuario_pai_id + " ORDER BY id DESC LIMIT 1";
+		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = " + usuario_pai_id + " ORDER BY id ASC LIMIT 1";
 		return sql;
 	}
 }

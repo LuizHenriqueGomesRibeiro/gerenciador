@@ -7,12 +7,16 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import DAO.SQL.SQLProdutos;
+import DAO.SQL.SQLRelatorio;
 import conexao.conexao;
+import model.ModelData;
 import model.ModelProdutos;
 import model.ModelVendas;
 
@@ -20,24 +24,33 @@ public class daoVendas extends DAOComum{
 	private Connection connection;
 	daoProdutos daoproduto = new daoProdutos();
 	SQLProdutos sqlproduto = new SQLProdutos();
+	SQLRelatorio sqlRelatorio = new SQLRelatorio();
 	
 	public daoVendas(){
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarDatas(int usuario_pai_id) throws SQLException {
-		LocalDate startDate = LocalDate.parse("2023-01-01");
-		LocalDate endDate = LocalDate.parse("2023-02-01");
+	public void gravarDatas(ModelVendas venda, int usuario_pai_id) throws SQLException, ParseException {
+		LocalDate startDate = LocalDate.parse(converterDatas(buscarData(sqlRelatorio.buscaData(usuario_pai_id))));
+		LocalDate endDate = LocalDate.parse(venda.getDataentrega());
 		
 		while (!startDate.isAfter(endDate)) {
-			//createRecord(connection, startDate);
 			String query = "INSERT INTO datavenda (datavenda, usuario_pai_id) VALUES (?, " + usuario_pai_id + ")";
-			
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setDate(1, java.sql.Date.valueOf(startDate));
 			statement.executeUpdate();
 			startDate = startDate.plusDays(1);
 		}
+	}
+	
+	public String buscarData(String sql) throws SQLException, ParseException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		String data = null;
+		while(resultado.next()) {
+			data = datavenda(resultado);
+		}
+		return data;
 	}
 	
 	/*
