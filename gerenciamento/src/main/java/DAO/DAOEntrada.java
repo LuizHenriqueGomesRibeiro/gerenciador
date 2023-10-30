@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import DAO.SQL.SQLProdutos;
 import model.ModelProdutos;
@@ -25,11 +26,11 @@ public class DAOEntrada extends DAOFerramentas{
 		return resultado.getInt("valor");
 	}
 	
-	public String dataentrega(ResultSet resultado) throws SQLException {
+	public String dataentrega(ResultSet resultado) throws SQLException, ParseException {
 		return converterDatas(resultado.getString("dataentrega"));
 	}
 
-	public String datapedido(ResultSet resultado) throws SQLException {
+	public String datapedido(ResultSet resultado) throws SQLException, ParseException {
 		return converterDatas(resultado.getString("datapedido"));
 	}
 	
@@ -57,11 +58,11 @@ public class DAOEntrada extends DAOFerramentas{
 		return resultado.getInt("preco");
 	}
 	
-	public String dataentrada(ResultSet resultado) throws SQLException {
+	public String dataentrada(ResultSet resultado) throws SQLException, ParseException {
 		return converterDatas(resultado.getString("dataentrada"));
 	}
 	
-	public String datavenda(ResultSet resultado) throws SQLException {
+	public String datavenda(ResultSet resultado) throws SQLException, ParseException {
 		return converterDatas(resultado.getString("datavenda"));
 	}
 }

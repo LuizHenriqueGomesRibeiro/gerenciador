@@ -1,5 +1,6 @@
 package DAO.SQL;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 
 import DAO.DAOFerramentas;
@@ -8,7 +9,7 @@ import model.ModelPedidos;
 public class SQLPedidos {
 	DAOFerramentas dao = new DAOFerramentas();
 	
-	public String gravarPedido(ModelPedidos pedido) {
+	public String gravarPedido(ModelPedidos pedido) throws ParseException {
 		String sql = "INSERT INTO pedidos(datapedido, quantidade, valor, valortotal, fornecimento_pai_id, dataentrega, produtos_pai_id, usuario_pai_id, status, nome)" + 
 				" VALUES ('" + 
 				dao.converterDatas(pedido.getDatapedido()) + "', " + 

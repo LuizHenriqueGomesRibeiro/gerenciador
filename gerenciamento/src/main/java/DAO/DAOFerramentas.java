@@ -8,11 +8,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import conexao.conexao;
 
 public class DAOFerramentas {
 
+	public Date stringToDate(String string) throws ParseException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = dateFormat.parse(string);
+        return date;
+	}
+	
 	public String colocarPonto(String numero) {
 		int posicao = numero.length() - 3;
 		while (posicao > 0) {
@@ -43,7 +50,7 @@ public class DAOFerramentas {
 		return numeroString;
     }
 	
-	public String converterDatas(String data) {
+	public String converterDatas(String data) throws ParseException {
 		String[] parte = data.split(" ");
 		data = parte[0];
 		if (verificarFormatoData(data, "yyyy-MM-dd")) {
@@ -61,20 +68,14 @@ public class DAOFerramentas {
         } catch (Exception e) {
             return false;
         }
-    }
+	}
 	
-	public String transformarFormatoData(String dataString, String formatoOriginal, String novoFormato) {
-		try {
-			SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
-			SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
-			java.util.Date data = formatoOriginalData.parse(dataString);
-			String dataFormatada = formatoNovoData.format(data);
-			return dataFormatada;
-		} catch (ParseException e) {
-			e.printStackTrace();
-			
-			return null;
-		}
+	public String transformarFormatoData(String dataString, String formatoOriginal, String novoFormato) throws ParseException {
+		SimpleDateFormat formatoOriginalData = new SimpleDateFormat(formatoOriginal);
+		SimpleDateFormat formatoNovoData = new SimpleDateFormat(novoFormato);
+		java.util.Date data = formatoOriginalData.parse(dataString);
+		String dataFormatada = formatoNovoData.format(data);
+		return dataFormatada;
 	}
 	
 	public String plusDias(String dataPedido, Long tempo) {

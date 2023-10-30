@@ -1,5 +1,7 @@
 package Servlet.API;
 
+import java.text.ParseException;
+
 import DAO.DAOFerramentas;
 import Servlet.API.Final.servlet_recuperacao_login;
 import jakarta.servlet.http.HttpServletRequest;
@@ -65,7 +67,7 @@ public class APIEntradas extends servlet_recuperacao_login {
 		return request.getParameter("dataFinal");
 	}
 	
-	public String dataVenda(HttpServletRequest request) { 
+	public String dataVenda(HttpServletRequest request) throws ParseException { 
 		return dao.converterDatas(request.getParameter("dataVenda"));
 	}
 	

@@ -30,13 +30,13 @@ public class daoPedidos extends DAOComum{
 		connection.commit();
 	}
 	
-	public ModelPedidos buscarPedido(String sql) throws SQLException {
+	public ModelPedidos buscarPedido(String sql) throws SQLException, ParseException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return buscarPedidoResultado(resultado, new ModelPedidos());	
 	}
 	
-	public ModelPedidos buscarPedidoResultado(ResultSet resultado, ModelPedidos pedido) throws SQLException {
+	public ModelPedidos buscarPedidoResultado(ResultSet resultado, ModelPedidos pedido) throws SQLException, ParseException {
 		while(resultado.next()){
 			pedido.setDataentrega(dataentrega(resultado));
 	        pedido.setDatapedido(datapedido(resultado));
@@ -45,13 +45,13 @@ public class daoPedidos extends DAOComum{
 		return pedido;
 	}
 	
-	public List<ModelPedidos> listarPedidos(String sql) throws SQLException {
+	public List<ModelPedidos> listarPedidos(String sql) throws SQLException, ParseException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 	    return resultadosListagem(resultado, new ArrayList<ModelPedidos>());
 	}
 		
-	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException {
+	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException, ParseException {
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
 			pedido.setQuantidadeTotal(somaQuantidade(sqlpedidos.somaQuantidadePedido(usuario_pai_id(resultado), status(resultado))));

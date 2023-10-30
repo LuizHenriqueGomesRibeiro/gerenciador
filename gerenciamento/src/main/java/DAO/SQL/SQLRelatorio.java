@@ -2,6 +2,7 @@ package DAO.SQL;
 
 import java.sql.PreparedStatement;
 
+import DAO.DAOComum;
 import model.ModelData;
 
 public class SQLRelatorio {
@@ -59,6 +60,11 @@ public class SQLRelatorio {
 	public String atualizacaoDataEValorVenda(ModelData dataVenda) {
 		String sql = "UPDATE datavenda SET valortotal = valortotal + " + dataVenda.getValortotal() 
 			+ " WHERE usuario_pai_id = " + dataVenda.getUsuario_pai_id().getId() + " AND datavenda = '" + dataVenda.getDatavenda() + "'";
+		return sql;
+	}
+	
+	public String buscaData(int usuario_pai_id) {
+		String sql = "SELECT * FROM datavenda WHERE usuario_pai_id = " + usuario_pai_id + " ORDER BY id DESC LIMIT 1";
 		return sql;
 	}
 }

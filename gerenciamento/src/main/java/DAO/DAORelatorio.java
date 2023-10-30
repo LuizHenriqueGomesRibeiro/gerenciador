@@ -71,7 +71,7 @@ public class DAORelatorio extends DAOComum {
 		return resultado;
 	}
 	
-	public List<ModelData> resultadoListarDatasEntradas(ResultSet resultado) throws SQLException{
+	public List<ModelData> resultadoListarDatasEntradas(ResultSet resultado) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
 			ModelData modelData = new ModelData();
@@ -82,7 +82,7 @@ public class DAORelatorio extends DAOComum {
 		return retorno;
 	}
 	
-	public List<ModelData> retultadoListarDatasVendas(ResultSet resultado) throws SQLException{
+	public List<ModelData> retultadoListarDatasVendas(ResultSet resultado) throws SQLException, ParseException{
 		List<ModelData> retorno = new ArrayList<ModelData>();
 		while(resultado.next()) {
 			ModelData modelData = new ModelData();
