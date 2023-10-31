@@ -65,4 +65,8 @@ public class DAOEntrada extends DAOFerramentas{
 	public String datavenda(ResultSet resultado) throws SQLException, ParseException {
 		return converterDatas(resultado.getString("datavenda"));
 	}
+	
+	public String max(ResultSet resultado) throws SQLException, ParseException {
+		return resultado.getString("max");
+	}
 }
