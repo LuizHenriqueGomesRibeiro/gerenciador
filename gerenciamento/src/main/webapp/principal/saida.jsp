@@ -66,9 +66,11 @@
 									<div class="modal-body">
 										<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
 											<div class="mb-3">
-												<label for="exampleInputEmail1" class="form-label">quantidade <br/> 
-												<div id="letreiro"></div>
+												<input type="hidden" name="acao" value="vender"/>
+												<label for="exampleInputEmail1" class="form-label">quantidade<br/> 
+													<div id="letreiro"></div>
 												</label>
+												<input name="id_produto" id="id_produto" type="hidden"/>
 												<input name="id" id="id" type="hidden">
 												<input name="valorHidden" id="valorHidden" type="hidden"> 
 												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" type="hidden">
@@ -78,6 +80,7 @@
 													<label for="exampleInputEmail1" class="form-label">Data da venda<br/>
 												<input class="form-control" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
 												<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
+												<button>Vender</button>
 											</div>
 										</form>
 									</div>
@@ -172,9 +175,13 @@
 			       	 jQuery("#quantidade").val(maxValue);
 			    }
 		}
+		
+		function idProduto(id){
+			jQuery("#id_produto").val(id);
+		}
 	
 		function loadProduto(id){
-			
+			idProduto(id);
 			dataAtual();
 			
 			var urlAction = document.getElementById('formularioSaida').action;

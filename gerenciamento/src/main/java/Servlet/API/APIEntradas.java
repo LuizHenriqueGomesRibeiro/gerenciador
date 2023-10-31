@@ -76,7 +76,7 @@ public class APIEntradas extends servlet_recuperacao_login {
 	}
 	
 	public int id(HttpServletRequest request) throws Exception {
-		return super.getUserId(request);
+		return getUserId(request);
 	}
 	
 	public int pagina(HttpServletRequest request) {

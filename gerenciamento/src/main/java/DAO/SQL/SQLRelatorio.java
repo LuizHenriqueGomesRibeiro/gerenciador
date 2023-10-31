@@ -71,9 +71,16 @@ public class SQLRelatorio {
 	}
 	
 	public String maiorData(int usuario_pai_id) {
-		String sql = "SELECT MAX(datavenda) FROM datavenda WHERE usuario_pai_id = " + usuario_pai_id;
+		String sql = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY datavenda DESC) as rn FROM datavenda) id WHERE rn = 1 AND usuario_pai_id = " + usuario_pai_id;
 		return sql;
 	}
+	
+	/*
+	public String maiorData(int usuario_pai_id) {
+		String sql = "SELECT * FROM datavenda WHERE id = (SELECT MAX(id) - 1 FROM datavenda) AND usuario_pai_id = " + usuario_pai_id;
+		return sql;
+	}
+	*/
 	
 	public String validacaoDatas(LocalDate startDate) {
 		String sql = "SELECT COUNT(*) FROM datavenda WHERE datavenda = '" + java.sql.Date.valueOf(startDate) + "'";

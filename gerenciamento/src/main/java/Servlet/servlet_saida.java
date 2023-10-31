@@ -70,44 +70,44 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		parametrosVenderDataVenda(request);
-		setarAtributosAjax(request);
+		parametrosVenderDataVenda(request, response);
 	}
 	
-	public HttpServletRequest parametrosVenderDataVenda(HttpServletRequest request) throws Exception {
+	public void parametrosVenderDataVenda(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelData dataVenda = new ModelData();
 		dataVenda.setDatavenda(dataVenda(request));
 		dataVenda.setValortotal(valor(request) * quantidade(request));
 		dataVenda.setUsuario_pai_id(user(request));
-		return parametrosVenderAlternarData(request, dataVenda);
+		parametrosVenderAlternarData(request, response, dataVenda);
 	}
 	
-	public HttpServletRequest parametrosVenderAlternarData(HttpServletRequest request, ModelData dataVenda) throws Exception {
-		daoRelatorio.alternarDataEValorVendas(dataVenda);
-		return parametrosVenderAddProdutoCaixa(request);
+	public void parametrosVenderAlternarData(HttpServletRequest request, HttpServletResponse response, ModelData dataVenda) throws Exception {
+		//daoRelatorio.alternarDataEValorVendas(dataVenda);
+		parametrosVenderAddProdutoCaixa(request, response);
 	}
 	
-	public HttpServletRequest parametrosVenderAddProdutoCaixa(HttpServletRequest request) throws Exception {
+	public void parametrosVenderAddProdutoCaixa(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		daoproduto.adicionaProdutoCaixa(id_produto(request), -quantidade(request));
-		return parametrosVenderSetarVenda(request);
+		parametrosVenderSetarVenda(request, response);
 	}
 	
-	public HttpServletRequest parametrosVenderSetarVenda(HttpServletRequest request) throws SQLException, Exception {
+	public void parametrosVenderSetarVenda(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
 		ModelVendas venda = new ModelVendas();
 		venda.setProduto_pai(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
 		venda.setQuantidade(quantidade(request));
 		venda.setDataentrega(dataVenda(request));
 		venda.setValortotal(valor(request) * quantidade(request));
-		return parametrosVenderGravarVenda(request, venda);
+		parametrosVenderGravarVenda(request, response, venda);
 	}
 	
-	public HttpServletRequest parametrosVenderGravarVenda(HttpServletRequest request, ModelVendas venda) throws Exception {
-		daovendas.gravarDatas(venda, id(request));
-		return request;
+	public void parametrosVenderGravarVenda(HttpServletRequest request, HttpServletResponse response, ModelVendas venda) throws Exception {
+		daovendas.gravarDatas(id(request));
+		//daovendas.gravarDatas(venda, id(request));
+		setarAtributosSaida(request, response);
 	}
 
-	//daovendas.gravarDatas(venda.getDataentrega(), id(request));
 	//daovendas.gravarVenda(sqlvendas.gravaVenda(venda, id(request)));
+	//daovendas.gravarDatas(venda.getDataentrega(), id(request));
 	
 	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = parametrosLoadProduto(request);
