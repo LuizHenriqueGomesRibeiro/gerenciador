@@ -11,7 +11,7 @@ import model.ModelUsuarios;
 
 import java.io.IOException;
 
-import DAO.daoLogin;
+import DAO.DAOLogin;
 
 /**
  * Servlet implementation class servletLogin
@@ -20,7 +20,7 @@ import DAO.daoLogin;
 public class servletLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private daoLogin daoLogin = new daoLogin();
+	private DAOLogin daoLogin = new DAOLogin();
 	
 	/**
 	 * @see HttpServlet#HttpServlet()

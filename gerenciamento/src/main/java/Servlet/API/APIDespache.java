@@ -5,9 +5,9 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 
 import DAO.DAOFerramentas;
-import DAO.daoFornecimento;
-import DAO.daoPedidos;
-import DAO.daoProdutos;
+import DAO.DAOFornecimento;
+import DAO.DAOPedidos;
+import DAO.DAOProdutos;
 import DAO.SQL.SQLProdutos;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,11 +15,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.ModelUsuarios;
 
 public class APIDespache extends APIEntradas {
-	daoPedidos daopedidos = new daoPedidos();
-	daoProdutos daoproduto = new daoProdutos();
+	DAOPedidos daopedidos = new DAOPedidos();
+	DAOProdutos daoproduto = new DAOProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	DAOFerramentas dao = new DAOFerramentas();
-	daoFornecimento daofornecedor = new daoFornecimento();
+	DAOFornecimento daofornecedor = new DAOFornecimento();
 
 	/**
 	 * 

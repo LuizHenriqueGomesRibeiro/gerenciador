@@ -7,11 +7,11 @@ import java.util.List;
 import com.google.gson.Gson;
 
 import DAO.DAOFerramentas;
-import DAO.daoFornecimento;
-import DAO.daoLogin;
-import DAO.daoPedidos;
-import DAO.daoProdutos;
-import DAO.daoVendas;
+import DAO.DAOFornecimento;
+import DAO.DAOLogin;
+import DAO.DAOPedidos;
+import DAO.DAOProdutos;
+import DAO.DAOVendas;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
 import DAO.SQL.SQLVendas;
@@ -31,17 +31,17 @@ import model.ModelVendas;
 public class ServletRelatorios extends APIDespache{
 	private static final long serialVersionUID = 1L;
 	
-	daoVendas daoVendas = new daoVendas();
-	daoPedidos daoPedidos = new daoPedidos();
-    daoPedidos daopedidos = new daoPedidos();
-	daoProdutos daoproduto = new daoProdutos();
+	DAOVendas daoVendas = new DAOVendas();
+	DAOPedidos daoPedidos = new DAOPedidos();
+    DAOPedidos daopedidos = new DAOPedidos();
+	DAOProdutos daoproduto = new DAOProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	DAOFerramentas dao = new DAOFerramentas();
-	daoFornecimento daofornecedor = new daoFornecimento();
+	DAOFornecimento daofornecedor = new DAOFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
-	daoLogin daologin = new daoLogin();
+	DAOLogin daologin = new DAOLogin();
 	SQLVendas sqlvendas = new SQLVendas();
-	daoVendas daovendas = new daoVendas();
+	DAOVendas daovendas = new DAOVendas();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String acao = request.getParameter("acao");

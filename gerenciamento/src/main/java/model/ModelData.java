@@ -2,7 +2,7 @@ package model;
 
 import java.sql.SQLException;
 
-import DAO.daoPedidos;
+import DAO.DAOPedidos;
 import DAO.SQL.SQLPedidos;
 import jakarta.servlet.http.HttpServletRequest;
 

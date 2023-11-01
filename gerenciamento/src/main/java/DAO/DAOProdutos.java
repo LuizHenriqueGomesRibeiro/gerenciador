@@ -11,14 +11,14 @@ import DAO.SQL.SQLProdutos;
 import conexao.conexao;
 import model.ModelProdutos;
 
-public class daoProdutos extends DAOComum{
+public class DAOProdutos extends DAOComum{
 	
 	private Connection connection;
-	daoLogin daoLogin = new daoLogin();
+	DAOLogin daoLogin = new DAOLogin();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	SQLPedidos sqlpedidos = new SQLPedidos();
 	
-	public daoProdutos() {
+	public DAOProdutos() {
 		connection = conexao.getConnection();
 	}
 	

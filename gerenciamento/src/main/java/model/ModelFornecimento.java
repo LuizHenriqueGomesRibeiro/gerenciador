@@ -2,8 +2,8 @@ package model;
 
 import java.sql.SQLException;
 
-import DAO.daoFornecimento;
-import DAO.daoProdutos;
+import DAO.DAOFornecimento;
+import DAO.DAOProdutos;
 
 public class ModelFornecimento {
 	

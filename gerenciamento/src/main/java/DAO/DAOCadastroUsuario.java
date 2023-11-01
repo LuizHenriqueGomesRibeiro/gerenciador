@@ -7,11 +7,11 @@ import java.sql.ResultSet;
 import conexao.conexao;
 import model.ModelUsuarios;
 
-public class daoCadastroUsuario extends DAOComum {
+public class DAOCadastroUsuario extends DAOComum {
 	
 	private Connection connection;
 	
-	public daoCadastroUsuario(){
+	public DAOCadastroUsuario(){
 		connection = conexao.getConnection();
 	}
 	

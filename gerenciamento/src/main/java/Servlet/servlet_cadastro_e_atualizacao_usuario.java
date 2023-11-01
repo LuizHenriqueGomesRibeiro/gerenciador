@@ -10,7 +10,7 @@ import model.ModelUsuarios;
 
 import java.io.IOException;
 
-import DAO.daoCadastroUsuario;
+import DAO.DAOCadastroUsuario;
 
 /**
  * Servlet implementation class servlet_cadastro_e_atualizacao_usuario
@@ -18,7 +18,7 @@ import DAO.daoCadastroUsuario;
 public class servlet_cadastro_e_atualizacao_usuario extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private daoCadastroUsuario daoCadastroUsuario = new daoCadastroUsuario();
+	private DAOCadastroUsuario daoCadastroUsuario = new DAOCadastroUsuario();
 
     public servlet_cadastro_e_atualizacao_usuario() {
         super();

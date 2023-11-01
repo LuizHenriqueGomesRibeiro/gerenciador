@@ -1,15 +1,14 @@
 package Servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import com.google.gson.Gson;
 import DAO.DAOFerramentas;
-import DAO.daoFornecimento;
-import DAO.daoLogin;
-import DAO.daoPedidos;
-import DAO.daoProdutos;
-import DAO.daoVendas;
+import DAO.DAOFornecimento;
+import DAO.DAOLogin;
+import DAO.DAOPedidos;
+import DAO.DAOProdutos;
+import DAO.DAOVendas;
 import DAO.DAORelatorio;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
@@ -29,11 +28,11 @@ public class servlet_saida extends APIDespache {
 	private static final long serialVersionUID = 1L;
 
 	SQLRelatorio sqlrelatorio = new SQLRelatorio();
-	daoLogin daologin = new daoLogin();
-	daoProdutos daoproduto = new daoProdutos();
-	daoFornecimento daoFornecimento = new daoFornecimento();
-	daoPedidos daopedidos = new daoPedidos();
-	daoVendas daovendas = new daoVendas();
+	DAOLogin daologin = new DAOLogin();
+	DAOProdutos daoproduto = new DAOProdutos();
+	DAOFornecimento daoFornecimento = new DAOFornecimento();
+	DAOPedidos daopedidos = new DAOPedidos();
+	DAOVendas daovendas = new DAOVendas();
 	DAORelatorio daoVendasRelatorio = new DAORelatorio();
 	DAOFerramentas dao = new DAOFerramentas();
 	SQLVendas sqlvendas = new SQLVendas();
@@ -42,21 +41,20 @@ public class servlet_saida extends APIDespache {
 	DAORelatorio daoRelatorio = new DAORelatorio();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String acao = request.getParameter("acao");
 		try {
-			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("caixaListar")) {
+			if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("caixaListar")) {
 				caixaListar(request, response);
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("vender")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("vender")) {
 				vender(request, response);
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadProduto")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("loadProduto")) {
 				loadProduto(request, response);
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("loadFinanceiro")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("loadFinanceiro")) {
 
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("financeiro")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("financeiro")) {
 				financeiro(request, response);
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaVendas")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarListaVendas")) {
 				carregarListaVendas(request, response);
-			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("carregarListaEntradas")) {
+			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarListaEntradas")) {
 				
 			}
 		} catch (Exception e) {
@@ -70,44 +68,38 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	protected void vender(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		parametrosVenderDataVenda(request, response);
+		venderSetarModelVendas(request, response);
 	}
 	
-	public void parametrosVenderDataVenda(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelData dataVenda = new ModelData();
-		dataVenda.setDatavenda(dataVenda(request));
-		dataVenda.setValortotal(valor(request) * quantidade(request));
-		dataVenda.setUsuario_pai_id(user(request));
-		parametrosVenderAlternarData(request, response, dataVenda);
-	}
-	
-	public void parametrosVenderAlternarData(HttpServletRequest request, HttpServletResponse response, ModelData dataVenda) throws Exception {
-		//daoRelatorio.alternarDataEValorVendas(dataVenda);
-		parametrosVenderAddProdutoCaixa(request, response);
-	}
-	
-	public void parametrosVenderAddProdutoCaixa(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		daoproduto.adicionaProdutoCaixa(id_produto(request), -quantidade(request));
-		parametrosVenderSetarVenda(request, response);
-	}
-	
-	public void parametrosVenderSetarVenda(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
+	protected void venderSetarModelVendas(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelVendas venda = new ModelVendas();
 		venda.setProduto_pai(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
 		venda.setQuantidade(quantidade(request));
 		venda.setDataentrega(dataVenda(request));
 		venda.setValortotal(valor(request) * quantidade(request));
-		parametrosVenderGravarVenda(request, response, venda);
+		venderGravarDatas(request, response, venda);
 	}
 	
-	public void parametrosVenderGravarVenda(HttpServletRequest request, HttpServletResponse response, ModelVendas venda) throws Exception {
-		daovendas.gravarDatas(id(request));
-		//daovendas.gravarDatas(venda, id(request));
-		setarAtributosSaida(request, response);
+	protected void venderGravarDatas(HttpServletRequest request, HttpServletResponse response, ModelVendas venda) throws Exception {
+		//daovendas.gravarDatas(id(request), dataVenda(request));
+		daoproduto.adicionaProdutoCaixa(id_produto(request), -quantidade(request));
+		daovendas.gravarVenda(sqlvendas.gravaVenda(venda, id(request)));
+		System.out.println(daovendas.buscarVendas(sqlrelatorio.ultimoIdDataVenda()));
+		venderSetarDataVenda(request, response);
 	}
 
-	//daovendas.gravarVenda(sqlvendas.gravaVenda(venda, id(request)));
-	//daovendas.gravarDatas(venda.getDataentrega(), id(request));
+	protected void venderSetarDataVenda(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelData dataVenda = new ModelData();
+		dataVenda.setDatavenda(dataVenda(request));
+		dataVenda.setValortotal(valor(request) * quantidade(request));
+		dataVenda.setUsuario_pai_id(user(request));
+		venderAlternarDataEValorVendas(request, response, dataVenda);
+	}
+	
+	protected void venderAlternarDataEValorVendas(HttpServletRequest request, HttpServletResponse response, ModelData dataVenda) throws Exception {
+		daoRelatorio.alternarDataEValorVendas(dataVenda);
+		setarAtributosSaida(request, response);
+	}
 	
 	protected void loadProduto(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String json = parametrosLoadProduto(request);

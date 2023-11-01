@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import com.google.gson.Gson;
 
 import DAO.DAOFerramentas;
-import DAO.daoFornecimento;
-import DAO.daoLogin;
-import DAO.daoPedidos;
-import DAO.daoProdutos;
+import DAO.DAOFornecimento;
+import DAO.DAOLogin;
+import DAO.DAOPedidos;
+import DAO.DAOProdutos;
 import DAO.SQL.SQLFornecimento;
 import DAO.SQL.SQLPedidos;
 import DAO.SQL.SQLProdutos;
@@ -23,13 +23,13 @@ import model.ModelProdutos;
  * Servlet implementation class servlet_cadastro_e_atualizacao_produtos
  */
 public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
-	daoPedidos daopedidos = new daoPedidos();
-	daoProdutos daoproduto = new daoProdutos();
+	DAOPedidos daopedidos = new DAOPedidos();
+	DAOProdutos daoproduto = new DAOProdutos();
 	SQLProdutos sqlprodutos = new SQLProdutos();
 	DAOFerramentas dao = new DAOFerramentas();
-	daoFornecimento daofornecedor = new daoFornecimento();
+	DAOFornecimento daofornecedor = new DAOFornecimento();
 	SQLPedidos sqlpedidos = new SQLPedidos();
-	daoLogin daologin = new daoLogin();
+	DAOLogin daologin = new DAOLogin();
 	SQLFornecimento sqlFornecimento = new SQLFornecimento();
 
 	private static final long serialVersionUID = 1L;
@@ -110,7 +110,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelProdutos modelProdutos = new ModelProdutos();
 		modelProdutos.setId(id_produto(request));
-		new daoFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), modelProdutos, tempoEntrega(request), valor(request)));
+		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), modelProdutos, tempoEntrega(request), valor(request)));
 		setarAtributos(request, response);
 	}
 	

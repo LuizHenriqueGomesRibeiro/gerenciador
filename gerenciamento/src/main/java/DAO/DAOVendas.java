@@ -14,70 +14,46 @@ import conexao.conexao;
 import model.ModelProdutos;
 import model.ModelVendas;
 
-public class daoVendas extends DAOComum{
+public class DAOVendas extends DAOComum{
 	private Connection connection;
-	daoProdutos daoproduto = new daoProdutos();
+	DAOProdutos daoproduto = new DAOProdutos();
 	SQLProdutos sqlproduto = new SQLProdutos();
 	SQLRelatorio sqlRelatorio = new SQLRelatorio();
 	
-	public daoVendas(){
+	public DAOVendas(){
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarDatas(int usuario_pai_id) throws SQLException {
-		//LocalDate startDate = LocalDate.parse(converterDatas(buscarData(sqlRelatorio.maiorData(usuario_pai_id))));
-		LocalDate startDate = LocalDate.parse("2023-01-01");
-		LocalDate endDate = LocalDate.parse("2023-02-01");
+	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException {
+		LocalDate startDate = LocalDate.parse("2023-10-20");
+		LocalDate endDate = LocalDate.parse(datavenda);
 		while (!startDate.isAfter(endDate)) {
-			String query = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES (?, ?, ?)";
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setDate(1, java.sql.Date.valueOf(startDate)); // Setando a data no formato esperado pelo banco de dados
-			statement.setInt(2, 0); // Valor fixo
-			statement.setInt(3, usuario_pai_id);
+			String sql = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " 
+				+ 0 + ", " + usuario_pai_id + ")";
+			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.execute();
 			startDate = startDate.plusDays(1);
 		}
-	}
-	
-	/*
-	public void gravarDatas(ModelVendas venda, int usuario_pai_id) throws SQLException, ParseException {
-		//LocalDate startDate = LocalDate.parse(converterDatas(buscarData(sqlRelatorio.maiorData(usuario_pai_id))));
-		LocalDate startDate = LocalDate.parse("2023-10-31");
-		LocalDate endDate = LocalDate.parse("2023-12-01");
-		System.out.println(startDate);
-		//LocalDate endDate = LocalDate.parse(venda.getDataentrega());
-		System.out.println(endDate);
-		while (!startDate.isAfter(endDate)) {
-			//int teste = contarDatas(sqlRelatorio.validacaoDatas(startDate));
-				String sql = "INSERT INTO datavenda (datavenda, usuario_pai_id, valortotal) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " + usuario_pai_id 
-						+ ", " + 0 +")";
-				PreparedStatement statement = connection.prepareStatement(sql);
-				statement.execute();
-			startDate = startDate.plusDays(1);
-		}
-	}
-	*/
-	public int contarDatas(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultSet = statement.executeQuery();
-		resultSet.next();
-		return resultSet.getInt(1);
-	}
-	
-	public String buscarData(String sql) throws SQLException, ParseException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		ResultSet resultado = statement.executeQuery();
-		String data = null;
-		while(resultado.next()) {
-			data = datavenda(resultado);
-		}
-		return data;
 	}
 	
 	public void gravarVenda(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.execute();
 		connection.commit();
+	}
+	
+	public ModelVendas buscarVendas(String sql) throws SQLException, ParseException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		return resultadoBuscarVendas(resultado);
+	}
+	
+	public ModelVendas resultadoBuscarVendas(ResultSet resultado) throws SQLException, ParseException {
+		ModelVendas venda = new ModelVendas();
+		while(resultado.next()) {
+			venda = setVendas(resultado);
+		}
+		return venda;
 	}
 	
 	public List<ModelVendas> listarVendas(String sql, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException{
@@ -95,13 +71,22 @@ public class daoVendas extends DAOComum{
 		return retorno;
 	}
 	
+	public ModelVendas setVendas(ResultSet resultado) throws SQLException, ParseException {
+		ModelVendas vendas = new ModelVendas();
+		vendas.setId(id(resultado));
+		vendas.setDataentrega(dataentrega(resultado));
+		vendas.setValortotal(valortotal(resultado));
+		vendas.setQuantidade(quantidade(resultado));
+		return vendas;
+	}
+	
 	public ModelVendas setVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException {
 		ModelVendas vendas = new ModelVendas();
 		vendas.setNome(produto(resultado).getNome());
 		vendas.setId(id(resultado));
 		vendas.setDataentrega(dataentrega(resultado));
 		vendas.setValortotal(valortotal(resultado));
-		vendas.setProduto_pai(produto(resultado));
+		//vendas.setProduto_pai(produto(resultado));
 		vendas.setQuantidade(quantidade(resultado));
 		vendas.setValores(somaValores(sqlSomaValores));
 		vendas.setQuantidadeTotal(somaQuantidade(sqlSomaQuantidade));

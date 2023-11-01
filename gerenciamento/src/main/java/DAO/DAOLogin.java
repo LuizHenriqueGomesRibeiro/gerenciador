@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import conexao.conexao;
 import model.ModelUsuarios;
 
-public class daoLogin extends DAOComum {
+public class DAOLogin extends DAOComum {
 	private Connection connection;
 	
-	public daoLogin() {
+	public DAOLogin() {
 		connection = conexao.getConnection();
 	}
 	
