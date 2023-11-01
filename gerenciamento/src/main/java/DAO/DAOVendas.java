@@ -24,8 +24,9 @@ public class DAOVendas extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException {
-		LocalDate startDate = LocalDate.parse("2023-10-20");
+	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException, ParseException {
+		String data = converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega());
+		LocalDate startDate = LocalDate.parse(data);
 		LocalDate endDate = LocalDate.parse(datavenda);
 		while (!startDate.isAfter(endDate)) {
 			String sql = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " 
@@ -73,21 +74,23 @@ public class DAOVendas extends DAOComum{
 	
 	public ModelVendas setVendas(ResultSet resultado) throws SQLException, ParseException {
 		ModelVendas vendas = new ModelVendas();
+		//vendas.setNome(produto(resultado).getNome());
 		vendas.setId(id(resultado));
-		vendas.setDataentrega(dataentrega(resultado));
+		vendas.setDataentrega(datavenda(resultado));
 		vendas.setValortotal(valortotal(resultado));
-		vendas.setQuantidade(quantidade(resultado));
+		//vendas.setProduto_pai(produto(resultado));
+		//vendas.setQuantidade(quantidade(resultado));
 		return vendas;
 	}
 	
 	public ModelVendas setVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException {
 		ModelVendas vendas = new ModelVendas();
-		vendas.setNome(produto(resultado).getNome());
+		//vendas.setNome(produto(resultado).getNome());
 		vendas.setId(id(resultado));
-		vendas.setDataentrega(dataentrega(resultado));
+		vendas.setDataentrega(datavenda(resultado));
 		vendas.setValortotal(valortotal(resultado));
 		//vendas.setProduto_pai(produto(resultado));
-		vendas.setQuantidade(quantidade(resultado));
+		//vendas.setQuantidade(quantidade(resultado));
 		vendas.setValores(somaValores(sqlSomaValores));
 		vendas.setQuantidadeTotal(somaQuantidade(sqlSomaQuantidade));
 		return vendas;

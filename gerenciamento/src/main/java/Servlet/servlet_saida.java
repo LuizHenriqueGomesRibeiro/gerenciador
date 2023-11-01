@@ -81,10 +81,9 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	protected void venderGravarDatas(HttpServletRequest request, HttpServletResponse response, ModelVendas venda) throws Exception {
-		//daovendas.gravarDatas(id(request), dataVenda(request));
+		daovendas.gravarDatas(id(request), dataVenda(request));
 		daoproduto.adicionaProdutoCaixa(id_produto(request), -quantidade(request));
 		daovendas.gravarVenda(sqlvendas.gravaVenda(venda, id(request)));
-		System.out.println(daovendas.buscarVendas(sqlrelatorio.ultimoIdDataVenda()));
 		venderSetarDataVenda(request, response);
 	}
 

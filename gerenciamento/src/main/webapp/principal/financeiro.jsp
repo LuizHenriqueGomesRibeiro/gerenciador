@@ -125,7 +125,7 @@
 				ctx,{
 					type: 'line',
 					data: {
-						labels: datas2,
+						labels: datas,
 						datasets: [{
 							label: "Vendas",
 							lineTension: 0.3,
@@ -140,21 +140,6 @@
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
 							data: valores
-						},
-						{
-							label: "Entradas",
-							lineTension: 0.3,
-							backgroundColor: "rgba(78, 115, 223, 0.05)",
-							borderColor: "red",
-							pointRadius: 0,
-							pointBackgroundColor: "rgba(78, 115, 223, 1)",
-							pointBorderColor: "red",
-							pointHoverRadius: 0,
-							pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-							pointHoverBorderColor: "red",
-							pointHitRadius: 10,
-							pointBorderWidth : 2,
-							data: valores2
 						}],
 					},
 					options: {
