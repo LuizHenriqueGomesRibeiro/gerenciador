@@ -47,10 +47,11 @@ public class DAOPedidos extends DAOComum{
 	public List<ModelPedidos> listarPedidos(String sql) throws SQLException, ParseException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-	    return resultadosListagem(resultado, new ArrayList<ModelPedidos>());
+	    return resultadosListagem(resultado);
 	}
 		
-	public List<ModelPedidos> resultadosListagem(ResultSet resultado, List<ModelPedidos> retorno) throws SQLException, ParseException {
+	public List<ModelPedidos> resultadosListagem(ResultSet resultado) throws SQLException, ParseException {
+		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
 			pedido = setPedido(resultado);

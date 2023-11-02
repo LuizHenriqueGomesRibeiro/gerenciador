@@ -4,7 +4,7 @@ import model.ModelProdutos;
 
 public class SQLProdutos {
 	public String listaProdutosLIMIT10(int id) {
-		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " LIMIT 10";
+		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " AND status = " + 1 + " LIMIT 10";
 		return sql;
 	}
 	
@@ -14,7 +14,7 @@ public class SQLProdutos {
 	}
 	
 	public String gravaProduto(String nome, int id) {
-		String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade) VALUES ('" + nome + "', " + id + ", " + 0 + ");";
+		String sql = "INSERT INTO produtos(nome, usuario_pai_id, quantidade, status) VALUES ('" + nome + "', " + id + ", " + 0 + "," + 1 + ");";
 		return sql;
 	}
 	
@@ -26,6 +26,11 @@ public class SQLProdutos {
 	
 	public String consultaProduto(Long id_produto) {
 		String sql = "SELECT*FROM produtos WHERE id = " + id_produto;
+		return sql;
+	}
+	
+	public String mudancaStatus(Long id_produto) {
+		String sql = "UPDATE produtos SET status = " + 0 + " WHERE id = " + id_produto;
 		return sql;
 	}
 }

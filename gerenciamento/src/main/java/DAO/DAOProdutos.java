@@ -42,6 +42,12 @@ public class DAOProdutos extends DAOComum{
 		statement.executeUpdate();
 		connection.commit();
 	}
+
+	public void mudarStatus(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		connection.commit();
+	}
 	
 	public ModelProdutos consultarProduto(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);

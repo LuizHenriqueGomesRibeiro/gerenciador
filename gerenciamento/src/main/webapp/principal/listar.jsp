@@ -61,8 +61,8 @@
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
 						<td style="height: 30px; width: 150px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" 
 							href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" href="#" data-toggle="modal" 
-							data-target=".exc" onclick="excData(${ml.id})"><p>Excluir</p></a></td>
+						<td style="width: 40px;"><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?id_produto=${ml.id}&acao=validarExclusao" 
+						class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"><p>Excluir</p></a></td>
 						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" 
 							onclick="loadData(${ml.id})">Fornecedores</a></td>
 					</tr>
@@ -245,7 +245,6 @@
 				<form style="position: relative; width: 90%; margin: auto;"
 					action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
 					method="get" name="formulario_cadastro_produtos" id="formulario">
-
 					<input type="hidden" name="acao" id="acao" value="excluir">
 					<input type="hidden" name="id_produto" id="excId">
 					<div style="width: 196px; position: relative; left: 50%; transform: translate(-50%, 0%); margin-bottom: 25px;">
@@ -534,8 +533,19 @@
 
 		jQuery("#tabelaHistoricoPedidos").hide();
 
-		function excData(id) {
-			jQuery("#excId").val(id);
+		function excData(id){
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&id_produto=' + id + '&acao=validarExclusao',
+				success : function(json, textStatus, xhr) {
+					alert(json);
+					location.reload();
+				}
+			}).fail(function(xhr, status, errorThrown) {
+				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
+			});
 		}
 	</script>
 </html>

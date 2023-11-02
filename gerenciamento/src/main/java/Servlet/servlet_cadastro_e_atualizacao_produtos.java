@@ -1,6 +1,7 @@
 package Servlet;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -58,6 +59,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				cadastrarFornecedor(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarTodosPedidos")){
 				carregarTodosPedidos(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("validarExclusao")){
+				validarExclusao(request, response);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -158,5 +161,15 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	protected void carregarTodosPedidos(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
 		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0)));
 		impressaoJSON(response, json);
+	}
+	
+	protected void validarExclusao(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		List<ModelPedidos> resultado = daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id_produto(request)));
+		if(resultado.isEmpty() || resultado == null) {
+			daoproduto.mudarStatus(sqlprodutos.mudancaStatus(id_produto(request)));
+			setarAtributos(request, response);
+		}else {
+			setarAtributos(request, response);
+		}
 	}
 }
