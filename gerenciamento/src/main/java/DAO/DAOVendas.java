@@ -27,10 +27,11 @@ public class DAOVendas extends DAOComum{
 	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException, ParseException {
 		String data = converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega());
 		LocalDate startDate = LocalDate.parse(data);
+		startDate = startDate.plusDays(1);
 		LocalDate endDate = LocalDate.parse(datavenda);
 		while (!startDate.isAfter(endDate)) {
 			String sql = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " 
-				+ 0 + ", " + usuario_pai_id + ")";
+					+ 0 + ", " + usuario_pai_id + ")";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.execute();
 			startDate = startDate.plusDays(1);

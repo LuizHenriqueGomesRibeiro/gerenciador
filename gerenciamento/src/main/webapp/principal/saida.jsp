@@ -78,7 +78,7 @@
 													<label for="exampleInputEmail1" class="form-label">Valor por unidade<br/> 
 												<input class="form-control" id="valor" name="valor">
 													<label for="exampleInputEmail1" class="form-label">Data da venda<br/>
-												<input class="form-control" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
+												<input type="hidden" class="form-control" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
 												<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
 												<button>Vender</button>
 											</div>
