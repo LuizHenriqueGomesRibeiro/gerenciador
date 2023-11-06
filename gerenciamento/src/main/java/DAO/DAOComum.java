@@ -31,7 +31,6 @@ public class DAOComum extends DAOEntrada{
 		ResultSet resultado = statement.executeQuery();
 			
 		resultado.next();
-		
 		return resultado.getInt("soma");
 	}
 }

@@ -298,7 +298,7 @@
 	</div>
 	<script type="text/javascript">
 	
-		jQuery('#configuracoes, #abrirPedidos, #verPedidos').click(function(event) {
+		jQuery('#configuracoes, #abrirPedidos, #verPedidos, #confirmarEntregaPedido, #confirmarCancelamentoPedido').click(function(event) {
 			  event.preventDefault(); 
 		});
 		
@@ -375,7 +375,7 @@
 						jQuery('#tabelaHistoricoPedidos > table > tbody')
 							.append('<tr><td>' + string + 
 								'</td><td>' + string2 + 
-								'</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></tr>');
+								'</td><td><a id="confirmarEntregaPedido" href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a id="confirmarCancelamentoPedido" href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></tr>');
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -455,7 +455,7 @@
 					for(var p = 0; p < jsonObj.length; p++){
 						var string = JSON.stringify(jsonObj[p].dataentrega);
 						var string2 = JSON.stringify(jsonObj[p].datapedido);
-						jQuery('#tabelaHistoricoPedidos > table > tbody').append('<tr><td>' + string + '</td><td>' + string2 + '</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+JSON.stringify(jsonObj[p].produto_pai_id.id)+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></td>');
+						jQuery('#tabelaHistoricoPedidos > table > tbody').append('<tr><td>' + string + '</td><td>' + string2 + '</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+JSON.stringify(jsonObj[p].produto_pai_id.id)+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></td>	);
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {

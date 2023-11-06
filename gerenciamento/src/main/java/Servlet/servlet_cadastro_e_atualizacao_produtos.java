@@ -48,7 +48,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarProduto")){
 				cadastrarProduto(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("confirmarPedido")){
-				confirmarPedido(request);
+				confirmarPedido(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cancelarPedido")){
 				cancelarPedido(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("deletarFornecedor")){
@@ -137,14 +137,16 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		setarAtributos(request, response);
 	}
 
-	protected void confirmarPedido(HttpServletRequest request) throws Exception {
+	protected void confirmarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request)));
 		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
 		daopedidos.mudarStatus(id_pedido(request), 2);
+		setarAtributos(request, response);
 	}
 	
 	protected void cancelarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		daopedidos.mudarStatus(id_pedido(request), 1);
+		setarAtributos(request, response);
 	}
 
 	protected void deletarFornecedor(HttpServletRequest request) throws Exception {

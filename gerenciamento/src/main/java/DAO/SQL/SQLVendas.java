@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -57,6 +58,11 @@ public class SQLVendas {
 	
 	public String somaQuantidadeVendas(int id, String dataInicial, String dataFinal) {
 		String sql = "SELECT SUM(quantidade) AS soma FROM vendas WHERE usuario_pai_id = " + id + " AND dataentrega >= '" + dataInicial + "' AND dataentrega <= '" + dataFinal + "'";
+		return sql;
+	}
+	
+	public String gravacaoAutomaticaVenda(int usuario_pai_id, LocalDate startDate) {
+		String sql = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " + 0 + ", " + usuario_pai_id + ")";
 		return sql;
 	}
 }

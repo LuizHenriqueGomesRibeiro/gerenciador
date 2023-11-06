@@ -46,13 +46,12 @@
 				</form>
 				<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaVendas()">Carregar lista de vendas</button></li>
-					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 218px;" onclick="carregarListaEntradas()">Carregar lista de entradas</button></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div style="display: flex; width: 100%;">
-		<div style="width: 50%;">
+		<div style="width: 100%;">
 			<div id="letreiro"></div>
 			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
 			<div id="tabela"></div>
@@ -469,7 +468,6 @@
 		        var jsonLista5 = responseArray[2];
 		        
 		        var json = JSON.parse(jsonLista2);
-		        
 				graficoVendas(jsonLista4, jsonLista5);
 				
 				var quantidadeTotal = json[0].quantidadeTotal;

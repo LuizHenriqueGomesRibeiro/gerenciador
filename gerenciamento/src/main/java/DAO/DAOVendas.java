@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import DAO.SQL.SQLProdutos;
 import DAO.SQL.SQLRelatorio;
+import DAO.SQL.SQLVendas;
 import conexao.conexao;
 import model.ModelProdutos;
 import model.ModelVendas;
@@ -19,23 +20,25 @@ public class DAOVendas extends DAOComum{
 	DAOProdutos daoproduto = new DAOProdutos();
 	SQLProdutos sqlproduto = new SQLProdutos();
 	SQLRelatorio sqlRelatorio = new SQLRelatorio();
+	SQLVendas sqlvendas = new SQLVendas();
 	
 	public DAOVendas(){
 		connection = conexao.getConnection();
 	}
 	
 	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException, ParseException {
-		String data = converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega());
-		LocalDate startDate = LocalDate.parse(data);
+		LocalDate startDate = LocalDate.parse(converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega()));
 		startDate = startDate.plusDays(1);
 		LocalDate endDate = LocalDate.parse(datavenda);
 		while (!startDate.isAfter(endDate)) {
-			String sql = "INSERT INTO datavenda (datavenda, valortotal, usuario_pai_id) VALUES ('" + java.sql.Date.valueOf(startDate) + "', " 
-					+ 0 + ", " + usuario_pai_id + ")";
-			PreparedStatement statement = connection.prepareStatement(sql);
-			statement.execute();
+			gravarData(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
 			startDate = startDate.plusDays(1);
 		}
+	}
+	
+	public void gravarData(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.execute();
 	}
 	
 	public void gravarVenda(String sql) throws SQLException {
@@ -86,12 +89,12 @@ public class DAOVendas extends DAOComum{
 	
 	public ModelVendas setVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException {
 		ModelVendas vendas = new ModelVendas();
-		//vendas.setNome(produto(resultado).getNome());
+		vendas.setNome(produto(resultado).getNome());
 		vendas.setId(id(resultado));
-		vendas.setDataentrega(datavenda(resultado));
+		vendas.setDataentrega(dataentrega(resultado));
 		vendas.setValortotal(valortotal(resultado));
 		//vendas.setProduto_pai(produto(resultado));
-		//vendas.setQuantidade(quantidade(resultado));
+		vendas.setQuantidade(quantidade(resultado));
 		vendas.setValores(somaValores(sqlSomaValores));
 		vendas.setQuantidadeTotal(somaQuantidade(sqlSomaQuantidade));
 		return vendas;
