@@ -71,6 +71,11 @@ public class SQLPedidos {
 		return sql;
 	}
 
+	public String listaPedidosProdutoIdStatus(Long id) {
+		String sql = "SELECT * FROM pedidos WHERE produtos_pai_id = " + id + " AND status = " + 0;
+		return sql;
+	}
+	
 	public String listaPedidosProdutoId(Long id, int status) {
 		String sql = "SELECT * FROM pedidos WHERE status = " + status + " AND produtos_pai_id = " + id;
 		return sql;

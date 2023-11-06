@@ -41,8 +41,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				listar(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("paginar")){
 				paginar(request, response);
-			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("excluir")){
-				excluir(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("configuracoes")){
 				configuracoes(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("historioPedidos")){
@@ -83,11 +81,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	
 	protected void paginar(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		setarAtributos(request, response);	
-	}
-	
-	protected void excluir(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		daoproduto.excluirProduto(id_produto(request));
-		setarAtributos(request, response);
 	}
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -164,7 +157,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void validarExclusao(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		List<ModelPedidos> resultado = daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoId(id_produto(request)));
+		List<ModelPedidos> resultado = daopedidos.listarPedidos(sqlpedidos.listaPedidosProdutoIdStatus(id_produto(request)));
 		if(resultado.isEmpty() || resultado == null) {
 			daoproduto.mudarStatus(sqlprodutos.mudancaStatus(id_produto(request)));
 			setarAtributos(request, response);

@@ -125,7 +125,8 @@
 		<tbody>
 			<tr>
 				<td><c:out value="${soma}"></c:out></td>
-				<td><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; width: 180px;" href="#" onclick="loadTodosPedidos()">Abrir</a></td>
+				<td><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; width: 180px;" href="#" 
+					id="abrirPedidos" onclick="loadTodosPedidos()">Abrir</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -292,12 +293,15 @@
 					<th>Cancelar entrega</th>
 				</tr>
 			</thead>
-			<tbody>
-
-			</tbody>
+			<tbody></tbody>
 		</table>
 	</div>
 	<script type="text/javascript">
+	
+		jQuery('#configuracoes, #abrirPedidos, #verPedidos').click(function(event) {
+			  event.preventDefault(); 
+		});
+		
 		function adicionarFornecedor() {
 			var urlAction = document.getElementById('formulario').action;
 			var nomeFornecedor = document.getElementById('nomeFornecedor').value;
