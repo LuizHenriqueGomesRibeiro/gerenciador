@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajaxListar.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -323,42 +324,9 @@
 			});
 		}
 
-		function loadPedidoIdConfirmar(id1, id2, quantidade){
-			var urlAction = document.getElementById('formulario').action;
-			var capturarData = document.getElementById('capturarData').value;
-			
-			jQuery.ajax({
-	
-				method : "get",
-				url : urlAction,
-				data : '&dataEntrega=' + capturarData + '&id_pedido='+ id1 + '&id_produto=' + id2 + '&quantidade=' + quantidade + '&acao=confirmarPedido',
-				success : function(json, textStatus, xhr) {
-					location.reload();
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-		
-		function loadPedidoIdCancelar(id1){
-			var urlAction = document.getElementById('formulario').action;
-			jQuery.ajax({
-	
-				method : "get",
-				url : urlAction,
-				data : '&id_pedido='+ id1 + '&acao=cancelarPedido',
-				success : function(json, textStatus, xhr) {
-					location.reload();
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-		
 		function loadPedidos(id){
 			jQuery("#tabelaFornecedores").hide();
 			jQuery("#tabelaHistoricoPedidos").show();
-			
 			var urlAction = document.getElementById('formulario').action;
 			jQuery.ajax({
 	
@@ -372,10 +340,18 @@
 						var string = JSON.stringify(jsonObj[0].dataentrega);
 						var string2 = JSON.stringify(jsonObj[p].datapedido);
 						chamarString(string);
-						jQuery('#tabelaHistoricoPedidos > table > tbody')
-							.append('<tr><td>' + string + 
-								'</td><td>' + string2 + 
-								'</td><td><a id="confirmarEntregaPedido" href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+id+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a></td><td><a id="confirmarCancelamentoPedido" href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></tr>');
+						jQuery('#tabelaHistoricoPedidos > table > tbody').append(
+							'<tr>' +
+								'<td>' + string + '</td>' + 
+								'<td>' + string2 + '</td>' + 
+								'<td>' + 
+									'<a id="confirmarEntregaPedido" href="servlet_cadastro_e_atualizacao_produtos?id_pedido='+JSON.stringify(jsonObj[p].id)+'&id_produto='+id+'&quantidade='+JSON.stringify(jsonObj[p].quantidade)+'&acao=confirmarPedido">Confirmar entrega</a>' + 
+								'</td>' + 
+								'<td>' + 
+									'<a id="confirmarCancelamentoPedido" href="servlet_cadastro_e_atualizacao_produtos?id_pedido='+JSON.stringify(jsonObj[p].id)+'&acao=cancelarPedido">Cancelar entrega</a>' + 
+								'</td>' +  
+							'</tr>'
+						);
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -455,7 +431,18 @@
 					for(var p = 0; p < jsonObj.length; p++){
 						var string = JSON.stringify(jsonObj[p].dataentrega);
 						var string2 = JSON.stringify(jsonObj[p].datapedido);
-						jQuery('#tabelaHistoricoPedidos > table > tbody').append('<tr><td>' + string + '</td><td>' + string2 + '</td><td><a href="#" onclick="loadPedidoIdConfirmar('+JSON.stringify(jsonObj[p].id)+','+JSON.stringify(jsonObj[p].produto_pai_id.id)+','+JSON.stringify(jsonObj[p].quantidade)+')">Confirmar entrega</a><td><a href="#" onclick="loadPedidoIdCancelar('+JSON.stringify(jsonObj[p].id)+')">Cancelar entrega</a></td></td>	);
+						jQuery('#tabelaHistoricoPedidos > table > tbody').append(
+							'<tr>' + 
+								'<td>' + string + '</td>' + 
+								'<td>' + string2 + '</td>' +  
+								'<td>' + 
+									'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido='+JSON.stringify(jsonObj[p].id)+'&id_produto='+JSON.stringify(jsonObj[p].produto_pai_id.id)+'&quantidade='+JSON.stringify(jsonObj[p].quantidade)+'&acao=confirmarPedido">Confirmar entrega</a>' +  
+								'</td>' + 
+								'<td>' + 
+									'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido='+JSON.stringify(jsonObj[p].id)+'&acao=cancelarPedido">Cancelar entrega</a>' + 
+								'</td>' + 
+							'</tr>'
+						);
 					}
 				}
 			}).fail(function(xhr, status, errorThrown) {
@@ -544,7 +531,6 @@
 				url : urlAction,
 				data : '&id_produto=' + id + '&acao=validarExclusao',
 				success : function(json, textStatus, xhr) {
-					alert(json);
 					location.reload();
 				}
 			}).fail(function(xhr, status, errorThrown) {
