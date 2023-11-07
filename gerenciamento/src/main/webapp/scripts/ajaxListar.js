@@ -1,3 +1,21 @@
+class Pedido{
+	constructor(dataentrega, datapedido, quantidade, id){
+		this.dataentrega = dataentrega;
+		this.datapedido = datapedido;
+		this.quantidade = quantidade;
+		this.id = id;
+	}
+}
+
+class Fornecedor{
+	constructor(id, nome, tempo, valor){
+		this.id = id;
+		this.nome = nome;
+		this.tempo = tempo;
+		this.valor = valor;
+	}
+}
+		
 function adicionarFornecedor() {
 	var urlAction = document.getElementById('formulario').action;
 	var nomeFornecedor = document.getElementById('nomeFornecedor').value;
@@ -45,25 +63,21 @@ function ajaxLoadPedidos(urlAction, parametros){
 }
 
 function resultadoLoadPedidos(json){
-	var jsonObj = JSON.parse(json);
 	jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
 	for(var p = 0; p < jsonObj.length; p++){
-		var dataentrega = JSON.stringify(jsonObj[0].dataentrega);
-		var datapedido = JSON.stringify(jsonObj[p].datapedido);
-		var quantidade = JSON.stringify(jsonObj[p].quantidade);
-		var id = JSON.stringify(jsonObj[p].id);
-		chamarString(dataentrega);
-		var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + id + '&quantidade=' + quantidade + '&acao=confirmarPedido"';
-		var linkServletCancelar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + id + '&acao=cancelarPedido"';
-		imprimirResultadoLoadPedidos(dataentrega, datapedido, linkServletConfirmar, linkServletCancelar);
+		const pedido = new Pedido(json[0].dataentrega, json[p].datapedido, json[p].quantidade, json[p].id);
+		chamarString(pedido.dataentrega);
+		var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&quantidade=' + pedido.quantidade + '&acao=confirmarPedido"';
+		var linkServletCancelar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&acao=cancelarPedido"';
+		imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar);
 	}
 }
 
-function imprimirResultadoLoadPedidos(dataentrega, datapedido, linkServletConfirmar, linkServletCancelar){
+function imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar){
 	jQuery('#tabelaHistoricoPedidos > table > tbody').append(
 		'<tr>' + 	
-			'<td>' + dataentrega + '</td>' + 
-			'<td>' + datapedido + '</td>' + 
+			'<td>' + pedido.dataentrega + '</td>' + 
+			'<td>' + pedido.datapedido + '</td>' + 
 			'<td><a id="confirmarEntregaPedido" ' + linkServletConfirmar + ' >Confirmar entrega</a></td>' +  
 			'<td><a id="confirmarCancelamentoPedido" ' + linkServletCancelar + ' >Cancelar entrega</a></td>' +  
 		'</tr>'
@@ -103,55 +117,45 @@ function ajaxLoadData(urlAction, parametros){
 		success : function(response){
 			resultadoLoadData(response);
 		}
-	}).fail(function(xhr, status, errorThrown) {
-		alert('Erro ao buscar usuário por nome: ' + xhr.responseText);	
 	});
 }
 
 function resultadoLoadData(response){
 	var responseArray = response.split("|");
-    novoFornecedorLoadData(JSON.parse(responseArray[0]));
-    listarFornecedoresLoadData(JSON.parse(responseArray[1]));
+    imprimirResultadoLoadData(responseArray[0]);
+    listarFornecedoresLoadData(responseArray[1]);
 }
 
-function novoFornecedorLoadData(objeto){
-    var objetoNovamenteId = JSON.stringify(objeto.id);
-    var objetoNovamenteNome = JSON.stringify(objeto.nome);
-	imprimirResultadoLoadData(objetoNovamenteId, objetoNovamenteNome);
-}
-
-function imprimirResultadoLoadData(objetoNovamenteId, objetoNovamenteNome){
+function imprimirResultadoLoadData(objeto){
     jQuery("#insiraNomeFornecedor > p").remove();
-    jQuery("#configuracoesId").val(objetoNovamenteId);
+    jQuery("#configuracoesId").val(objeto.id);
     jQuery('#listaFornecedores > tbody > tr').remove();
     jQuery('#produtoIdIncluir > input').remove();
-    jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objetoNovamenteNome + '</p>');
-    jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="id_produto" value="' + objetoNovamenteId + '">');
+    jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + objeto.nome + '</p>');
+    jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="id_produto" value="' + objeto.id + '">');
 }
 
-function listarFornecedoresLoadData(jsonObj){
-    for(var p = 0; p < jsonObj.length; p++){
-    	const valorMonetario = parseFloat(JSON.stringify(jsonObj[p].valor)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}); 
-    	const tempoentregaDias = JSON.stringify(jsonObj[p].tempoentrega) + " dias";
-    	const nome = JSON.stringify(jsonObj[p].nome);
-    	const id = JSON.stringify(jsonObj[p].id);
-    	imprimirResultadoListaFornecedores(valorMonetario, tempoentregaDias, nome, id);
+function listarFornecedoresLoadData(json){
+    for(var p = 0; p < json.length; p++){
+		const fornecedor = 
+			new Fornecedor(json[p].id, json[p].nome, json[p].tempoentrega + " dias", parseFloat(json[p].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}));
+    	imprimirResultadoListaFornecedores(fornecedor);
     }
 }
 
-function imprimirResultadoListaFornecedores(valorMonetario, tempoentregaDias, nome, id){
+function imprimirResultadoListaFornecedores(fornecedor){
 	jQuery('#listaFornecedores > tbody').append(
 		'<tr>' + 
-			'<td>' + nome + '</td>' + 
-			'<td>'+tempoentregaDias+'</td>' + 
-			'<td>'+valorMonetario+'</td>' +
+			'<td>' + fornecedor.nome + '</td>' + 
+			'<td>' + fornecedor.tempo + '</td>' + 
+			'<td>' + fornecedor.valor + '</td>' +
 			'<td style="height: 30px; color: red; padding: 0px 0px 0px 0px;">' + 
-				'<a class="page-link" style="color: red; margin: -1px -28px -6px 0px; width: 160px; height: 37px;" href="#" onclick="funcoes3(' + id + ')">' + 
+				'<a class="page-link" style="color: red; margin: -1px -28px -6px 0px; width: 160px; height: 37px;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
 					'Deletar fornecedor</a>' + 
 			'</td>' + 
 			'<td>' + 
 				'<a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" ' + 
-					'onclick="funcoes(' + id + ')">Fazer pedido</a>' + 
+					'onclick="funcoes(' + fornecedor.id + ')">Fazer pedido</a>' + 
 			'</td>' + 
 		'</tr>'
 	);
@@ -173,60 +177,26 @@ function loadTodosPedidos(){
 
 function loadTodosPedidosResultado(json){
 	jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-	var jsonObj = JSON.parse(json);
-	for(var p = 0; p < jsonObj.length; p++){
-		var string = JSON.stringify(jsonObj[p].dataentrega);
-		var string2 = JSON.stringify(jsonObj[p].datapedido);
-		var id_pedido = JSON.stringify(jsonObj[p].id);
-		var id_produto = JSON.stringify(jsonObj[p].produto_pai_id.id);
-		var quantidade = JSON.stringify(jsonObj[p].quantidade);
-		loadTodosPedidosImprimir(string, string2, id_pedido, id_produto, quantidade);
+	for(var p = 0; p < json.length; p++){
+		loadTodosPedidosImprimir(json[p]);
 	}
 }
 
-function loadTodosPedidosImprimir(string, string2, id_pedido, id_produto, quantidade){
+function loadTodosPedidosImprimir(json){
 	jQuery('#tabelaHistoricoPedidos > table > tbody').append(
 		'<tr>' + 
-			'<td>' + string + '</td>' + 
-			'<td>' + string2 + '</td>' +  
+			'<td>' + json.dataentrega + '</td>' + 
+			'<td>' + json.datapedido + '</td>' +  
 			'<td>' + 
-				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + id_pedido + '&id_produto=' + id_produto + '&quantidade=' + quantidade + 
-					'&acao=confirmarPedido">Confirmar entrega</a>' +  
+				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&id_produto=' + json.produto_pai_id.id 
+					+ '&quantidade=' + json.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
 			'</td>' + 
 			'<td>' + 
-				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + id_pedido + '&acao=cancelarPedido">Cancelar entrega</a>' + 
+				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
 			'</td>' + 
 		'</tr>'
 	);
 }
-
-/*
-
-function loadTodosPedidosResultado(json){
-	jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-	var jsonObj = JSON.parse(json);
-	for(var p = 0; p < jsonObj.length; p++){
-		var jsonString = JSON.stringify(jsonObj[p]);
-		loadTodosPedidosImprimir(jsonString);
-	}
-}
-
-function loadTodosPedidosImprimir(jsonString){
-	jQuery('#tabelaHistoricoPedidos > table > tbody').append(
-		'<tr>' + 
-			'<td>' + jsonString.dataentrega + '</td>' + 
-			'<td>' + jsonString.datapedido + '</td>' +  
-			'<td>' + 
-				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + jsonString.id + '&id_produto=' + jsonString.produto_pai_id.id 
-					+ '&quantidade=' + jsonString.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
-			'</td>' + 
-			'<td>' + 
-				'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + jsonString.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
-			'</td>' + 
-		'</tr>'
-	);
-}
-*/
 
 function excData(id){
 	var urlAction = document.getElementById('formulario').action;

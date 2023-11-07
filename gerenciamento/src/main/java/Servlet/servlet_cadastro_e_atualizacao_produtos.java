@@ -138,8 +138,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 
 	protected void confirmarPedido(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request)));
-		daoproduto.adicionaProdutoCaixa(id_produto(request), quantidade(request));
+		daoproduto.consultarProduto(sqlprodutos.consultaProduto(daopedidos.buscarPedido(sqlpedidos.buscarPedido(id_pedido(request))).getProduto_pai_id().getId()));
+		daoproduto.adicionaProdutoCaixa(daopedidos.buscarPedido(sqlpedidos.buscarPedido(id_pedido(request))).getProduto_pai_id().getId(), quantidade(request));
 		daopedidos.mudarStatus(id_pedido(request), 2);
 		setarAtributos(request, response);
 	}

@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajaxSaida.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -115,7 +116,6 @@
 		<i class="fas fa-angle-up"></i>
 	</a>
 	<script type="text/javascript">
-	
 		function dataAtual() {
 		  	var input = document.getElementById('dataVenda');
 		  	var dataAtual = new Date();
@@ -150,25 +150,7 @@
 			}
 		}
 	
-		function carregarMargem(){
-			
-			var urlAction = document.getElementById('formularioSaida').action;
-			var id = jQuery("#id").val();
-			
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&acao=loadFinanceiro&id=' + id,
-				success : function(response) {
-					
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-	
 		function limitar(){
-	
 			const maxValue = document.getElementById('quantidadeHidden').value;
 			const input = document.getElementById('quantidade').value;
 			    if (parseInt(input) > parseInt(maxValue)) {
@@ -180,60 +162,6 @@
 			jQuery("#id_produto").val(id);
 		}
 	
-		function loadProduto(id){
-			idProduto(id);
-			dataAtual();
-			
-			var urlAction = document.getElementById('formularioSaida').action;
-			jQuery("#letreiro > p").remove();
-			
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&acao=loadProduto&id_produto=' + id,
-				success : function(response) {
-					var responseArray = response.split("|");
-			        var stringLista1 = responseArray[0];
-			        var jsonLista1 = JSON.parse(stringLista1);
-			        var stringLista2 = responseArray[1];
-			        var jsonLista2 = JSON.parse(stringLista2);
-			        
-					jQuery("#letreiro").append("<p>	*Deve ser inferior ou igual à quantidade em caixa: " + jsonLista1.quantidade + " unidades</p>");
-					jQuery("#quantidade").val(jsonLista1.quantidade);
-					jQuery("#quantidadeHidden").val(jsonLista1.quantidade);
-					jQuery("#valorHidden").val(2*jsonLista2);
-					jQuery("#id").val(jsonLista1.id);
-					jQuery("#valor").val("R$" + 2*jsonLista2 + ",00");
-					jQuery("#footer > button").remove();
-					jQuery("#imprimirMargem > p").remove();
-					jQuery("#imprimirMargem").append("<p>(4) A atual margem-padrão para " + jsonLista1.nome + " é de vinte por cento</p><p>O dobro das médidas do produto '" + 
-							jsonLista1.nome + "' é R$" + 2*jsonLista2 + ",00</p>" + "<p>Preço mínimo de venda: R$" + 1.6*jsonLista2 + ",00</p>");
-					jQuery("#footer").append("<button id=\"clicar\" type=\"button\" class=\"btn btn-primary\" onmousemove=\"limitar2()\" onclick=\"pedido(" + jsonLista1.id + ")\">Save changes</button>");
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-		
-		function pedido(id){
-			var urlAction = document.getElementById('formularioSaida').action;
-			var quantidade = document.getElementById('quantidade').value;
-			var valor = document.getElementById('valor').value;
-			var dataVenda = document.getElementById('dataVenda').value;
-			
-			dataVenda
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&dataVenda=' + dataVenda + '&valor=' + valor + '&id_produto=' + id + '&quantidade=' + quantidade + '&acao=vender',
-				success : function(json, textStatus, xhr) {
-					location.reload();
-				}
-			}).fail(function(xhr, status, errorThrown) {
-				alert('Erro ao buscar usuário por nome: ' + xhr.responseText);
-			});
-		}
-		
 		jQuery("#valor").maskMoney({
 			showSymbol : true,	
 			symbol : "R$",

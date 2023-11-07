@@ -1,6 +1,7 @@
 package Servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.Gson;
 import DAO.DAOFerramentas;
@@ -133,10 +134,8 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	public void parametrosCarregarListaVendasJson(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String listaVendas = sqlvendas.listaVendas(id(request));
-		String somaValoresVendas = sqlvendas.somaValoresVendas(id(request));
-		String somaQuantidadeVendas = sqlvendas.somaQuantidadeVendas(id(request));
-		List<ModelVendas> vendas = daovendas.listarVendas(listaVendas, somaValoresVendas, somaQuantidadeVendas);
+		List<String> sql = parametrosCarregarListaVendasJsonSQL(request);
+		List<ModelVendas> vendas = daovendas.listarVendas(sql.get(0), sql.get(1), sql.get(2));
 		List<ModelData> dataVendas = daoRelatorio.listarDatasVendas(sqlrelatorio.listaDatasVendas(id(request)));
 		List<ModelData> dataEntradas = daoRelatorio.listarDatasEntradas(sqlrelatorio.listaDatasEntradas(id(request)));
 		String superJson = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
@@ -144,13 +143,27 @@ public class servlet_saida extends APIDespache {
 	}
 	
 	public void parametrosCarregarListaVendasJsonTempo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String listaVendasTempo = sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request));
-		String somaValoresVendasTempo = sqlvendas.somaValoresVendas(id(request), dataInicial(request), dataFinal(request));
-		String somaQuantidadeVendasTempo = sqlvendas.somaQuantidadeVendas(id(request), dataInicial(request), dataFinal(request));
-		List<ModelVendas> vendas = daovendas.listarVendas(listaVendasTempo, somaValoresVendasTempo, somaQuantidadeVendasTempo);
+		List<String> sql = parametrosCarregarListaVendasJsonTempoSQL(request);
+		List<ModelVendas> vendas = daovendas.listarVendas(sql.get(0), sql.get(1), sql.get(2));
 		List<ModelData> dataVendas = daoRelatorio.listarDatasVendas(sqlrelatorio.listaDatasVendas(id(request), dataInicial(request), dataFinal(request)));
 		List<ModelData> dataEntradas = daoRelatorio.listarDatasEntradas(sqlrelatorio.listaDatasEntradas(id(request), dataInicial(request), dataFinal(request)));
 		String superJson = new Gson().toJson(vendas) + "|" + new Gson().toJson(dataVendas) + "|" + new Gson().toJson(dataEntradas);
 		impressaoMultiJSON(response, superJson);
+	}
+	
+	public List<String> parametrosCarregarListaVendasJsonSQL(HttpServletRequest request) throws Exception{
+		List<String> retorno = new ArrayList<String>();
+		retorno.add(sqlvendas.listaVendas(id(request)));
+		retorno.add(sqlvendas.somaValoresVendas(id(request)));
+		retorno.add(sqlvendas.somaQuantidadeVendas(id(request)));
+		return retorno;
+	}
+	
+	public List<String> parametrosCarregarListaVendasJsonTempoSQL(HttpServletRequest request) throws Exception{
+		List<String> retorno = new ArrayList<String>();
+		retorno.add(sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request)));
+		retorno.add(sqlvendas.somaValoresVendas(id(request), dataInicial(request), dataFinal(request)));
+		retorno.add(sqlvendas.somaQuantidadeVendas(id(request), dataInicial(request), dataFinal(request)));
+		return retorno;
 	}
 }
