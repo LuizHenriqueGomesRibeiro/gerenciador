@@ -121,6 +121,7 @@ function ajaxLoadData(urlAction, parametros){
 }
 
 function resultadoLoadData(response){
+	alert("teste");
 	var responseArray = response.split("|");
     imprimirResultadoLoadData(responseArray[0]);
     listarFornecedoresLoadData(responseArray[1]);

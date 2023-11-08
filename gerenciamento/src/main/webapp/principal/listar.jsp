@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajaxListar.js"></script>
+<!--<script type="text/javascript" src="scripts/ajaxListar.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -134,32 +134,29 @@
 	<div style="display: none; overflow-y: none;" id="tabelaFornecedores">
 		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
-			<div style="width: 400px;">
-				<div class="col-sm">
-					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario"
-					id="formulario">
-						<input type="hidden" value="cadastrarFornecedor" name="acao" />
-						<div class="form-group">
-							<div id="insiraNomeFornecedor"></div>
-							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" 
-							name="nomeFornecedor" placeholder="Nome do novo fornecedor">
-						</div>
-						<div class="form-group">
-							<label for="tempoentrega" class="form-label">
-							</label> 
-							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="tempoentrega" 
-							name="tempoentrega" placeholder="tempo de entrega (em dias)">
-						</div>
-						<div class="form-group">
-							<label for="valor" class="form-label">
-							</label> 
-							<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="valor" 
-							name="valor" placeholder="valor">
-						</div>
-						<input id="configuracoesId" name="id" type="hidden">
-						<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
-					</form>
-				</div>
+				<div style="width: 400px;">
+					<div class="col-sm">
+						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario" id="formulario">
+							<input type="hidden" value="cadastrarFornecedor" name="acao" />
+							<div class="form-group">
+								<div id="insiraNomeFornecedor"></div>
+								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" 
+								name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+							</div>
+							<div class="form-group">
+								<label for="tempoentrega" class="form-label"></label> 
+								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="tempoentrega" 
+								name="tempoentrega" placeholder="tempo de entrega (em dias)">
+							</div>
+							<div class="form-group">
+								<label for="valor" class="form-label"></label> 
+								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="valor" 
+								name="valor" placeholder="valor">
+							</div>
+							<input type="hidden" id="configuracoesId" name="id">
+							<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
+						</form>
+					</div>
 				</div>
 				<div style="overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -10px 0px 0px 0px;" class="col-sm">
 					<table style="" class="table table-striped table-sm" id="listaFornecedores">
@@ -298,6 +295,221 @@
 		</table>
 	</div>
 	<script type="text/javascript">
+		class Pedido{
+			constructor(dataentrega, datapedido, quantidade, id){
+				this.dataentrega = dataentrega;
+				this.datapedido = datapedido;
+				this.quantidade = quantidade;
+				this.id = id;
+			}
+		}
+	
+		class Fornecedor{
+			constructor(id, nome, tempo, valor){
+				this.id = id;
+				this.nome = nome;
+				this.tempo = tempo;
+				this.valor = valor;
+			}
+		}
+				
+		function adicionarFornecedor() {
+			var urlAction = document.getElementById('formulario').action;
+			var nomeFornecedor = document.getElementById('nomeFornecedor').value;
+			var tempoentrega = document.getElementById('tempoentrega').value;
+			var valor = document.getElementById('valor').value;
+			var id = document.getElementById('configuracoesId').value;
+			var parametros = '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id_produto=' + id + '&acao=cadastrarFornecedor';
+			ajaxAdicionarFornecedor(urlAction, parametros);
+		}
+	
+		function ajaxAdicionarFornecedor(urlAction, parametros){
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : parametros,
+				success : function(json, textStatus, xhr) {
+					resultadoAdicionarFornecedor();
+				}
+			});
+		}
+	
+		function resultadoAdicionarFornecedor(){
+			jQuery('#nomeFornecedor').val('');
+			jQuery('#tempoentrega').val('');
+			jQuery('#valor').val('');
+		}
+	
+		function loadPedidos(id){
+			jQuery("#tabelaFornecedores").hide();
+			jQuery("#tabelaHistoricoPedidos").show();
+			var urlAction = document.getElementById('formulario').action;
+			var parametros = '&id_produto='+ id + '&acao=historioPedidos';
+			ajaxLoadPedidos(urlAction, parametros);
+		}
+	
+		function ajaxLoadPedidos(urlAction, parametros){
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : parametros,
+				success : function(json, textStatus, xhr) {
+					resultadoLoadPedidos(json);
+				}
+			});
+		}
+	
+		function resultadoLoadPedidos(json){
+			json = JSON.parse(json);
+			jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
+			for(var p = 0; p < json.length; p++){
+				const pedido = new Pedido(json[0].dataentrega, json[p].datapedido, json[p].quantidade, json[p].id);
+				chamarString(pedido.dataentrega);
+				var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&quantidade=' + pedido.quantidade + '&acao=confirmarPedido"';
+				var linkServletCancelar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&acao=cancelarPedido"';
+				imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar);
+			}
+		}
+	
+		function imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar){
+			jQuery('#tabelaHistoricoPedidos > table > tbody').append(
+				'<tr>' + 	
+					'<td>' + pedido.dataentrega + '</td>' + 
+					'<td>' + pedido.datapedido + '</td>' + 
+					'<td><a id="confirmarEntregaPedido" ' + linkServletConfirmar + ' >Confirmar entrega</a></td>' +  
+					'<td><a id="confirmarCancelamentoPedido" ' + linkServletCancelar + ' >Cancelar entrega</a></td>' +  
+				'</tr>'
+			);
+		}
+	
+		function deletarFornecedor(id) {
+			var urlAction = document.getElementById('formulario').action;
+			var parametros = '&acao=deletarFornecedor&id_fornecedor=' + id;
+			ajaxAdicionarFornecedor(urlAction, parametros);
+		}
+	
+		function ajaxDeletarFornecedor(urlAction, parametros){
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : parametros,
+				success : function(json, textStatus, xhr) {
+				}
+			});
+		}
+	
+		function loadData(id) {
+			jQuery("#tabelaFornecedores").show();
+			jQuery("#tabelaHistoricoPedidos").hide();
+			var urlAction = document.getElementById('formulario').action;
+			var parametros = '&id_produto=' + id + '&acao=configuracoes';
+			ajaxLoadData(urlAction, parametros);
+		}
+	
+		function ajaxLoadData(urlAction, parametros){
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : parametros,
+				dataType: "text",
+				success : function(response){
+					resultadoLoadData(response);
+				}
+			});
+		}
+	
+		function resultadoLoadData(response){
+			var responseArray = response.split("|");
+		    var produto = JSON.parse(responseArray[0]);
+		    var fornecedores = JSON.parse(responseArray[1]);
+		    imprimirResultadoLoadData(produto);
+		    listarFornecedoresLoadData(fornecedores);
+		}
+	
+		function imprimirResultadoLoadData(produto){
+		    jQuery("#insiraNomeFornecedor > p").remove();
+		    jQuery("#configuracoesId").val(produto.id);
+		    jQuery('#listaFornecedores > tbody > tr').remove();
+		    jQuery('#produtoIdIncluir > input').remove();
+		    jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + produto.nome + '</p>');
+		    jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="id_produto" value="' + produto.id + '">');
+		}
+	
+		function listarFornecedoresLoadData(fornecedores){
+		    for(var p = 0; p < fornecedores.length; p++){
+				const fornecedor = new Fornecedor(fornecedores[p].id, fornecedores[p].nome, fornecedores[p].tempoentrega + " dias", 
+					parseFloat(fornecedores[p].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}));
+		    	imprimirResultadoListaFornecedores(fornecedor);
+		    }
+		}
+	
+		function imprimirResultadoListaFornecedores(fornecedor){
+			jQuery('#listaFornecedores > tbody').append(
+				'<tr>' + 
+					'<td>' + fornecedor.nome + '</td>' + 
+					'<td>' + fornecedor.tempo + '</td>' + 
+					'<td>' + fornecedor.valor + '</td>' +
+					'<td style="height: 30px; color: red; padding: 0px 0px 0px 0px;">' + 
+						'<a class="page-link" style="color: red; margin: -1px -28px -6px 0px; width: 160px; height: 37px;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
+							'Deletar fornecedor</a>' + 
+					'</td>' + 
+					'<td>' + 
+						'<a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" ' + 
+							'onclick="funcoes(' + fornecedor.id + ')">Fazer pedido</a>' + 
+					'</td>' + 
+				'</tr>'
+			);
+		}
+	
+		function loadTodosPedidos(){
+			jQuery("#tabelaFornecedores").hide();
+			jQuery("#tabelaHistoricoPedidos").show();
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&acao=carregarTodosPedidos',
+				success : function(json, textStatus, xhr) {
+					loadTodosPedidosResultado(json);
+				}
+			});
+		}
+	
+		function loadTodosPedidosResultado(json){
+			json = JSON.parse(json);
+			jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
+			for(var p = 0; p < json.length; p++){
+				loadTodosPedidosImprimir(json[p]);
+			}
+		}
+	
+		function loadTodosPedidosImprimir(json){
+			jQuery('#tabelaHistoricoPedidos > table > tbody').append(
+				'<tr>' + 
+					'<td>' + json.dataentrega + '</td>' + 
+					'<td>' + json.datapedido + '</td>' +  
+					'<td>' + 
+						'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&id_produto=' + json.produto_pai_id.id 
+							+ '&quantidade=' + json.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
+					'</td>' + 
+					'<td>' + 
+						'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
+					'</td>' + 
+				'</tr>'
+			);
+		}
+	
+		function excData(id){
+			var urlAction = document.getElementById('formulario').action;
+			jQuery.ajax({
+				method : "get",
+				url : urlAction,
+				data : '&id_produto=' + id + '&acao=validarExclusao',
+				success : function(json, textStatus, xhr) {
+					location.reload();
+				}
+			});
+		}
 	
 		jQuery('#configuracoes, #abrirPedidos, #verPedidos, #confirmarEntregaPedido, #confirmarCancelamentoPedido').click(function(event) {
 			  event.preventDefault(); 

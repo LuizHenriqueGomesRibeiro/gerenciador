@@ -85,7 +85,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	
 	protected void configuracoes(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String produto = new Gson().toJson(daoproduto.consultarProduto(sqlprodutos.consultaProduto(id_produto(request))));
-		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(id_produto(request)));
+		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.lista(id_produto(request))));
 		String json = produto + "|" + fornecedores;
 		impressaoJSON(response, json);
 	}
@@ -104,9 +104,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelProdutos modelProdutos = new ModelProdutos();
-		modelProdutos.setId(id_produto(request));
-		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), modelProdutos, tempoEntrega(request), valor(request)));
+		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), id_produto(request), tempoEntrega(request), valor(request)));
 		setarAtributos(request, response);
 	}
 	
@@ -114,12 +112,12 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		fornecedorIncluirPedido(request, response);
 	}
 	
-	public void fornecedorIncluirPedido(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, Exception {
+	protected void fornecedorIncluirPedido(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, Exception {
 		ModelFornecimento modelFornecedor = daofornecedor.consultarFornecedor(sqlFornecimento.consulta(id_fornecedor(request)));
 		pedidoIncluirPedido(request, response, modelFornecedor);
 	}
 	
-	public void pedidoIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelFornecimento modelFornecedor) throws Exception {
+	protected void pedidoIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelFornecimento modelFornecedor) throws Exception {
 		ModelPedidos modelPedido = new ModelPedidos();
 		modelPedido.setValor(modelFornecedor.getValor());
 		modelPedido.setFornecedor_pai_id(modelFornecedor);
@@ -132,7 +130,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		persistenciaIncluirPedido(request, response, modelPedido);
 	}
 	
-	public void persistenciaIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelPedidos modelPedido) throws Exception {
+	protected void persistenciaIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelPedidos modelPedido) throws Exception {
 		daopedidos.gravarPedido(sqlpedidos.gravarPedido(modelPedido));
 		setarAtributos(request, response);
 	}

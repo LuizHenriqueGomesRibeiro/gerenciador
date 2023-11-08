@@ -25,6 +25,8 @@ function loadProdutoAjax(urlAction, parametros){
 			var responseArray = response.split("|");
 	        var produto = JSON.parse(responseArray[0]);
 	        var mediaValor = JSON.parse(responseArray[1]);
+	        alert(produto);
+	        alert(mediaValor);
 	        loadProdutoResultados(produto, mediaValor);
 		}
 	});

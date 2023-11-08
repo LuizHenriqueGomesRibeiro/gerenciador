@@ -47,8 +47,8 @@ public class DAOFornecimento extends DAOComum{
 		return modelFornecimento;
 	}
 	
-	public List<ModelFornecimento> listarFornecedores(Long id) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.lista(id));
+	public List<ModelFornecimento> listarFornecedores(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return lerResultadoListarFornecedores(resultado);
 	}
