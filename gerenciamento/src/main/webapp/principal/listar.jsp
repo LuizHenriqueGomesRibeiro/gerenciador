@@ -21,31 +21,36 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-</head>
-<body style="overflow: hidden;">
-	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-		<li class="page-item"><button class="page-link"
-				data-toggle="modal" data-target=".ui">Novo registro</button></li>
-		<li class="page-item"><button class="page-link">Índice=></button></li>
-		<%	
-		int totalPagina = (int) request.getAttribute("totalPagina");
-		for (int p = 0; p < totalPagina; p++) {
-			String url = request.getContextPath() + "/servlet_cadastro_e_atualizacao_produtos?acao=paginar&pagina=" + (p * 10);
-			out.print("<li class=\"page-item\"><a class=\"page-link\" href=\"" + url + "\">" + (p + 1) + "</a></li>");
-		}
-		%>
-		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button class="page-link">Ir para caixa</button></a></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button class="page-link">Ir para setor de contabilidade</button></a></li>
-		<li class="page-item"><button class="page-link">Ajuda</button></li>
-		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		<li class="page-item"><a class="page-link" href="principal/principal.jsp">Voltar</a></li>
-	</ul>
+<link rel="stylesheet" href="https://unpkg.com/98.css" />
+</head> 
+<body style="overflow: hidden; background-color: #C0C0C0; color: black;">
+	<div style="position: relative; top: 12px; left: 12px;">
+		<ul class="pagination" style="margin: 0px 0px -1px 0px;">
+			<li class="page-item"><button data-toggle="modal" data-target=".ui">Novo registro</button></li>
+			<li class="page-item"><button>Índice=></button></li>
+			<%	
+			int totalPagina = (int) request.getAttribute("totalPagina");
+			for (int p = 0; p < totalPagina; p++) {
+				String url = request.getContextPath() + "/servlet_cadastro_e_atualizacao_produtos?acao=paginar&pagina=" + (p * 10);
+				out.print("<li style=\"width: 25px;\" class=\"page-item\"><button onclick=\"window.location.href=" + url + "\">" + (p + 1) + "</button></li>");
+			}
+			%>
+			<li class="page-item"><button>Configurações</button></li>
+			<li class="page-item"><a style="text-decoration: none" 
+				href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
+			<li class="page-item"><a style="text-decoration: none" 
+				href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
+			<li class="page-item"><button>Ajuda</button></li>
+			<li class="page-item"><button>Refrescar página</button></li>
+			<li class="page-item"><button onclick="window.location.href='principal/principal.jsp'">Voltar</button></li>
+		</ul>
+	</div>
 	<div id="json-content"></div>
-	<div style="overflow-y: scroll; height: 250px;">
-		<table class="table table-striped table-sm">
-			<thead>
-				<tr>
+	<div class="example">
+		<div class="sunken-panel" style="position: relative; margin: auto; margin-bottom: 12px; margin-top: 24px; height: 250px; width: 90%;">
+			<table style="width: 100%;" class="interactive">
+				<thead>
+					<tr>
 					<th>Nome</th>
 					<th>Quantidade pedida</th>
 					<th>Valor total dos pedidos</th>
@@ -53,19 +58,20 @@
 					<th>Excluir</th>
 					<th>Configurações</th>
 				</tr>
-			</thead>
-			<tbody>
-				<c:forEach items="${produtos}" var="ml" varStatus="status">
+				</thead>
+				<tbody>
+					<c:forEach items="${produtos}" var="ml" varStatus="status">
 					<tr>
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						<td style="height: 30px; width: 150px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; padding: 6px 0px 0px 23px;" 
-							href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td style="width: 40px;"><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?id_produto=${ml.id}&acao=validarExclusao" 
-						class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;"><p>Excluir</p></a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#" id="configuracoes" 
-							onclick="loadData(${ml.id})">Fornecedores</a></td>
+						<td style="height: 30px; width: 150px;"><a class="" href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
+						<td>
+							<a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?id_produto=${ml.id}&acao=validarExclusao" class=""><p>Excluir</p></a>
+						</td>
+						<td>
+							<a class="" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a>
+						</td>
 					</tr>
 					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
 						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -106,32 +112,35 @@
 						</div>
 					</div>
 				</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		jQuery(function(){
+			jQuery("#buscar").click(function(){
+				jQuery("#atualizacaoPreco").focus();
+			});
+		});
+	</script>
+	<div style="position: relative; margin: auto; height: 58px; overflow: hidden; width: 90%" class="sunken-panel">
+		<table style="position: relative; margin-bottom: 26px; color: black;" class="table table-striped table-sm">
+			<thead>
+				<tr>
+					<th>Soma dos valores dos pedidos</th>
+					<th>Abrir todos os pedidos</th>
+				</tr>
+			</thead>
+			<tbody style="background-color: white;">
+				<tr>
+					<td><c:out value="${soma}"></c:out></td>
+					<td><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; width: 180px;" href="#" 
+						id="abrirPedidos" onclick="loadTodosPedidos()">Abrir</a></td>
+				</tr>
 			</tbody>
 		</table>
-		<script type="text/javascript">
-			jQuery(function(){
-				jQuery("#buscar").click(function(){
-					jQuery("#atualizacaoPreco").focus();
-				});
-			});
-		</script>
 	</div>
-	<table style="position: relative; margin-bottom: 26px;" class="table table-striped table-sm">
-		<thead>
-			<tr>
-				<th>Soma dos valores dos pedidos</th>
-				<th>Abrir todos os pedidos</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><c:out value="${soma}"></c:out></td>
-				<td><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; width: 180px;" href="#" 
-					id="abrirPedidos" onclick="loadTodosPedidos()">Abrir</a></td>
-			</tr>
-		</tbody>
-	</table>
-	<div style="display: none; overflow-y: none;" id="tabelaFornecedores">
+	<div style="position: relative; width: 89.5%; margin: auto; display: none; overflow-y: none; top: 40px; left: -13px;" id="tabelaFornecedores">
 		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 				<div style="width: 400px;">
@@ -158,7 +167,7 @@
 						</form>
 					</div>
 				</div>
-				<div style="overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -10px 0px 0px 0px;" class="col-sm">
+				<div style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" class="sunken-panel">
 					<table style="" class="table table-striped table-sm" id="listaFornecedores">
 						<thead>
 							<tr>
@@ -295,6 +304,15 @@
 		</table>
 	</div>
 	<script type="text/javascript">
+		document.querySelectorAll('table.interactive').forEach(element => {
+		  element.addEventListener('click', (event) => {
+			const row = event.path.find(element => element.tagName === 'TR' && element.parentElement.tagName === 'TBODY');
+			if (row) {
+			  row.classList.toggle('highlighted');
+			}
+		  })
+		});
+	
 		class Pedido{
 			constructor(dataentrega, datapedido, quantidade, id){
 				this.dataentrega = dataentrega;
