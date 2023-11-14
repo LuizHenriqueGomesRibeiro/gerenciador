@@ -2,14 +2,19 @@ package DAO.SQL;
 
 public class SQLFornecimento {
 	
-	public String gravar(String nome, Long produtos_pai_id, int tempoentrega, int valor) {
-		String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor) VALUES ('" + nome + "'," + produtos_pai_id + "," 
-			+ tempoentrega + "," + valor + ");";
+	public String gravar(String nome, Long produtos_pai_id, int tempoentrega, int valor, int usuario_pai_id) {
+		String sql = "INSERT INTO fornecimento(nome, produtos_pai_id, tempoentrega, valor, usuario_pai_id) VALUES ('" + nome + "'," + produtos_pai_id + "," 
+			+ tempoentrega + "," + valor + "," + usuario_pai_id + ");";
 		return sql;
 	}
 	
 	public String lista(Long id) {
 		String sql = "SELECT * FROM fornecimento WHERE produtos_pai_id = " + id;
+		return sql;
+	}
+	
+	public String listaTodosFornecedores(int id) {
+		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id;
 		return sql;
 	}
 	

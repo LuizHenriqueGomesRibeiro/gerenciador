@@ -1,6 +1,5 @@
 package Servlet;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
@@ -61,6 +60,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				carregarTodosPedidos(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("validarExclusao")){
 				validarExclusao(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("abrirTodosFornecedores")){
+				abrirTodosFornecedores(request, response);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -106,7 +107,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), id_produto(request), tempoEntrega(request), valor(request)));
+		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), id_produto(request), tempoEntrega(request), valor(request), id(request)));
 		setarAtributos(request, response);
 	}
 	
@@ -166,5 +167,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		}else {
 			setarAtributos(request, response);
 		}
+	}
+	
+	protected void abrirTodosFornecedores(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request))));
+		impressaoJSON(response, fornecedores);
 	}
 }

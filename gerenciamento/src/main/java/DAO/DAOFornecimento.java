@@ -16,6 +16,7 @@ import model.ModelProdutos;
 public class DAOFornecimento extends DAOComum{
 	private Connection connection;
 	SQLFornecimento sqlfornecimento = new SQLFornecimento();
+	DAOLogin daoLogin = new DAOLogin();
 	
 	public DAOFornecimento(){
 		connection = conexao.getConnection();
@@ -66,6 +67,7 @@ public class DAOFornecimento extends DAOComum{
 	public ModelFornecimento setFornecedor(ResultSet resultado) throws SQLException {
 		ModelFornecimento modelFornecimento = new ModelFornecimento();
 		modelFornecimento.setId(id(resultado));
+		modelFornecimento.setUsuario_pai_id(daoLogin.consultaUsuarioLogadoId(usuario_pai_id(resultado)));
 		modelFornecimento.setTempoentrega(tempoentrega(resultado));
 		modelFornecimento.setNome(nome(resultado));
 		modelFornecimento.setValor(valor(resultado));

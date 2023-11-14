@@ -35,9 +35,8 @@
 			}
 			%>
 			<li class="page-item"><button>Configurações</button></li>
-			<li class="page-item"><a style="text-decoration: none" 
-				href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
-			<li class="page-item"><a style="text-decoration: none" 
+			<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
+			<li class="page-item"><a style="text-decoration: none"
 				href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
 			<li class="page-item"><button>Ajuda</button></li>
 			<li class="page-item"><button>Refrescar página</button></li>
@@ -69,44 +68,7 @@
 							style="color: red;">Excluir</a></td>
 						<td><a class="" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a></td>
 					</tr>
-					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
-						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
-						aria-hidden="true">
-						<div class="modal-dialog modal-lg 5">
-							<div class="modal-content">
-								<div style="margin: 20px;">
-									<form style="position: relative; width: 90%; margin: auto;"
-										action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-										method="post" name="formulario_cadastro_produtos"
-										id="formulario">
-
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">Preço
-												por unidade</label> <input class="form-control" id="atualizacaoPreco" name="preco">
-											<div class="form-text">...............................</div>
-										</div>
-										<div class="mb-3">
-											<input  type="hidden" class="form-control" id="atualizacaoId" name="id">
-										</div>
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">Quantidade
-											</label> <input class="form-control" id="atualizacaoQuantidade"
-												name="quantidade">
-											<div class="form-text">...............................</div>
-										</div>
-										<div class="mb-3">
-											<label for="exampleInputEmail1" class="form-label">Nome
-											</label> <input class="form-control" id="atualizacaoNome" name="nome">
-											<div class="form-text">...............................</div>
-										</div>
-										<input value="${usuario.id}" value="cadastrar" name="usuario_pai_id" type="hidden"> 
-										<input type="submit" value="Submeter" class="btn btn-primary btn-user btn-block"
-										style="margin-bottom: 20px;">
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
+					<jsp:include page="includes/listar/formularioIncluirPedido.jsp"></jsp:include>
 				</c:forEach>
 				</tbody>
 			</table>
@@ -140,33 +102,11 @@
 		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 				<div style="width: 400px;">
-					<div id="divNovoFornecedor" style="width: 300px; margin: auto; margin-top: 40px;">
-						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario" id="formulario">
-							<input type="hidden" value="cadastrarFornecedor" name="acao" />
-							<div class="field-row">
-								<label for="nomeFornecedor">Fornecedor:</label> 
-								<input style="width: 250px;" id="nomeFornecedor" type="text" id="nomeFornecedor" name="nomeFornecedor" 
-									placeholder="Nome do novo fornecedor"/>
-							</div>
-							<div class="field-row">
-								<label for="tempoentrega">Tempo de entrega:</label> 
-								<input style="width: 220px;" id="tempoentrega" type="text" id="tempoentrega" name="tempoentrega" placeholder="tempo de entrega (em dias)"/>
-							</div>
-							<div class="field-row">
-								<label for="valor">Valor por unidade:</label> 
-								<input style="width: 222px;" type="text" id="valor" name="valor" placeholder="valor">
-							</div>
-							<input type="hidden" id="configuracoesId" name="id">
-							<div style="width: 100%;">
-								<div style="width: 134px; margin: auto; position: relative; top: 10px;">
-									<button type="button" onclick="funcoes2()" class="btn btn-primary">Criar fornecedor</button>
-								</div>
-							</div>
-						</form>
-					</div>
-					<jsp:include page="includes/formularioNovoPedido.jsp"></jsp:include>
+					<jsp:include page="includes/listar/formularioNovoFornecedor.jsp"></jsp:include>
+					<jsp:include page="includes/listar/formularioNovoPedido.jsp"></jsp:include>
 				</div>
-				<div style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" class="sunken-panel">
+				<div id="tabelaFornecedorUnitario" style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" 
+				class="sunken-panel">
 					<table style="width: 100%;" class="interactive" id="listaFornecedores">
 						<thead>
 							<tr>
@@ -175,6 +115,20 @@
 								<th>Valor</th>
 								<th>Configurações</th>
 								<th>Pedidos</th>
+							</tr>
+						</thead>
+						<tbody>	
+						</tbody>
+					</table>
+				</div>
+				<div id="tabelaTodosFornecedores" style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" 
+				class="sunken-panel">
+					<table style="width: 100%;" class="interactive" id="listaTodosFornecedores">
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Configurações</th>
+								<th>Selecionar</th>
 							</tr>
 						</thead>
 						<tbody>	
@@ -194,27 +148,6 @@
 	<a class="scroll-to-top rounded" href="#page-top"> 
 		<i class="fas fa-angle-up"></i>
 	</a>
-	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-					<button class="close" type="button" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">Select "Logout" below if you are ready
-					to end your current session.</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button"
-						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
-				</div>
-			</div>
-		</div>
-	</div>
 	<div class="modal fade bd-example-modal-lg ui" tabindex="-1"
 		role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
@@ -223,18 +156,13 @@
 					<form style="position: relative; width: 90%; margin: auto;"
 						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
 						method="get" name="formulario_cadastro_produtos" id="formulario">
-
 						<input type="hidden" value="cadastrarProduto" name="acao">
-
 						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">nome</label> <input
-								class="form-control" id="nome" name="nome">
-							<div class="form-text">...............................</div>
+							<label for="exampleInputEmail1" class="form-label">nome</label> 
+							<input class="form-control" id="nome" name="nome">
 						</div>
-						<input value="${usuario.id}" type="hidden" value="cadastrar"
-							name="usuario_pai_id"> <input type="submit"
-							value="Submeter" class="btn btn-primary btn-user btn-block"
-							style="margin-bottom: 20px;">
+						<input value="${usuario.id}" type="hidden" value="cadastrar" name="usuario_pai_id"> 
+						<input type="submit" value="Submeter" class="btn btn-primary btn-user btn-block" style="margin-bottom: 20px;">
 					</form>
 				</div>
 			</div>
@@ -277,316 +205,5 @@
 			</table>
 		</div>
 	</div>
-	<script type="text/javascript">
-		document.querySelectorAll('table.interactive').forEach(element => {
-		  element.addEventListener('click', (event) => {
-			const row = event.path.find(element => element.tagName === 'TR' && element.parentElement.tagName === 'TBODY');
-			if (row) {
-			  row.classList.toggle('highlighted');
-			}
-		  })
-		});
-	
-		class Pedido{
-			constructor(dataentrega, datapedido, quantidade, id){
-				this.dataentrega = dataentrega;
-				this.datapedido = datapedido;
-				this.quantidade = quantidade;
-				this.id = id;
-			}
-		}
-	
-		class Fornecedor{
-			constructor(id, nome, tempo, valor){
-				this.id = id;
-				this.nome = nome;
-				this.tempo = tempo;
-				this.valor = valor;
-			}
-		}
-				
-		function adicionarFornecedor() {
-			var urlAction = document.getElementById('formulario').action;
-			var nomeFornecedor = document.getElementById('nomeFornecedor').value;
-			var tempoentrega = document.getElementById('tempoentrega').value;
-			var valor = document.getElementById('valor').value;
-			var id = document.getElementById('configuracoesId').value;
-			var parametros = '&nomeFornecedor=' + nomeFornecedor + '&tempoentrega=' + tempoentrega + '&valor=' + valor + '&id_produto=' + id + '&acao=cadastrarFornecedor';
-			ajaxAdicionarFornecedor(urlAction, parametros);
-		}
-	
-		function ajaxAdicionarFornecedor(urlAction, parametros){
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : parametros,
-				success : function(json, textStatus, xhr) {
-					resultadoAdicionarFornecedor();
-				}
-			});
-		}
-	
-		function resultadoAdicionarFornecedor(){
-			jQuery('#nomeFornecedor').val('');
-			jQuery('#tempoentrega').val('');
-			jQuery('#valor').val('');
-		}
-	
-		function loadPedidos(id){
-			jQuery("#tabelaFornecedores").hide();
-			jQuery("#tabelaHistoricoPedidos").show();
-			var urlAction = document.getElementById('formulario').action;
-			var parametros = '&id_produto='+ id + '&acao=historioPedidos';
-			ajaxLoadPedidos(urlAction, parametros);
-		}
-	
-		function ajaxLoadPedidos(urlAction, parametros){
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : parametros,
-				success : function(json, textStatus, xhr) {
-					resultadoLoadPedidos(json);
-				}
-			});
-		}
-	
-		function resultadoLoadPedidos(json){
-			json = JSON.parse(json);
-			jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-			for(var p = 0; p < json.length; p++){
-				const pedido = new Pedido(json[0].dataentrega, json[p].datapedido, json[p].quantidade, json[p].id);
-				chamarString(pedido.dataentrega);
-				var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&quantidade=' + pedido.quantidade + 
-					'&acao=confirmarPedido"';
-				var linkServletCancelar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&acao=cancelarPedido"';
-				imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar);
-			}
-		}
-	
-		function imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar){
-			jQuery('#tabelaHistoricoPedidos > table > tbody').append(
-				'<tr>' + 	
-					'<td>' + pedido.dataentrega + '</td>' + 
-					'<td>' + pedido.datapedido + '</td>' + 
-					'<td><a id="confirmarEntregaPedido" ' + linkServletConfirmar + ' >Confirmar entrega</a></td>' +  
-					'<td><a id="confirmarCancelamentoPedido" ' + linkServletCancelar + ' >Cancelar entrega</a></td>' +  
-				'</tr>'
-			);
-		}
-	
-		function deletarFornecedor(id) {
-			var urlAction = document.getElementById('formulario').action;
-			var parametros = '&acao=deletarFornecedor&id_fornecedor=' + id;
-			ajaxAdicionarFornecedor(urlAction, parametros);
-		}
-	
-		function ajaxDeletarFornecedor(urlAction, parametros){
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : parametros,
-				success : function(json, textStatus, xhr) {
-				}
-			});
-		}
-	
-		function loadData(id) {
-			jQuery("#tabelaFornecedores").show();
-			jQuery("#tabelaHistoricoPedidos").hide();
-			jQuery("#divNovoPedido").hide();
-			jQuery("#divNovoFornecedor").show();
-			var urlAction = document.getElementById('formulario').action;
-			var parametros = '&id_produto=' + id + '&acao=configuracoes';
-			ajaxLoadData(urlAction, parametros);
-		}
-	
-		function ajaxLoadData(urlAction, parametros){
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : parametros,
-				dataType: "text",
-				success : function(response){
-					resultadoLoadData(response);
-				}
-			});
-		}
-	
-		function resultadoLoadData(response){
-			var responseArray = response.split("|");
-		    var produto = JSON.parse(responseArray[0]);
-		    var fornecedores = JSON.parse(responseArray[1]);
-		    imprimirResultadoLoadData(produto);
-		    listarFornecedoresLoadData(fornecedores);
-		}
-	
-		function imprimirResultadoLoadData(produto){
-		    jQuery("#insiraNomeFornecedor > p").remove();
-		    jQuery("#configuracoesId").val(produto.id);
-		    jQuery('#listaFornecedores > tbody > tr').remove();
-		    jQuery('#produtoIdIncluir > input').remove();
-		    jQuery('#insiraNomeFornecedor').append('<p>Insira um novo fornecedor para ' + produto.nome + '</p>');
-		    jQuery('#produtoIdIncluir').append('<input type="hidden" id="idProduto" name="id_produto" value="' + produto.id + '">');
-		}
-	
-		function listarFornecedoresLoadData(fornecedores){
-		    for(var p = 0; p < fornecedores.length; p++){
-				const fornecedor = new Fornecedor(fornecedores[p].id, fornecedores[p].nome, fornecedores[p].tempoentrega + " dias", 
-					parseFloat(fornecedores[p].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}));
-		    	imprimirResultadoListaFornecedores(fornecedor);
-		    }
-		}
-		
-		function imprimirResultadoListaFornecedores(fornecedor){
-			jQuery('#listaFornecedores > tbody').append(
-				'<tr>' + 
-					'<td>' + fornecedor.nome + '</td>' + 
-					'<td>' + fornecedor.tempo + '</td>' + 
-					'<td>' + fornecedor.valor + '</td>' +
-					'<td style="color: red;>' + 
-						'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
-							'Deletar fornecedor</a>' + 
-					'</td>' + 
-					'<td>' + 
-						'<a href="#" onclick="abrirDivNovoPedido(' + fornecedor.id + ')">Fazer pedido</a>' + 
-					'</td>' + 
-				'</tr>'
-			);
-		}
-		
-		function abrirDivNovoPedido(id){
-			jQuery("#divNovoPedido").show();
-			jQuery("#divNovoFornecedor").hide();
-			dataAtual();
-			jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
-		}
-
-		function loadTodosPedidos(){
-			jQuery("#tabelaFornecedores").hide();
-			jQuery("#tabelaHistoricoPedidos").show();
-			var urlAction = document.getElementById('formulario').action;
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&acao=carregarTodosPedidos',
-				success : function(json, textStatus, xhr) {
-					loadTodosPedidosResultado(json);
-				}
-			});
-		}
-	
-		function loadTodosPedidosResultado(json){
-			json = JSON.parse(json);
-			jQuery('#tabelaHistoricoPedidos > table > tbody > tr').remove();				
-			for(var p = 0; p < json.length; p++){
-				loadTodosPedidosImprimir(json[p]);
-			}
-		}
-	
-		function loadTodosPedidosImprimir(json){
-			jQuery('#tabelaHistoricoPedidos > table > tbody').append(
-				'<tr>' + 
-					'<td>' + json.dataentrega + '</td>' + 
-					'<td>' + json.datapedido + '</td>' +  
-					'<td>' + 
-						'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&id_produto=' + json.produto_pai_id.id 
-							+ '&quantidade=' + json.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
-					'</td>' + 
-					'<td>' + 
-						'<a style="color: red;" href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
-					'</td>' + 
-				'</tr>'
-			);
-		}
-	
-		function excData(id){
-			var urlAction = document.getElementById('formulario').action;
-			jQuery.ajax({
-				method : "get",
-				url : urlAction,
-				data : '&id_produto=' + id + '&acao=validarExclusao',
-				success : function(json, textStatus, xhr) {
-					location.reload();
-				}
-			});
-		}
-	
-		jQuery('#configuracoes, #abrirPedidos, #verPedidos, #confirmarEntregaPedido, #confirmarCancelamentoPedido').click(function(event) {
-			  event.preventDefault(); 
-		});
-		
-		function dataAtual() {
-			var input = document.getElementById('dataPedido');
-			var dataAtual = new Date();
-			var dia = dataAtual.getDate();
-			var mes = dataAtual.getMonth() + 1;
-			var ano = dataAtual.getFullYear();
-
-			if (dia < 10) {
-				dia = '0' + dia;
-			}
-
-			if (mes < 10) {
-				mes = '0' + mes;
-			}
-
-			input.value = dia + '/' + mes + '/' + ano;
-		};
-
-		jQuery("#valor").maskMoney({
-			showSymbol: true,
-			symbol: "R$",
-			decimal: ",",
-			thousands: "."
-		});
-
-		jQuery("#preco").maskMoney({
-			showSymbol: true,
-			symbol: "R$",
-			decimal: ",",
-			thousands: "."
-		});
-
-		jQuery("#configuracoesPreco").maskMoney({
-			showSymbol: true,
-			symbol: "R$",
-			decimal: ",",
-			thousands: "."
-		});
-
-		jQuery("#atualizacaoPreco").maskMoney({
-			showSymbol: true,
-			symbol: "R$",
-			decimal: ",",
-			thousands: "."
-		});
-
-		function loadPedido(id) {
-			jQuery("#capturarId").append("<input name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
-		}
-
-		function chamarString(data) {
-			jQuery("#tabelaHistoricoPedidos").append("<input type='hidden' id='capturarData' value=" + data + "></input>");
-		}
-
-		function funcoes(id) {
-			dataAtual();
-			loadPedido(id);
-		}
-
-		function funcoes2() {
-			var id = document.getElementById('configuracoesId').value;
-			adicionarFornecedor();
-			loadData(id);
-		}
-
-		function funcoes3(id) {
-			deletarFornecedor(id);
-			loadData(id);
-		}
-
-		jQuery("#tabelaHistoricoPedidos").hide();
-
-	</script>
+	<jsp:include page="includes/listar/ajaxListar.jsp"></jsp:include>
 </html>

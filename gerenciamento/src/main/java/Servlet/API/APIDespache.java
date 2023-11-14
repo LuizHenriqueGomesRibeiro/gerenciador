@@ -21,9 +21,6 @@ public class APIDespache extends APIEntradas {
 	DAOFerramentas dao = new DAOFerramentas();
 	DAOFornecimento daofornecedor = new DAOFornecimento();
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	public void setarAtributos(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -38,7 +35,7 @@ public class APIDespache extends APIEntradas {
 	}
 
 	public void setarAtributosSaida(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		plusAtributosComum(request);
+		plusProdutos(request);
 		request.getRequestDispatcher("principal/saida.jsp").forward(request, response);
 	}
 
@@ -79,21 +76,3 @@ public class APIDespache extends APIEntradas {
 		return request;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
