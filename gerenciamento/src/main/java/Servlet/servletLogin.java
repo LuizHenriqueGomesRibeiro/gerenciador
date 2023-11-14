@@ -12,59 +12,39 @@ import model.ModelUsuarios;
 import java.io.IOException;
 
 import DAO.DAOLogin;
+import Servlet.API.APIDespache;
+import Servlet.API.APIEntradas;
 
 /**
  * Servlet implementation class servletLogin
  */
 @WebServlet(urlPatterns = { "/principal/ServletLogin"}) 
-public class servletLogin extends HttpServlet {
+public class servletLogin extends APIDespache {
 	private static final long serialVersionUID = 1L;
 	
 	private DAOLogin daoLogin = new DAOLogin();
 	
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public servletLogin() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		
-		String senha = request.getParameter("senha");
-		String url = request.getParameter("url");
-		String login = request.getParameter("login");
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		session.setAttribute("login", login);
+		session.setAttribute("login", login(request));
 
 		try {
-			if (login != null && !login.isEmpty() && senha != null && !senha.isEmpty()) {
+			if (login(request) != null && !login(request).isEmpty() && senha(request) != null && !senha(request).isEmpty()) {
 				
 				ModelUsuarios login_em_validacao = new ModelUsuarios();
-				login_em_validacao.setSenha(senha);
-				login_em_validacao.setLogin(login);
+				login_em_validacao.setSenha(senha(request));
+				login_em_validacao.setLogin(login(request));
 				
 				if(daoLogin.validarAutenticacao(login_em_validacao)) {
 
-					if(url == null || url.equals("null")) {
-						url = "principal/principal.jsp";
-						
-						RequestDispatcher redirecionar = request.getRequestDispatcher(url);
+					if(url(request) == null || url(request).equals("null")) {
+						plusProdutos(request);
+						plusAtributosComum(request);
+						RequestDispatcher redirecionar = request.getRequestDispatcher("principal/listar.jsp");
 						redirecionar.forward(request, response);
 					}
 				}else {
@@ -78,5 +58,4 @@ public class servletLogin extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-
 }

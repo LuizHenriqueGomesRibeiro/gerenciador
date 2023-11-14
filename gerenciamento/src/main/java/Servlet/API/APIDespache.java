@@ -78,5 +78,22 @@ public class APIDespache extends APIEntradas {
 		request.setAttribute("produtos", daoproduto.listarProdutos(sqlprodutos.listaProdutosLIMIT10(id(request)), id(request)));
 		return request;
 	}
-	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -65,13 +65,10 @@
 						<td><c:out value="${ml.nome}"></c:out></td>
 						<td><c:out value="${ml.quantidadePedidaString}"></c:out></td>
 						<td><c:out value="${ml.valorTotalString}"></c:out></td>
-						<td style="height: 30px; width: 150px;"><a class="" href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
-						<td>
-							<a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?id_produto=${ml.id}&acao=validarExclusao" class=""><p>Excluir</p></a>
-						</td>
-						<td>
-							<a class="" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a>
-						</td>
+						<td><a class="" href="#" id="verPedidos" onclick="loadPedidos(${ml.id})">Ver pedidos</a></td>
+						<td><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?id_produto=${ml.id}&acao=validarExclusao" 
+							style="color: red;">Excluir</a></td>
+						<td><a class="" href="#" id="configuracoes" onclick="loadData(${ml.id})">Fornecedores</a></td>
 					</tr>
 					<div class="modal fade bd-example-modal-lg ada" tabindex="-1"
 						id="teste" role="dialog" aria-labelledby="myLargeModalLabel"
@@ -144,31 +141,61 @@
 		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 				<div style="width: 400px;">
-					<div class="col-sm">
+				
+				
+					<div id="divNovoFornecedor" style="width: 300px; margin: auto; margin-top: 40px;">
 						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario" id="formulario">
 							<input type="hidden" value="cadastrarFornecedor" name="acao" />
-							<div class="form-group">
-								<div id="insiraNomeFornecedor"></div>
-								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="nomeFornecedor" 
-								name="nomeFornecedor" placeholder="Nome do novo fornecedor">
+							<div class="field-row">
+								<label for="nomeFornecedor">Fornecedor:</label> 
+								<input style="width: 250px;" id="nomeFornecedor" type="text" id="nomeFornecedor" name="nomeFornecedor" 
+									placeholder="Nome do novo fornecedor"/>
 							</div>
-							<div class="form-group">
-								<label for="tempoentrega" class="form-label"></label> 
-								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="tempoentrega" 
-								name="tempoentrega" placeholder="tempo de entrega (em dias)">
+							<div class="field-row">
+								<label for="tempoentrega">Tempo de entrega:</label> 
+								<input style="width: 220px;" id="tempoentrega" type="text" id="tempoentrega" name="tempoentrega" placeholder="tempo de entrega (em dias)"/>
 							</div>
-							<div class="form-group">
-								<label for="valor" class="form-label"></label> 
-								<input style="position: relative; margin: -13px 0px 0px 0px;" class="form-control" id="valor" 
-								name="valor" placeholder="valor">
+							<div class="field-row">
+								<label for="valor">Valor por unidade:</label> 
+								<input style="width: 222px;" type="text" id="valor" name="valor" placeholder="valor">
 							</div>
 							<input type="hidden" id="configuracoesId" name="id">
-							<button type="button" onclick="funcoes2()" class="btn btn-primary">Submit</button>
+							<div style="width: 100%;">
+								<div style="width: 134px; margin: auto; position: relative; top: 10px;">
+									<button type="button" onclick="funcoes2()" class="btn btn-primary">Criar fornecedor</button>
+								</div>
+							</div>
+						</form>
+					</div>
+
+
+
+					<div id="divNovoPedido" style="width: 300px; margin: auto; margin-top: 40px; display: none;">
+						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="post" name="formulario" id="formulario">
+							<div class="form-group">
+								<div id="capturarId"></div>
+							</div>
+							<div class="field-row">
+								<label for="exampleInputEmail1" class="form-label">Quantidade:</label>
+								<input type="text" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});"
+									placeholder="quantidade">
+							</div>
+							<div class="field-row">
+								<label for="exampleInputEmail1" class="form-label">Data de pedido:</label>
+								<input type="text" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')" placeholder="data de pedido">
+							</div>
+							<input type="hidden" name="acao" value="incluirPedido">
+							<div id="produtoIdIncluir"></div>
+							<div id="capturarId"></div>
+							<button type="submit" class="btn btn-primary">Submit</button>
 						</form>
 					</div>
 				</div>
+
+
+
 				<div style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" class="sunken-panel">
-					<table style="" class="table table-striped table-sm" id="listaFornecedores">
+					<table style="width: 100%;" class="interactive" id="listaFornecedores">
 						<thead>
 							<tr>
 								<th>Nome</th>
@@ -263,6 +290,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- 
 	<div class="modal fade bd-example-modal-lg dar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -290,18 +318,21 @@
 			</div>
 		</div>
 	</div>
-	<div id="tabelaHistoricoPedidos" style="width: 100%; overflow-y: scroll; overflow-x: none; height: 250px; position: relative; margin: -27px 0px 0px -16px;" class="col-sm">
-		<table style="width: 100%;" class="table table-striped table-sm">
-			<thead>
-				<tr>
-					<th>Data de entrega</th>
-					<th>Data do pedido</th>
-					<th>Confirmar entrega</th>
-					<th>Cancelar entrega</th>
-				</tr>
-			</thead>
-			<tbody></tbody>
-		</table>
+	--> 
+	<div style="width: 100%; margin-top: 13px;">
+		<div style="width: 90%; margin: auto;" id="tabelaHistoricoPedidos" class="sunken-panel">
+			<table style="width: 100%;" class="interactive">
+				<thead>
+					<tr>
+						<th>Data de entrega</th>
+						<th>Data do pedido</th>
+						<th>Confirmar entrega</th>
+						<th>Cancelar entrega</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
 	</div>
 	<script type="text/javascript">
 		document.querySelectorAll('table.interactive').forEach(element => {
@@ -383,7 +414,8 @@
 			for(var p = 0; p < json.length; p++){
 				const pedido = new Pedido(json[0].dataentrega, json[p].datapedido, json[p].quantidade, json[p].id);
 				chamarString(pedido.dataentrega);
-				var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&quantidade=' + pedido.quantidade + '&acao=confirmarPedido"';
+				var linkServletConfirmar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&quantidade=' + pedido.quantidade + 
+					'&acao=confirmarPedido"';
 				var linkServletCancelar = 'href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + pedido.id + '&acao=cancelarPedido"';
 				imprimirResultadoLoadPedidos(pedido, linkServletConfirmar, linkServletCancelar);
 			}
@@ -419,6 +451,8 @@
 		function loadData(id) {
 			jQuery("#tabelaFornecedores").show();
 			jQuery("#tabelaHistoricoPedidos").hide();
+			jQuery("#divNovoPedido").hide();
+			jQuery("#divNovoFornecedor").show();
 			var urlAction = document.getElementById('formulario').action;
 			var parametros = '&id_produto=' + id + '&acao=configuracoes';
 			ajaxLoadData(urlAction, parametros);
@@ -460,25 +494,48 @@
 		    	imprimirResultadoListaFornecedores(fornecedor);
 		    }
 		}
-	
+		
 		function imprimirResultadoListaFornecedores(fornecedor){
 			jQuery('#listaFornecedores > tbody').append(
 				'<tr>' + 
 					'<td>' + fornecedor.nome + '</td>' + 
 					'<td>' + fornecedor.tempo + '</td>' + 
 					'<td>' + fornecedor.valor + '</td>' +
-					'<td style="height: 30px; color: red; padding: 0px 0px 0px 0px;">' + 
-						'<a class="page-link" style="color: red; margin: -1px -28px -6px 0px; width: 160px; height: 37px;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
+					'<td style="color: red;>' + 
+						'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
 							'Deletar fornecedor</a>' + 
 					'</td>' + 
 					'<td>' + 
-						'<a class="page-link" style="margin: -6px 0px -6px 0px; width: 118px; height: 37px;" href="#" data-toggle="modal" data-target=".dar" ' + 
+						'<a href="#" onclick="abrirDivNovoPedido(' + fornecedor.id + ')">Fazer pedido</a>' + 
+					'</td>' + 
+				'</tr>'
+			);
+		}
+		
+		function abrirDivNovoPedido(id){
+			jQuery("#divNovoPedido").show();
+			jQuery("#divNovoFornecedor").hide();
+		}
+		
+		/*
+		function imprimirResultadoListaFornecedores(fornecedor){
+			jQuery('#listaFornecedores > tbody').append(
+				'<tr>' + 
+					'<td>' + fornecedor.nome + '</td>' + 
+					'<td>' + fornecedor.tempo + '</td>' + 
+					'<td>' + fornecedor.valor + '</td>' +
+					'<td style="color: red;>' + 
+						'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
+							'Deletar fornecedor</a>' + 
+					'</td>' + 
+					'<td>' + 
+						'<a href="#" data-toggle="modal" data-target=".dar" ' + 
 							'onclick="funcoes(' + fornecedor.id + ')">Fazer pedido</a>' + 
 					'</td>' + 
 				'</tr>'
 			);
 		}
-	
+		*/
 		function loadTodosPedidos(){
 			jQuery("#tabelaFornecedores").hide();
 			jQuery("#tabelaHistoricoPedidos").show();
@@ -511,7 +568,7 @@
 							+ '&quantidade=' + json.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
 					'</td>' + 
 					'<td>' + 
-						'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
+						'<a style="color: red;" href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
 					'</td>' + 
 				'</tr>'
 			);

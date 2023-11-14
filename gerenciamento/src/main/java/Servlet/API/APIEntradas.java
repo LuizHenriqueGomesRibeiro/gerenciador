@@ -82,4 +82,16 @@ public class APIEntradas extends servlet_recuperacao_login {
 	public int pagina(HttpServletRequest request) {
 		return Integer.parseInt(request.getParameter("pagina"));
 	}
+	
+	public String senha(HttpServletRequest request) {
+		return request.getParameter("senha");
+	}
+	
+	public String url(HttpServletRequest request) {
+		return request.getParameter("url");
+	}
+
+	public String login(HttpServletRequest request) {
+		return request.getParameter("login");
+	}
 }

@@ -21,19 +21,22 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://unpkg.com/98.css"/>
 </head>
-<body style="overflow: hidden;">
-	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-		<li class="page-item"><button class="page-link">Índice=></button></li>
-		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios"><button class="page-link">Ir para relatórios</button></a></li>
-		<li class="page-item"><button class="page-link">Ajuda</button></li>
-		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		<li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></li>
-	</ul>
+<body style="overflow: hidden; background-color: #C0C0C0; color: black;">
+	<div style="position: relative; top: 12px; left: 12px;">
+		<ul class="pagination" style="margin: 0px 0px -1px 0px;">
+			<li class="page-item"><button>Índice=></button></li>
+			<li class="page-item"><button>Configurações</button></li>
+			<li class="page-item"><button><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios">Ir para relatórios</a></button></li>
+			<li class="page-item"><button>Ajuda</button></li>
+			<li class="page-item"><button>Refrescar página</button></li>
+			<li class="page-item"><button><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></button></li>
+		</ul>
+	</div>
 	<div id="json-content"></div>
-	<div style="overflow-y: scroll; height: 250px;">
-		<table class="table table-striped table-sm">
+	<div class="sunken-panel" style="overflow-y: scroll; height: 250px; width: 90%; margin: auto; position: relative; margin-top: 24px;">
+		<table style="width: 100%;" class="interactive">
 			<thead>
 				<tr>
 					<th>Nome</th>
@@ -51,9 +54,8 @@
 						<td><c:out value="${ml.quantidade}"></c:out></td>
 						<td>generico</td>
 						<td>generico</td>
-						<td style="height: 30px; width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px;" href="#">Informações</a></td>
-						<td style="width: 40px;"><a class="page-link" style="margin: -6px 0px -6px 0px; height: 37px; color: red;" id="focus"
-							href="#" data-toggle="modal" data-target="#exampleModal" onclick="loadProduto(${ml.id})"><p>Vender</p></a></td>
+						<td><a href="#">Informações</a></td>
+						<td><a style="color: red;" id="focus" href="#" data-toggle="modal" data-target="#exampleModal" onclick="loadProduto(${ml.id})">Vender</a></td>
 						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
