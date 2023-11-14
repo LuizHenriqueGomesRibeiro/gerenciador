@@ -31,10 +31,9 @@
 			<li class="page-item"><button><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios">Ir para relatórios</a></button></li>
 			<li class="page-item"><button>Ajuda</button></li>
 			<li class="page-item"><button>Refrescar página</button></li>
-			<li class="page-item"><button><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">Voltar</a></button></li>
+			<li class="page-item"><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar"><button>Voltar</button></a></li>
 		</ul>
 	</div>
-	<div id="json-content"></div>
 	<div class="sunken-panel" style="overflow-y: scroll; height: 250px; width: 90%; margin: auto; position: relative; margin-top: 24px;">
 		<table style="width: 100%;" class="interactive">
 			<thead>
@@ -55,44 +54,7 @@
 						<td>generico</td>
 						<td>generico</td>
 						<td><a href="#">Informações</a></td>
-						<td><a style="color: red;" id="focus" href="#" data-toggle="modal" data-target="#exampleModal" onclick="loadProduto(${ml.id})">Vender</a></td>
-						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-							<div class="modal-dialog" role="document">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLabel">Saída de estoque</h5>
-										<button type="button" class="close" data-dismiss="modal"
-											aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-										</button>
-									</div>
-									<div class="modal-body">
-										<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
-											<div class="mb-3">
-												<input type="hidden" name="acao" value="vender"/>
-												<label for="exampleInputEmail1" class="form-label">quantidade<br/> 
-													<div id="letreiro"></div>
-												</label>
-												<input name="id_produto" id="id_produto" type="hidden"/>
-												<input name="id" id="id" type="hidden">
-												<input name="valorHidden" id="valorHidden" type="hidden"> 
-												<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" type="hidden">
-												<input onkeyup="limitar()" class="form-control" id="quantidade" name="quantidade" type="number">
-													<label for="exampleInputEmail1" class="form-label">Valor por unidade</label>
-												<input class="form-control" id="valor" name="valor">
-													<label for="exampleInputEmail1" class="form-label">Data da venda</label>
-												<input type="hidden" class="form-control" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
-												<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
-												<div id="botao"></div>
-											</div>
-										</form>
-									</div>
-									<div class="modal-footer" id="footer">
-										<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									</div>
-								</div>
-							</div>
-						</div>
+						<td><a style="color: red;" id="focus" href="#" onclick="loadProduto(${ml.id})">Vender</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -114,10 +76,39 @@
 			</div>
 		</div>
 	</div>
-	<a class="scroll-to-top rounded" href="#page-top"> 
-		<i class="fas fa-angle-up"></i>
-	</a>
+	<div style="width: 100vw;">
+		<div style="width: 90%; margin: auto; top: 19px; position: relative;">
+			<div id="divFormularioVenda">
+				<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
+					<div class="mb-3">
+						<input type="hidden" name="acao" value="vender"/>
+							<div id="letreiro"></div>
+						<input name="id_produto" id="id_produto" type="hidden"/>
+						<input name="id" id="id" type="hidden">
+						<input name="valorHidden" id="valorHidden" type="hidden"> 
+						<input class="form-control" id="quantidadeHidden" name="quantidadeHidden" type="hidden">
+						<input type="hidden" id="dataVenda" name="dataVenda" onkeypress="$(this).mask('00/00/0000')">
+						
+						<div class="field-row-stacked" style="width: 200px">
+							<input onkeyup="limitar()" id="quantidade" name="quantidade" type="number" placeholder="Quantidade">
+						</div>
+						
+						<div class="field-row-stacked" style="width: 200px">
+							<input id="valor" name="valor" type="text" placeholder="Valor de venda">
+						</div>
+						
+						<a onclick="carregarMargem()" href="#" style="text-decoration: none;" data-toggle="modal" data-target="#knowHow">Como calcular o valor da unidade</a>
+						
+						<button id="clicar" class="btn btn-primary" onmousemove="limitar2()" onclick="pedido(" + produto.id + ")">Save changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 	<script type="text/javascript">
+	
+		jQuery("#divFormularioVenda").hide();
+		
 		class Pedido{
 			constructor(dataentrega, datapedido, quantidade, id){
 				this.dataentrega = dataentrega;
@@ -128,6 +119,7 @@
 		}
 	
 		function loadProduto(id){
+			jQuery("#divFormularioVenda").show();
 			jQuery("#letreiro > p").remove();
 			idProduto(id);
 			dataAtual();
@@ -188,7 +180,6 @@
 				url : urlAction,
 				data : parametros,
 				success : function(json, textStatus, xhr) {
-					location.reload();
 				}
 			});
 		}

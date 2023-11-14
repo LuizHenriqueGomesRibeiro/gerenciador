@@ -12,7 +12,6 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="css/sb-admin-2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
-<!--<script type="text/javascript" src="scripts/ajaxListar.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -141,8 +140,6 @@
 		<div style="width: 100%; margin: -16px 0px 0px 0px; padding: 0px 0px 0px 11px;">
 			<div class="row">
 				<div style="width: 400px;">
-				
-				
 					<div id="divNovoFornecedor" style="width: 300px; margin: auto; margin-top: 40px;">
 						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="get" name="formulario" id="formulario">
 							<input type="hidden" value="cadastrarFornecedor" name="acao" />
@@ -167,33 +164,8 @@
 							</div>
 						</form>
 					</div>
-
-
-
-					<div id="divNovoPedido" style="width: 300px; margin: auto; margin-top: 40px; display: none;">
-						<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="post" name="formulario" id="formulario">
-							<div class="form-group">
-								<div id="capturarId"></div>
-							</div>
-							<div class="field-row">
-								<label for="exampleInputEmail1" class="form-label">Quantidade:</label>
-								<input type="text" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});"
-									placeholder="quantidade">
-							</div>
-							<div class="field-row">
-								<label for="exampleInputEmail1" class="form-label">Data de pedido:</label>
-								<input type="text" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')" placeholder="data de pedido">
-							</div>
-							<input type="hidden" name="acao" value="incluirPedido">
-							<div id="produtoIdIncluir"></div>
-							<div id="capturarId"></div>
-							<button type="submit" class="btn btn-primary">Submit</button>
-						</form>
-					</div>
+					<jsp:include page="includes/formularioNovoPedido.jsp"></jsp:include>
 				</div>
-
-
-
 				<div style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" class="sunken-panel">
 					<table style="width: 100%;" class="interactive" id="listaFornecedores">
 						<thead>
@@ -290,35 +262,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- 
-	<div class="modal fade bd-example-modal-lg dar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg">
-			<div class="modal-content">
-				<div style="padding: 0px 20px 20px 20px;">
-					<form action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos" method="post" name="formulario" id="formulario">
-						<div class="form-group">
-							<div id="capturarId"></div>
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">quantidade</label>
-							<input class="form-control" id="quantidade" name="quantidade" onkeypress="$(this).mask('#.###.###.###.###', {reverse: true});">
-							<div class="form-text">...............................</div>
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputEmail1" class="form-label">Data de pedido</label>
-							<input class="form-control" id="dataPedido" name="dataPedido" onkeypress="$(this).mask('00/00/0000')">
-							<div class="form-text">...............................</div>
-						</div>
-						<input type="hidden" name="acao" value="incluirPedido">
-						<div id="produtoIdIncluir"></div>
-						<div id="capturarId"></div>
-						<button type="submit" class="btn btn-primary">Submit</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	--> 
 	<div style="width: 100%; margin-top: 13px;">
 		<div style="width: 90%; margin: auto;" id="tabelaHistoricoPedidos" class="sunken-panel">
 			<table style="width: 100%;" class="interactive">
@@ -515,27 +458,10 @@
 		function abrirDivNovoPedido(id){
 			jQuery("#divNovoPedido").show();
 			jQuery("#divNovoFornecedor").hide();
+			dataAtual();
+			jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
 		}
-		
-		/*
-		function imprimirResultadoListaFornecedores(fornecedor){
-			jQuery('#listaFornecedores > tbody').append(
-				'<tr>' + 
-					'<td>' + fornecedor.nome + '</td>' + 
-					'<td>' + fornecedor.tempo + '</td>' + 
-					'<td>' + fornecedor.valor + '</td>' +
-					'<td style="color: red;>' + 
-						'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">' + 
-							'Deletar fornecedor</a>' + 
-					'</td>' + 
-					'<td>' + 
-						'<a href="#" data-toggle="modal" data-target=".dar" ' + 
-							'onclick="funcoes(' + fornecedor.id + ')">Fazer pedido</a>' + 
-					'</td>' + 
-				'</tr>'
-			);
-		}
-		*/
+
 		function loadTodosPedidos(){
 			jQuery("#tabelaFornecedores").hide();
 			jQuery("#tabelaHistoricoPedidos").show();
@@ -637,7 +563,7 @@
 		});
 
 		function loadPedido(id) {
-			jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
+			jQuery("#capturarId").append("<input name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
 		}
 
 		function chamarString(data) {
