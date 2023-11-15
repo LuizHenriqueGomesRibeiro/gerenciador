@@ -18,17 +18,18 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
 <script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
-<body style="overflow-x: hidden ">
-	<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-		<li class="page-item"><button class="page-link">Índice=></button></li>
-		<li class="page-item"><button class="page-link">Configurações</button></li>
-		<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar">
-			<button class="page-link">Ir para caixa</button></a></li>
-		<li class="page-item"><button class="page-link">Ajuda</button></li>
-		<li class="page-item"><button class="page-link">Refrescar página</button></li>
-		<li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar">
-			Voltar</a></li>
-	</ul>
+<link rel="stylesheet" href="https://unpkg.com/98.css" />
+<body style="overflow-x: hidden; background-color: #C0C0C0; color: black;">
+	<div style="position: relative; top: 12px; left: 12px;">
+		<ul class="pagination" style="margin: 0px 0px -1px 0px;">
+			<li class="page-item"><button>Configurações</button></li>
+			<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
+			<li class="page-item"><a style="text-decoration: none"
+				href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
+			<li class="page-item"><button>Ajuda</button></li>
+			<li class="page-item"><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar"><button>Voltar</button></a></li>
+		</ul>
+	</div>
 	<div style="width: 100%">
 		<div style="margin-left: 20px; margin-top: 10px;">
 			<h2>Setor de contabilidade</h2>
@@ -52,15 +53,22 @@
 	</div>
 	<div style="display: flex; width: 100%;">
 		<div style="width: 100%;">
-			<div id="letreiro"></div>
-			<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
-			<div id="tabela"></div>
+			<div id="divListaVendas" style="display: none; width: 90%; position: relative; margin: auto; top: 14px;" class="sunken-panel">
+				<div id="cabecario" style="overflow-y: scroll; overflow-x: none; height: 300px;"></div>
+				<div id="tabela"></div>
+			</div>
 		</div>
 	</div>
-	<div id="botao">
+	<div style="width: 100%;">
+		<div style="width: 90%; position: relative; margin: auto;">
+			<div id="botao"></div>
+		</div>
 	</div>
-	<div id="letrascanvas"></div>
-	<div style="width: 100%;" id="canvas"></div>
+	<div id="divCanvas" style="display: none; width: 90%; position: relative; margin: auto; top: 25px; margin-bottom: 50px;">
+		<ul class="tree-view">
+			<div style="width: 100%;" id="canvas"></div>
+		</ul>
+	</div>
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -386,7 +394,7 @@
 				
 				jQuery("#tabela > table").remove();
 				jQuery("#tabela").append(
-					'<table class="table table-striped table-sm">' +
+					'<table class="interactive">' +
 						'<thead>' + 
 							'<tr>' + 
 								'<th>Quantidades totais</th>' + 
@@ -442,7 +450,8 @@
 	
 
 	function carregarListaVendas(){
-		
+		jQuery("#divCanvas").show();
+		jQuery("#divListaVendas").show();
 		var urlAction = document.getElementById('formularioSaida').action;
 		var dataInicial = document.getElementById('dataInicial').value;
 		var dataFinal = document.getElementById('dataFinal').value;
@@ -455,7 +464,7 @@
 				jQuery("#botao > a").remove();
 				jQuery("#botao").append(
 					"<a style='text-decoration: none' href='ServletRelatorios?acao=printFormVendasPDF&dataInicial=" + dataInicial + "&dataFinal=" + dataFinal + "'>" +
-						"<button style=\"page-link\">Imprimir PDF de relatório de vendas</button>" +
+						"<button style=\"position: relative; top: 20px;\">Imprimir PDF de relatório de vendas</button>" +
 					"</a>"
 				);
 
@@ -479,7 +488,7 @@
 				
 				jQuery("#tabela > table").remove();
 				jQuery("#tabela").append(
-					'<table class="table table-striped table-sm">' +
+					'<table class="interactive" style="width: 100%;">' +
 						'<thead>' + 
 							'<tr>' + 
 								'<th>Quantidades totais</th>' + 
@@ -500,7 +509,7 @@
 
 				jQuery("#cabecario > table").remove();
 				jQuery("#cabecario").append(
-					'<table class="table table-striped table-sm">' +
+					'<table class="interactive" style="width: 100%;">' +
 						'<thead>' + 
 							'<tr>' + 
 								'<th>Nome</th>' + 
