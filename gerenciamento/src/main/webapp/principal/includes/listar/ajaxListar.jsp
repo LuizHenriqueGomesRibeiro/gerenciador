@@ -31,11 +31,6 @@
 		});
 	}
 	
-	function abrirSelecionarFornecedor(id){
-		jQuery("#novoOuNaoFornecedor").val("antigo");
-		jQuery("#nomeFornecedor").val(id);
-	}
-	
 	function abrirDivNovoPedido(id){
 		dataAtual();
 		jQuery("#divNovoPedido").show();
@@ -321,6 +316,7 @@
 		var id = document.getElementById('configuracoesId').value;
 		adicionarFornecedor();
 		loadData(id);
+		validarFornecedor();
 	}
 
 	function funcoes3(id) {

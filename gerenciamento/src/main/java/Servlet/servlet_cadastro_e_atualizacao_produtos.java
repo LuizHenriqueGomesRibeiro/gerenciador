@@ -54,8 +54,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				cancelarPedido(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("deletarFornecedor")){
 				deletarFornecedor(request);
-			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarFornecedor")){
-				cadastrarFornecedor(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarTodosPedidos")){
 				carregarTodosPedidos(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("validarExclusao")){
@@ -72,6 +70,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		try {
 			if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("incluirPedido")) {
 				incluirPedido(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarFornecedor")){
+				cadastrarFornecedor(request, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

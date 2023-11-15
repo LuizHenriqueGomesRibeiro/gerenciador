@@ -23,6 +23,11 @@ public class SQLFornecimento {
 		return sql;
 	}
 	
+	public String consultaPorNome(int id, String nome) {
+		String sql = "SELECT* FROM fornecimento WHERE usuario_pai_id = " + id + " AND nome = '" + nome + "'";
+		return sql;
+	}
+	
 	public String exclui(Long id) {
 		String sql = "DELETE FROM fornecimento WHERE id = " + id;
 		return sql;
