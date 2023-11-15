@@ -13,8 +13,8 @@ public class SQLFornecimento {
 		return sql;
 	}
 	
-	public String listaTodosFornecedores(int id) {
-		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id;
+	public String listaTodosFornecedores(int id, Long produtos_pai_id) {
+		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id + " AND NOT produtos_pai_id = " + produtos_pai_id;
 		return sql;
 	}
 	

@@ -115,6 +115,7 @@ public class ServletRelatorios extends APIDespache{
 	}
 	
 	public byte[] printFormVendasPDFComDatas(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println(sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request)));
 		String sqlListaVendas = sqlvendas.listaVendas(id(request), dataInicial(request), dataFinal(request)); 
 		String sqlSomaValores = sqlvendas.somaValoresVendas(id(request), dataInicial(request), dataFinal(request));
 		String sqlSomaQuantidade = sqlvendas.somaQuantidadeVendas(id(request), dataInicial(request), dataFinal(request));

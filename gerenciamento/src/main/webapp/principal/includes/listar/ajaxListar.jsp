@@ -4,7 +4,7 @@
 		jQuery("#tabelaFornecedorUnitario").hide();
 		jQuery("#tabelaTodosFornecedores").show();
 		var urlAction = document.getElementById('formulario').action;
-		var parametros = '&acao=abrirTodosFornecedores';
+		var parametros = '&id_produto=' + jQuery("#configuracoesId").val() + '&acao=abrirTodosFornecedores';
 		jQuery.ajax({
 			method : "get",
 			url : urlAction,
@@ -15,7 +15,6 @@
 			    for(var p = 0; p < fornecedores.length; p++){	
 					const fornecedor = new Fornecedor(fornecedores[p].id, fornecedores[p].nome, fornecedores[p].tempoentrega + " dias", 
 						parseFloat(fornecedores[p].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}));
-					
 					jQuery('#listaTodosFornecedores > tbody').append(
 						'<tr>' + 
 							'<td>' + fornecedor.nome + '</td>' + 
@@ -23,7 +22,7 @@
 								'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">Deletar fornecedor</a>' + 
 							'</td>' + 
 							'<td>' + 
-								'<a href="#" onclick="abrirDivNovoPedido(' + fornecedor.id + ')">Selecionar</a>' + 
+							'<a href="#" onclick="abrirSelecionarFornecedor(\'' + fornecedor.nome + '\')">Selecionar</a>' + 
 							'</td>' + 
 						'</tr>'
 					);
@@ -32,7 +31,20 @@
 		});
 	}
 	
+	function abrirSelecionarFornecedor(id){
+		jQuery("#novoOuNaoFornecedor").val("antigo");
+		jQuery("#nomeFornecedor").val(id);
+	}
+	
+	function abrirDivNovoPedido(id){
+		dataAtual();
+		jQuery("#divNovoPedido").show();
+		jQuery("#divNovoFornecedor").hide();
+		jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
+	}
+	
 	function loadData(id) {
+		jQuery("#novoOuNaoFornecedor").val("novo");
 		jQuery("#tabelaTodosFornecedores").hide();
 		jQuery("#tabelaFornecedorUnitario").show();
 		jQuery("#tabelaFornecedores").show();
@@ -190,13 +202,6 @@
 			success : function(json, textStatus, xhr) {
 			}
 		});
-	}
-
-	function abrirDivNovoPedido(id){
-		jQuery("#divNovoPedido").show();
-		jQuery("#divNovoFornecedor").hide();
-		dataAtual();
-		jQuery("#capturarId").append("<input type='hidden' name='id_fornecedor' id='id_fornecedor' value=" + id + ">");
 	}
 
 	function loadTodosPedidos(){

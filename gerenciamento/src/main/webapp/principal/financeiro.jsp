@@ -31,8 +31,7 @@
 		</ul>
 	</div>
 	<div style="width: 100%">
-		<div style="margin-left: 20px; margin-top: 10px;">
-			<h2>Setor de contabilidade</h2>
+		<div style="width: 90%; margin: auto; position: relative; top: 40px;">
 			<div>
 				<form action="<%=request.getContextPath()%>/servlet_saida" method="get" name="formularioSaida" id="formularioSaida">
 					<div class="row">
@@ -46,7 +45,11 @@
 					<p style="margin-left: 10px;">*Caso as datas não sejam especificadas, o servidor rodará todos os resultados.</p>
 				</form>
 				<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-					<li class="page-item"><button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaVendas()">Carregar lista de vendas</button></li>
+					<li class="page-item">
+						<button class="page-link" style="text-decoration: none; width: 198px;" onclick="carregarListaVendas()">
+							Carregar lista de vendas
+						</button>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -80,8 +83,8 @@
 <script type="text/javascript">
 
 	function graficoVendas(jsonLista4, jsonLista5) {
-		Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-		Chart.defaults.global.defaultFontColor = '#858796';
+		Chart.defaults.global.defaultFontFamily = '"Pixelated MS Sans Serif",Arial', '"Pixelated MS Sans Serif",Arial';
+		Chart.defaults.global.defaultFontColor = 'black';
 		
 		function number_format(number, decimals, dec_point, thousands_sep) {
 	
@@ -137,13 +140,13 @@
 							label: "Vendas",
 							lineTension: 0.3,
 							backgroundColor: "rgba(78, 115, 223, 0.05)",
-							borderColor: "rgba(78, 115, 223, 1)",
-							pointRadius: 0,
-							pointBackgroundColor: "rgba(78, 115, 223, 1)",
-							pointBorderColor: "rgba(78, 115, 223, 1)",
-							pointHoverRadius: 0,
-							pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-							pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+							borderColor: "black",
+							pointRadius: 2,
+							pointBackgroundColor: "black",
+							pointBorderColor: "black",
+							pointHoverRadius: 2,
+							pointHoverBackgroundColor: "black",
+							pointHoverBorderColor: "black",
 							pointHitRadius: 10,
 							pointBorderWidth : 2,
 							data: valores
@@ -169,7 +172,7 @@
 									drawBorder: false
 								},
 								ticks: {
-									maxTicksLimit: 7
+									maxTicksLimit: 20
 								}
 							}],
 							yAxes: [ {
@@ -194,12 +197,11 @@
 						},
 						tooltips : {
 							backgroundColor : "rgb(255,255,255)",
-							bodyFontColor : "#858796",
+							bodyFontColor : "black",
 							titleMarginBottom : 10,
-							titleFontColor : '#6e707e',
+							titleFontColor : 'black',
 							titleFontSize : 14,
-							borderColor : '#dddfeb',
-							borderWidth : 1,
+							borderColor : 'black',
 							xPadding : 15,
 							yPadding : 15,
 							displayColors : false,

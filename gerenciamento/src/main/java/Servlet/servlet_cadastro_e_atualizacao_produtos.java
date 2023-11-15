@@ -170,7 +170,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void abrirTodosFornecedores(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request))));
+		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request))));
 		impressaoJSON(response, fornecedores);
 	}
 }
