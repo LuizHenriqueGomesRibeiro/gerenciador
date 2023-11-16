@@ -60,7 +60,10 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				validarExclusao(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("abrirTodosFornecedores")){
 				abrirTodosFornecedores(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("verificarHaNomeFornecedor")){
+				verificarHaNomeFornecedor(request, response);
 			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -173,4 +176,23 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request))));
 		impressaoJSON(response, fornecedores);
 	}
+	
+	protected void verificarHaNomeFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String validadorFornecedor;
+		if(daofornecedor.consultarFornecedor(sqlFornecimento.consultaPorNome(id(request), nomeFornecedor(request))).getId() != null) {
+			validadorFornecedor = "haNome";
+		}else {
+			validadorFornecedor = "naoHaNome";
+		}
+		impressaoJSON(response, new Gson().toJson(validadorFornecedor));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

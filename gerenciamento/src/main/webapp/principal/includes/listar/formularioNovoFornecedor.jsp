@@ -4,7 +4,7 @@
 		<input type="hidden" value="cadastrarFornecedor" name="acao" />
 		<div class="field-row">
 			<label for="nomeFornecedor">Fornecedor:</label>
-			<input style="width: 250px;" type="text" id="nomeFornecedor" name="nomeFornecedor" 
+			<input oninput="mudarValorNomeFornecedor()" style="width: 250px;" type="text" id="nomeFornecedor" name="nomeFornecedor" 
 				placeholder="Nome do novo fornecedor"/>
 		</div>
 		<div class="field-row">
@@ -16,9 +16,12 @@
 			<input style="width: 222px;" type="text" id="valor" name="valor" placeholder="valor">
 		</div>
 		<input type="hidden" id="configuracoesId" name="id">
+		<input name="fornecedorNovoOuNao" id="fornecedorNovoOuNao" value="novo">
+		<input name="haNomeFornecedor" id="haNomeFornecedor" value="naoHaNome">
+		<input name="alterouNomeFornecedor" id="alterouNomeFornecedor" value="naoAlterou">
 		<div style="width: 100%;">
 			<div style="width: 134px; margin: auto; position: relative; top: 10px; display: inline;">
-				<button onclick="funcoes2()" class="btn btn-primary">Criar fornecedor</button>
+				<button onclick="funcoes2()" class="btn btn-primary" type="button">Criar fornecedor</button>
 				<button onclick="abrirTabelaTodosFornecedores()" style="background-color: green;" type="button" class="btn btn-primary">Abrir fornecedores</button>
 			</div>
 		</div>
