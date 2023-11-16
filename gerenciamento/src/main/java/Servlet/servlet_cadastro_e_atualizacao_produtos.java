@@ -1,11 +1,8 @@
 package Servlet;
 
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
-
 import com.google.gson.Gson;
-
 import DAO.DAOFerramentas;
 import DAO.DAOFornecimento;
 import DAO.DAOLogin;
@@ -173,6 +170,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void abrirTodosFornecedores(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request)));
 		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request))));
 		impressaoJSON(response, fornecedores);
 	}
@@ -186,13 +184,4 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 		}
 		impressaoJSON(response, new Gson().toJson(validadorFornecedor));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
