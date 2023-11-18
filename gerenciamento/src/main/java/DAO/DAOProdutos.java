@@ -24,25 +24,12 @@ public class DAOProdutos extends DAOComum{
 	
 	public void alternarProduto(ModelProdutos modelProduto) throws SQLException {
 		if(modelProduto.isNovo()) {
-			gravarProduto(sqlprodutos.gravaProduto(modelProduto.getNome(), modelProduto.getUsuario_pai_id().getId()));
+			gravar(sqlprodutos.gravaProduto(modelProduto.getNome(), modelProduto.getUsuario_pai_id().getId()));
 		}else {
 			atualizarProduto(sqlprodutos.atualizaProduto(modelProduto));
 		}
 	}
 	
-	public void gravarProduto(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
-		connection.commit();
-	}
-	
-	public void excluirProduto(Long id) throws SQLException {
-		String sql = "DELETE FROM produtos WHERE id = " + id;
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.executeUpdate();
-		connection.commit();
-	}
-
 	public void mudarStatus(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.executeUpdate();

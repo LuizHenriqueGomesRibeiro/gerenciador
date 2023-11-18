@@ -3,6 +3,9 @@ package Servlet.API;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
+
+import com.google.gson.Gson;
 
 import DAO.DAOFerramentas;
 import DAO.DAOFornecimento;
@@ -12,7 +15,10 @@ import DAO.SQL.SQLProdutos;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ModelFornecimento;
+import model.ModelPedidos;
 import model.ModelUsuarios;
+import net.bytebuddy.description.type.TypeDescription.Generic;
 
 public class APIDespache extends APIEntradas {
 	DAOPedidos daopedidos = new DAOPedidos();

@@ -156,7 +156,7 @@
 				<div style="margin: 20px;">
 					<form style="position: relative; width: 90%; margin: auto;"
 						action="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos"
-						method="get" name="formulario_cadastro_produtos" id="formulario">
+						method="post" name="formulario_cadastro_produtos" id="formulario">
 						<input type="hidden" value="cadastrarProduto" name="acao">
 						<div class="mb-3">
 							<label for="exampleInputEmail1" class="form-label">nome</label> 

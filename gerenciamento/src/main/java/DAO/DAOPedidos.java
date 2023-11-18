@@ -24,12 +24,6 @@ public class DAOPedidos extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarPedido(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
-		connection.commit();
-	}
-	
 	public ModelPedidos buscarPedido(String sql) throws SQLException, ParseException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();

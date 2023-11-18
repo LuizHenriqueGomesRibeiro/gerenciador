@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import com.google.gson.Gson;
+
 import conexao.conexao;
 
 public class DAOFerramentas {
@@ -83,4 +85,13 @@ public class DAOFerramentas {
 		data = data.plusDays(tempo);
 		return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 	}
+	
+	public String json(String string) {
+		Gson gson = new Gson();
+		String json = gson.toJson(string);
+		return json;
+	}
 }
+
+
+

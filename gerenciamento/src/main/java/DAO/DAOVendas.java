@@ -31,20 +31,9 @@ public class DAOVendas extends DAOComum{
 		startDate = startDate.plusDays(1);
 		LocalDate endDate = LocalDate.parse(datavenda);
 		while (!startDate.isAfter(endDate)) {
-			gravarData(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
+			gravar(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
 			startDate = startDate.plusDays(1);
 		}
-	}
-	
-	public void gravarData(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
-	}
-	
-	public void gravarVenda(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
-		connection.commit();
 	}
 	
 	public ModelVendas buscarVendas(String sql) throws SQLException, ParseException {

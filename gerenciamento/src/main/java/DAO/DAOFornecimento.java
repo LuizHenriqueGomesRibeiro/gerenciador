@@ -22,16 +22,14 @@ public class DAOFornecimento extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarNovoFornecedor(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
-		connection.commit();
-	}
-	
-	public void excluirFornecedor(Long id) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.exclui(id));
-		statement.executeUpdate();
-		connection.commit();
+	public String verificarHaNomeFornecedor(String sql) throws SQLException {
+		String validadorFornecedor;
+		if(consultarFornecedor(sql).getId() != null) {
+			validadorFornecedor = "haNome";
+		}else {
+			validadorFornecedor = "naoHaNome";
+		}
+		return json(validadorFornecedor);
 	}
 	
 	public ModelFornecimento consultarFornecedor(String sql) throws SQLException {

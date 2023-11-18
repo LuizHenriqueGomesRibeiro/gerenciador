@@ -15,6 +15,18 @@ public class DAOComum extends DAOEntrada{
 	private Connection connection;
 	SQLProdutos sqlproduto = new SQLProdutos();
 	
+	public void excluir(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
+		connection.commit();
+	}
+	
+	public void gravar(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.execute();
+		connection.commit();
+	}
+	
 	public int somaQuantidade(String sql) throws SQLException {
 		connection = conexao.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);

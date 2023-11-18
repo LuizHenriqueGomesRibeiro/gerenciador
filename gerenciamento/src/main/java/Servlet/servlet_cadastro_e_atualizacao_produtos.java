@@ -43,8 +43,6 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				configuracoes(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("historioPedidos")){
 				historicoPedidos(request, response);
-			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarProduto")){
-				cadastrarProduto(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("confirmarPedido")){
 				confirmarPedido(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cancelarPedido")){
@@ -60,9 +58,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("verificarHaNomeFornecedor")){
 				verificarHaNomeFornecedor(request, response);
 			}
-			
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 		}
 	}
 	
@@ -72,6 +69,8 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 				incluirPedido(request, response);
 			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarFornecedor")){
 				cadastrarFornecedor(request, response);
+			}else if(acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("cadastrarProduto")){
+				cadastrarProduto(request, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -107,7 +106,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void cadastrarFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		new DAOFornecimento().gravarNovoFornecedor(sqlFornecimento.gravar(nomeFornecedor(request), id_produto(request), tempoEntrega(request), valor(request), id(request)));
+		new DAOFornecimento().gravar(sqlFornecimento.gravar(nomeFornecedor(request), id_produto(request), tempoEntrega(request), valor(request), id(request)));
 		setarAtributos(request, response);
 	}
 	
@@ -134,7 +133,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void persistenciaIncluirPedido(HttpServletRequest request, HttpServletResponse response, ModelPedidos modelPedido) throws Exception {
-		daopedidos.gravarPedido(sqlpedidos.gravarPedido(modelPedido));
+		daopedidos.gravar(sqlpedidos.gravarPedido(modelPedido));
 		setarAtributos(request, response);
 	}
 
@@ -151,11 +150,13 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 
 	protected void deletarFornecedor(HttpServletRequest request) throws Exception {
-		daofornecedor.excluirFornecedor(id_fornecedor(request));
+		daofornecedor.excluir(sqlFornecimento.exclui(id_fornecedor(request)));
 	}
 	
 	protected void carregarTodosPedidos(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0)));
+		List<ModelPedidos> pedidos = daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0));
+		Gson gson = new Gson();
+		String json = gson.toJson(pedidos);
 		impressaoJSON(response, json);
 	}
 	
@@ -170,18 +171,12 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void abrirTodosFornecedores(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		System.out.println(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request)));
 		String fornecedores = new Gson().toJson(daofornecedor.listarFornecedores(sqlFornecimento.listaTodosFornecedores(id(request), id_produto(request))));
 		impressaoJSON(response, fornecedores);
 	}
 	
 	protected void verificarHaNomeFornecedor(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String validadorFornecedor;
-		if(daofornecedor.consultarFornecedor(sqlFornecimento.consultaPorNome(id(request), nomeFornecedor(request))).getId() != null) {
-			validadorFornecedor = "haNome";
-		}else {
-			validadorFornecedor = "naoHaNome";
-		}
-		impressaoJSON(response, new Gson().toJson(validadorFornecedor));
+		String validadorFornecedor = daofornecedor.verificarHaNomeFornecedor(sqlFornecimento.consultaPorNome(id(request), nomeFornecedor(request)));
+		impressaoJSON(response, validadorFornecedor);
 	}
 }

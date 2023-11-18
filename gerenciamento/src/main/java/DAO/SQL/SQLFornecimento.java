@@ -13,11 +13,17 @@ public class SQLFornecimento {
 		return sql;
 	}
 	
-	public String listaTodosFornecedores(int id, Long produtos_pai_id) {
-		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id + " AND NOT produtos_pai_id = " + produtos_pai_id;
+	public String listaNomes(Long id) {
+		String sql = "SELECT nome FROM fornecimento WHERE produtos_pai_id = " + id;
 		return sql;
 	}
-	String sql = "SELECT * FROM fornecimento WHERE nome = ";
+	
+	public String listaTodosFornecedores(int id, Long produtos_pai_id) {
+		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id + " AND NOT produtos_pai_id = " + produtos_pai_id 
+			+ " AND nome NOT IN (SELECT nome FROM fornecimento WHERE produtos_pai_id = " + produtos_pai_id + ")";
+		return sql;
+	}
+	
 	public String consulta(Long id) {
 		String sql = "SELECT* FROM fornecimento WHERE id = " + id;
 		return sql;
