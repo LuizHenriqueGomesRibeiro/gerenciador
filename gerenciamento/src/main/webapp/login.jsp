@@ -19,8 +19,7 @@
 				<div style="width: 600px;" class="col-sm-6 text-black">
 					<div style="width: 350px;" class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 						<div style="width: 70%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-							<form action="servletLogin" method="post"
-								name="formulario_login" id="formulario">
+							<form action="servletLogin" method="post" name="formulario_login" id="formulario">
 
 								<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
 
