@@ -69,20 +69,9 @@ public class DAOPedidos extends DAOComum{
 		return pedido;
 	}
 	
-	public void mudarStatus(Long id, int status) throws SQLException{
-		if(status == 1) {
-			gravarCancelamento(sqlpedidos.gravarCancelamento(id));
-		}
-		String sql = "UPDATE pedidos SET status = " + status + " WHERE id = " + id;
+	public void mudarStatus(String sql) throws SQLException{
 		PreparedStatement statement = connection.prepareStatement(sql);
-
 		statement.executeUpdate();
-		connection.commit();
-	}
-	
-	public void gravarCancelamento(String sql) throws SQLException{
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.execute();
 		connection.commit();
 	}
 }

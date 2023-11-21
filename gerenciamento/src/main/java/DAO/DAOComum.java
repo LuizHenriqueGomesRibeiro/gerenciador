@@ -15,6 +15,10 @@ public class DAOComum extends DAOEntrada{
 	private Connection connection;
 	SQLProdutos sqlproduto = new SQLProdutos();
 	
+	public DAOComum(){
+		connection = conexao.getConnection();
+	}
+	
 	public void excluir(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.executeUpdate();
@@ -24,6 +28,12 @@ public class DAOComum extends DAOEntrada{
 	public void gravar(String sql) throws SQLException {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.execute();
+		connection.commit();
+	}
+	
+	public void atualizar(String sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.executeUpdate();
 		connection.commit();
 	}
 	

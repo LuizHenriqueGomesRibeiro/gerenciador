@@ -26,7 +26,7 @@ public class DAOProdutos extends DAOComum{
 		if(modelProduto.isNovo()) {
 			gravar(sqlprodutos.gravaProduto(modelProduto.getNome(), modelProduto.getUsuario_pai_id().getId()));
 		}else {
-			atualizarProduto(sqlprodutos.atualizaProduto(modelProduto));
+			atualizar(sqlprodutos.atualizaProduto(modelProduto));
 		}
 	}
 	
@@ -79,12 +79,6 @@ public class DAOProdutos extends DAOComum{
 		return modelProduto;
 	}
 
-	public void atualizarProduto(String sql) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.executeUpdate();
-		connection.commit();
-	}
-	
 	public void alternarSomaValores(ModelProdutos produtos, Long id) throws SQLException {
 		if(somaValores(sqlpedidos.somaValoresPedidoProdutoId(id, 0)) == 0) {
 			produtos.setValorTotalString("Sem valores");

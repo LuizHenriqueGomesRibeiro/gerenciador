@@ -100,4 +100,9 @@ public class SQLPedidos {
 		String sql = "SELECT * FROM pedidos WHERE id = " + id;
 		return sql;
 	}
+	
+	public String atualizarStatusPedido(Long id, int status) {
+		String sql = "UPDATE pedidos SET status = " + status + " WHERE id = " + id;
+		return sql;
+	}
 }

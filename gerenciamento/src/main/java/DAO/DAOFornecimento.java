@@ -76,6 +76,13 @@ public class DAOFornecimento extends DAOComum{
 		PreparedStatement statement = connection.prepareStatement(sqlfornecimento.media(produto));
 		ResultSet resultado = statement.executeQuery();
 		resultado.next();
-		return resultado.getDouble("media");
+		return mediaValoresFornecimentoLimparDouble(resultado);
+	}
+	
+	public Double mediaValoresFornecimentoLimparDouble(ResultSet resultado) throws Exception {
+		String media = resultado.getString("media");
+		int indexPonto = media.indexOf(".");
+        Double mediaLimpa = Double.parseDouble(media.substring(0, indexPonto));
+		return mediaLimpa;
 	}
 }

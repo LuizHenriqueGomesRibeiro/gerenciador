@@ -8,33 +8,29 @@
 <meta name="description" content="">
 <meta name="author" content="">
 <link href="<%=request.getContextPath()%>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/css/sb-admin-2.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/98.css"/>
 </head>
-<body style="overflow: hidden;">
+<body style="overflow: hidden; background-color: #C0C0C0; color: black;">
 	<section class="vh-100">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-sm-6 text-black">
-					<div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-						<div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
-							<form style="width: 23rem;" action="servletLogin" method="post"
+				<div style="width: 600px;" class="col-sm-6 text-black">
+					<div style="width: 350px;" class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
+						<div style="width: 70%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
+							<form action="servletLogin" method="post"
 								name="formulario_login" id="formulario">
 
 								<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
 
 								<div class="form-outline mb-4">
-									<input type="text" id="form2Example18"
-										class="form-control form-control-lg" placeholder="login"
-										name="login" id="login" /> <label class="form-label"
-										for="form2Example18">Login</label>
+									<label class="form-label" for="form2Example18">Login</label>
+									<input type="text" id="form2Example18" class="form-control form-control-lg" placeholder="login" name="login" id="login" />
 								</div>
 								<div class="form-outline mb-4">
-									<input type="password" id="form2Example28" name="senha"
-										id="senha" placeholder="senha"
-										class="form-control form-control-lg"/> <label
-										class="form-label" for="form2Example28">Senha</label>
+									<label class="form-label" for="form2Example28">Senha</label>
+									<input type="password" id="form2Example28" name="senha" id="senha" placeholder="senha" class="form-control form-control-lg"/>
 								</div>
 								<div class="pt-1 mb-4">
 									<button class="btn btn-info btn-lg btn-block" type="submit">Entrar</button>
