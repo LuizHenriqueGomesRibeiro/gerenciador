@@ -20,16 +20,16 @@
 					<div style="width: 350px;" class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
 						<div style="width: 70%; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);">
 							<form action="servletLogin" method="post" name="formulario_login" id="formulario">
-
-								<input type="hidden" value="<%=request.getParameter("url")%>" name="url">
-
+								<input type="hidden" value="<%=request.getParameter("acao")%>" name="acao">
 								<div class="form-outline mb-4">
 									<label class="form-label" for="form2Example18">Login</label>
-									<input type="text" id="form2Example18" class="form-control form-control-lg" placeholder="login" name="login" id="login" />
+									<input type="text" id="form2Example18" class="form-control form-control-lg" 
+										placeholder="login" name="login" id="login" />
 								</div>
 								<div class="form-outline mb-4">
 									<label class="form-label" for="form2Example28">Senha</label>
-									<input type="password" id="form2Example28" name="senha" id="senha" placeholder="senha" class="form-control form-control-lg"/>
+									<input type="password" id="form2Example28" name="senha" id="senha" 
+										placeholder="senha" class="form-control form-control-lg"/>
 								</div>
 								<div class="pt-1 mb-4">
 									<button class="btn btn-info btn-lg btn-block" type="submit">Entrar</button>

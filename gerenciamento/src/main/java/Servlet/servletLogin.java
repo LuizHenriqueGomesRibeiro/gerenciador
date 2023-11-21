@@ -15,10 +15,7 @@ import DAO.DAOLogin;
 import Servlet.API.APIDespache;
 import Servlet.API.APIEntradas;
 
-/**
- * Servlet implementation class servletLogin
- */
-@WebServlet(urlPatterns = { "/principal/ServletLogin"}) 
+@WebServlet(urlPatterns = {"/ServletLogin"}) 
 public class servletLogin extends APIDespache {
 	private static final long serialVersionUID = 1L;
 	
@@ -40,13 +37,10 @@ public class servletLogin extends APIDespache {
 				login_em_validacao.setLogin(login(request));
 				
 				if(daoLogin.validarAutenticacao(login_em_validacao)) {
-
-					if(url(request) == null || url(request).equals("null")) {
-						plusProdutos(request);
-						plusAtributosComum(request);
-						RequestDispatcher redirecionar = request.getRequestDispatcher("principal/listar.jsp");
-						redirecionar.forward(request, response);
-					}
+					plusProdutos(request);
+					plusAtributosComum(request);
+					RequestDispatcher redirecionar = request.getRequestDispatcher("principal/listar.jsp");
+					redirecionar.forward(request, response);
 				}else {
 					request.setAttribute("msg", "Usuário ou senha incorretos.");
 					RequestDispatcher redirecionar = request.getRequestDispatcher("login.jsp");
