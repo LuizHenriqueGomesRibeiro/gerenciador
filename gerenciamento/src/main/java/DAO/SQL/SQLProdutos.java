@@ -4,12 +4,12 @@ import model.ModelProdutos;
 
 public class SQLProdutos {
 	public String listaProdutosLIMIT10(int id) {
-		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " AND status = " + 1 + " LIMIT 10";
+		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " AND status = " + 1;
 		return sql;
 	}
 	
 	public String listaProdutos(int id) {
-		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id + " LIMIT 10";
+		String sql = "SELECT * FROM produtos WHERE usuario_pai_id = " + id;
 		return sql;
 	}
 	

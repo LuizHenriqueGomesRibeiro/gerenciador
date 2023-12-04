@@ -11,7 +11,10 @@ import model.ModelUsuarios;
 
 import java.io.IOException;
 
+import DAO.DAOFerramentas;
 import DAO.DAOLogin;
+import DAO.DAOVendas;
+import DAO.SQL.SQLLogin;
 import Servlet.API.APIDespache;
 import Servlet.API.APIEntradas;
 
@@ -20,6 +23,9 @@ public class servletLogin extends APIDespache {
 	private static final long serialVersionUID = 1L;
 	
 	private DAOLogin daoLogin = new DAOLogin();
+	private DAOVendas daoVendas = new DAOVendas();
+	private DAOFerramentas daoferramentas = new DAOFerramentas();
+	private SQLLogin sqlLogin = new SQLLogin();
 	
 	public servletLogin() {
 		super();
@@ -36,7 +42,8 @@ public class servletLogin extends APIDespache {
 				login_em_validacao.setSenha(senha(request));
 				login_em_validacao.setLogin(login(request));
 				
-				if(daoLogin.validarAutenticacao(login_em_validacao)) {
+				if(daoLogin.validarAutenticacao(sqlLogin.validarUsuarioPorLoginESenha(login_em_validacao))) {
+					daoVendas.gravarDatas(user(request).getId(), daoferramentas.converterDatas(daoferramentas.dataAtual()));
 					plusProdutos(request);
 					plusAtributosComum(request);
 					RequestDispatcher redirecionar = request.getRequestDispatcher("principal/listar.jsp");

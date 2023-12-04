@@ -71,7 +71,6 @@ public class APIDespache extends APIEntradas {
 	}
 
 	public HttpServletRequest plusAtributosComum(HttpServletRequest request) throws Exception {
-		request.setAttribute("totalPagina", daoproduto.consultaProdutosPaginas(id(request)));
 		request.setAttribute("soma", dao.converterIntegerDinheiro(daoproduto.somaProdutos(id(request))));
 		request.setAttribute("usuario", user(request));
 		return plusProdutos(request);

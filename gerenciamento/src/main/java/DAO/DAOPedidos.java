@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +23,13 @@ public class DAOPedidos extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public ModelPedidos buscarPedido(String sql) throws SQLException, ParseException {
+	public ModelPedidos buscarPedido(String sql) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return buscarPedidoResultado(resultado);	
 	}
 	
-	public ModelPedidos buscarPedidoResultado(ResultSet resultado) throws SQLException, ParseException {
+	public ModelPedidos buscarPedidoResultado(ResultSet resultado) throws Exception {
 		ModelPedidos pedido = new ModelPedidos(); 
 		while(resultado.next()){
 			pedido = setPedido(resultado);
@@ -38,13 +37,13 @@ public class DAOPedidos extends DAOComum{
 		return pedido;
 	}
 	
-	public List<ModelPedidos> listarPedidos(String sql) throws SQLException, ParseException {
+	public List<ModelPedidos> listarPedidos(String sql) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 	    return resultadosListagem(resultado);
 	}
 		
-	public List<ModelPedidos> resultadosListagem(ResultSet resultado) throws SQLException, ParseException {
+	public List<ModelPedidos> resultadosListagem(ResultSet resultado) throws Exception {
 		List<ModelPedidos> retorno = new ArrayList<ModelPedidos>();
 		while(resultado.next()){
 			ModelPedidos pedido = new ModelPedidos();
@@ -54,7 +53,7 @@ public class DAOPedidos extends DAOComum{
 		return retorno;
 	}
 	
-	public ModelPedidos setPedido(ResultSet resultado) throws SQLException, ParseException {
+	public ModelPedidos setPedido(ResultSet resultado) throws Exception {
 		ModelPedidos pedido = new ModelPedidos();
 		pedido.setDataentrega(dataentrega(resultado));
 		pedido.setDatapedido(datapedido(resultado));

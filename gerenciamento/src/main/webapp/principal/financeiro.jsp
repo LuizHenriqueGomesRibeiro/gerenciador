@@ -27,7 +27,7 @@
 			<li class="page-item"><a style="text-decoration: none"
 				href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
 			<li class="page-item"><button>Ajuda</button></li>
-			<li class="page-item"><a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar"><button>Voltar</button></a></li>
+			<li class="page-item"><button>Refrescar página</button></li>
 		</ul>
 	</div>
 	<div style="width: 100%">

@@ -26,21 +26,17 @@
 	<div style="position: relative; top: 12px; left: 12px;">
 		<ul class="pagination" style="margin: 0px 0px -1px 0px;">
 			<li class="page-item"><button data-toggle="modal" data-target=".ui">Novo registro</button></li>
-			<li class="page-item"><button>Índice=></button></li>
-			<%	
-			int totalPagina = (int) request.getAttribute("totalPagina");
-			for (int p = 0; p < totalPagina; p++) {
-				String url = request.getContextPath() + "/servlet_cadastro_e_atualizacao_produtos?acao=paginar&pagina=" + (p * 10);
-				out.print("<li style=\"width: 25px;\" class=\"page-item\"><button onclick=\"window.location.href=" + url + "\">" + (p + 1) + "</button></li>");
-			}
-			%>
 			<li class="page-item"><button>Configurações</button></li>
 			<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
 			<li class="page-item"><a style="text-decoration: none"
 				href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
+			<li class="page-item">
+				<a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_usuario?acao=abrirConfiguracoesUsuario">
+					<button>Ir para configurações de usuário</button>
+				</a>
+			</li>
 			<li class="page-item"><button>Ajuda</button></li>
 			<li class="page-item"><button>Refrescar página</button></li>
-			<li class="page-item"><button onclick="window.location.href='principal/principal.jsp'">Voltar</button></li>
 		</ul>
 	</div>
 	<div id="json-content"></div>
@@ -81,8 +77,8 @@
 			});
 		});
 	</script>
-	<div style="position: relative; margin: auto; height: 58px; overflow: hidden; width: 90%" class="sunken-panel">
-		<table style="position: relative; margin-bottom: 26px; color: black;" class="table table-striped table-sm">
+	<div style="position: relative; margin: auto; height: 38px; overflow: hidden; width: 90%" class="sunken-panel">
+		<table style="position: relative; color: black; width: 100%;" class="interactive">
 			<thead>
 				<tr>
 					<th>Soma dos valores dos pedidos</th>

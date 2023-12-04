@@ -1,9 +1,5 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -15,7 +11,13 @@ import com.google.gson.Gson;
 import conexao.conexao;
 
 public class DAOFerramentas {
-
+	
+	public String dataAtual() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dataAtual = dateFormat.format(new Date());
+        return dataAtual;
+	}
+	
 	public Date stringToDate(String string) throws ParseException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = dateFormat.parse(string);

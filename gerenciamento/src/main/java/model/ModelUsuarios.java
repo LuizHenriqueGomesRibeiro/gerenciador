@@ -7,6 +7,20 @@ public class ModelUsuarios {
 	private int id;
 	private String nome;
 	private String email;
+	
+	public ModelUsuarios() {
+		
+	}
+	
+	public ModelUsuarios(String login, String senha) {
+		this.login = login;
+		this.senha = senha;
+	}
+	
+	public ModelUsuarios(String login, int id) {
+		this.login = login;
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;

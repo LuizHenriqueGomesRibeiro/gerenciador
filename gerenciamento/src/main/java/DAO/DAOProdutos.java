@@ -36,13 +36,13 @@ public class DAOProdutos extends DAOComum{
 		connection.commit();
 	}
 	
-	public ModelProdutos consultarProduto(String sql) throws SQLException {
+	public ModelProdutos consultarProduto(String sql) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return resultadoConsultarProduto(resultado);
 	}
 	
-	public ModelProdutos resultadoConsultarProduto(ResultSet resultado) throws SQLException {
+	public ModelProdutos resultadoConsultarProduto(ResultSet resultado) throws Exception {
 		ModelProdutos modelProduto = new ModelProdutos();
 		while (resultado.next()) {
 			modelProduto = setProduto(resultado);
@@ -51,13 +51,13 @@ public class DAOProdutos extends DAOComum{
 	}
 	
 
-	public List<ModelProdutos> listarProdutos(String sql, int id) throws SQLException {
+	public List<ModelProdutos> listarProdutos(String sql, int id) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return resultadosListagem(resultado);
 	}
 	
-	public List<ModelProdutos> resultadosListagem(ResultSet resultado) throws SQLException {
+	public List<ModelProdutos> resultadosListagem(ResultSet resultado) throws Exception {
 		List<ModelProdutos> retorno = new ArrayList<ModelProdutos>();
 		while(resultado.next()){
 			ModelProdutos produtos = setProduto(resultado);
@@ -68,7 +68,7 @@ public class DAOProdutos extends DAOComum{
 		return retorno;
 	}
 	
-	public ModelProdutos setProduto(ResultSet resultado) throws SQLException {
+	public ModelProdutos setProduto(ResultSet resultado) throws Exception {
 		ModelProdutos modelProduto = new ModelProdutos();
 		modelProduto.setId(id(resultado));
 		modelProduto.setQuantidade(quantidade(resultado));

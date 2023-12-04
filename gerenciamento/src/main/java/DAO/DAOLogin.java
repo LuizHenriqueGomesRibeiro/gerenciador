@@ -15,23 +15,25 @@ public class DAOLogin extends DAOComum {
 		connection = conexao.getConnection();
 	}
 	
-	public boolean validarAutenticacao(ModelUsuarios usuario) throws SQLException {
-		String sql="SELECT*FROM usuarios WHERE login = ? AND senha = ?";
-		
+	public void atualizarLogin(String sql) throws Exception{
+		System.out.println(sql);
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, usuario.getLogin());
-		statement.setString(2, usuario.getSenha());
+		statement.executeUpdate();
+		connection.commit();
+	}
+	
+	public boolean validarAutenticacao(String  sql) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
-		
 		if(resultado.next()) {
 			return true;
+		}else {
+			return false;
 		}
-		
-		return false;
 	}
 	
 	public ModelUsuarios consultaLogin(ModelUsuarios usuario) throws SQLException {
-		String sql = "SELECT*FROM usuarios WHERE login = " + usuario.getLogin();
+		String sql = "SELECT * FROM usuarios WHERE login = " + usuario.getLogin();
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		while(resultado.next()) {
@@ -42,9 +44,8 @@ public class DAOLogin extends DAOComum {
 		return usuario;
 	}
 
-	public ModelUsuarios consultaLoginString(String login) {
+	public ModelUsuarios consultaLoginString(String login) throws Exception {
 	
-	try {
 		String sql = "SELECT*FROM usuarios WHERE login = ?";
 		
 		ModelUsuarios usuario = new ModelUsuarios();
@@ -58,19 +59,10 @@ public class DAOLogin extends DAOComum {
 			usuario.setLogin(resultado.getString("login"));
 			usuario.setSenha(resultado.getString("senha"));
 		}
-		
 		return usuario;
-		
-	} catch (Exception e) {
-		// TODO: handle exception
-		e.printStackTrace();
 	}
-	return null;
-}
 
-public ModelUsuarios consultaUsuarioLogadoId(int id) {
-
-	try {
+	public ModelUsuarios consultaUsuarioLogadoId(int id) throws Exception {
 		String sql = "SELECT*FROM usuarios WHERE id = ?";
 		
 		ModelUsuarios modelUsuario = new ModelUsuarios();
@@ -86,12 +78,6 @@ public ModelUsuarios consultaUsuarioLogadoId(int id) {
 			modelUsuario.setNome(resultado.getString("nome"));
 		}
 		return modelUsuario;
-
-	} catch (Exception e) {
-		// TODO: handle exception
-		e.printStackTrace();
-
-		return null;
+	
 	}
-}
 }

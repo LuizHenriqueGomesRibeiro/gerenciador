@@ -26,16 +26,11 @@
 <body style="overflow: hidden; background-color: #C0C0C0; color: black;">
 	<div style="position: relative; top: 12px; left: 12px;">
 		<ul class="pagination" style="margin: 0px 0px -1px 0px;">
-			<li class="page-item"><button>Índice=></button></li>
 			<li class="page-item"><button>Configurações</button></li>
-			<li class="page-item">
-				<button><a style="text-decoration: none" href="<%=request.getContextPath()%>/ServletRelatorios?acao=irParaRelatorios">Ir para relatórios</a></button>
-			</li>
+			<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=caixaListar"><button>Ir para caixa</button></a></li>
+			<li class="page-item"><a style="text-decoration: none" href="<%=request.getContextPath()%>/servlet_saida?acao=financeiro"><button>Ir para setor de contabilidade</button></a></li>
 			<li class="page-item"><button>Ajuda</button></li>
 			<li class="page-item"><button>Refrescar página</button></li>
-			<li class="page-item">
-				<a href="<%=request.getContextPath()%>/servlet_cadastro_e_atualizacao_produtos?acao=listar"><button>Voltar</button></a>
-			</li>
 		</ul>
 	</div>
 	<div class="sunken-panel" style="overflow-y: scroll; height: 250px; width: 90%; margin: auto; position: relative; margin-top: 24px;">

@@ -26,13 +26,21 @@ public class DAOVendas extends DAOComum{
 		connection = conexao.getConnection();
 	}
 	
-	public void gravarDatas(int usuario_pai_id, String datavenda) throws SQLException, ParseException {
-		LocalDate startDate = LocalDate.parse(converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega()));
-		startDate = startDate.plusDays(1);
-		LocalDate endDate = LocalDate.parse(datavenda);
-		while (!startDate.isAfter(endDate)) {
-			gravar(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
-			startDate = startDate.plusDays(1);
+	public void gravarDatas(int usuario_pai_id, String dataAtual) throws SQLException, ParseException {
+		LocalDate endDate = LocalDate.parse(dataAtual);
+		if(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega() != null) {
+			LocalDate startDate = LocalDate.parse(converterDatas(buscarVendas(sqlRelatorio.ultimoIdDataVenda()).getDataentrega()));
+			if(startDate != endDate) {
+				startDate = startDate.plusDays(1);
+				while (!startDate.isAfter(endDate)) {
+					gravar(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
+					startDate = startDate.plusDays(1);
+				}
+			}else {
+				gravar(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, startDate));
+			}
+		}else {
+			gravar(sqlvendas.gravacaoAutomaticaVenda(usuario_pai_id, endDate));
 		}
 	}
 	
@@ -50,13 +58,13 @@ public class DAOVendas extends DAOComum{
 		return venda;
 	}
 	
-	public List<ModelVendas> listarVendas(String sql, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException{
+	public List<ModelVendas> listarVendas(String sql, String sqlSomaValores, String sqlSomaQuantidade) throws Exception{
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
 		return resultadoListarVendas(resultado, sqlSomaValores, sqlSomaQuantidade);
 	}
 	
-	public List<ModelVendas> resultadoListarVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException{
+	public List<ModelVendas> resultadoListarVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws Exception{
 		List<ModelVendas> retorno = new ArrayList<ModelVendas>();
 		while(resultado.next()) {
 			ModelVendas vendas = setVendas(resultado, sqlSomaValores, sqlSomaQuantidade);
@@ -76,7 +84,7 @@ public class DAOVendas extends DAOComum{
 		return vendas;
 	}
 	
-	public ModelVendas setVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws SQLException, ParseException {
+	public ModelVendas setVendas(ResultSet resultado, String sqlSomaValores, String sqlSomaQuantidade) throws Exception {
 		ModelVendas vendas = new ModelVendas();
 		vendas.setNome(produto(resultado).getNome());
 		vendas.setId(id(resultado));
@@ -89,7 +97,7 @@ public class DAOVendas extends DAOComum{
 		return vendas;
 	}
 	
-	public ModelProdutos produto(ResultSet resultado) throws SQLException {
+	public ModelProdutos produto(ResultSet resultado) throws Exception {
 		ModelProdutos produto = daoproduto.consultarProduto(sqlproduto.consultaProduto(produtos_pai_Id(resultado)));
 		return produto;
 	}

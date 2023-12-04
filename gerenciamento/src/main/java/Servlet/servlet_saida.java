@@ -55,8 +55,6 @@ public class servlet_saida extends APIDespache {
 				financeiro(request, response);
 			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarListaVendas")) {
 				carregarListaVendas(request, response);
-			} else if (acao(request) != null && !acao(request).isEmpty() && acao(request).equalsIgnoreCase("carregarListaEntradas")) {
-				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -155,9 +155,7 @@ public class servlet_cadastro_e_atualizacao_produtos extends APIDespache {
 	}
 	
 	protected void carregarTodosPedidos(HttpServletRequest request, HttpServletResponse response) throws SQLException, Exception {
-		List<ModelPedidos> pedidos = daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0));
-		Gson gson = new Gson();
-		String json = gson.toJson(pedidos);
+		String json = new Gson().toJson(daopedidos.listarPedidos(sqlpedidos.listaPedidosUsuarioId(getUserId(request), 0)));
 		impressaoJSON(response, json);
 	}
 	

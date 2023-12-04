@@ -11,6 +11,15 @@
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="<%=request.getContextPath()%>/css/sb-admin-2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/98.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/ajaxSaida.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/scripts/jquery-3.7.0.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath() %>/scripts/jquery.maskMoney.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body style="overflow: hidden; background-color: #C0C0C0; color: black;">
 	<section class="vh-100">
@@ -23,13 +32,11 @@
 								<input type="hidden" value="<%=request.getParameter("acao")%>" name="acao">
 								<div class="form-outline mb-4">
 									<label class="form-label" for="form2Example18">Login</label>
-									<input type="text" id="form2Example18" class="form-control form-control-lg" 
-										placeholder="login" name="login" id="login" />
+									<input type="text" id="form2Example18" class="form-control form-control-lg" placeholder="login" name="login" id="login"/>
 								</div>
 								<div class="form-outline mb-4">
 									<label class="form-label" for="form2Example28">Senha</label>
-									<input type="password" id="form2Example28" name="senha" id="senha" 
-										placeholder="senha" class="form-control form-control-lg"/>
+									<input type="password" id="form2Example28" name="senha" id="senha" placeholder="senha" class="form-control form-control-lg"/>
 								</div>
 								<div class="pt-1 mb-4">
 									<button class="btn btn-info btn-lg btn-block" type="submit">Entrar</button>

@@ -242,14 +242,14 @@
 				for(var p = 0; p < json.length; p++){
 					jQuery('#tabelaHistoricoPedidos > table > tbody').append(
 						'<tr>' + 
-							'<td>' + json.dataentrega + '</td>' + 
-							'<td>' + json.datapedido + '</td>' +  
+							'<td>' + json[p].dataentrega + '</td>' + 
+							'<td>' + json[p].datapedido + '</td>' +  
 							'<td>' + 
-								'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&id_produto=' + json.produto_pai_id.id 
-									+ '&quantidade=' + json.quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
+								'<a href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json[p].id + '&id_produto=' + json[p].produto_pai_id.id 
+									+ '&quantidade=' + json[p].quantidade + '&acao=confirmarPedido">Confirmar entrega</a>' +  
 							'</td>' + 
 							'<td>' + 
-								'<a style="color: red;" href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json.id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
+								'<a style="color: red;" href="servlet_cadastro_e_atualizacao_produtos?id_pedido=' + json[p].id + '&acao=cancelarPedido">Cancelar entrega</a>' + 
 							'</td>' + 
 						'</tr>'
 					);

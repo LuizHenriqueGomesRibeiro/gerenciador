@@ -15,6 +15,22 @@ public class APIEntradas extends servlet_recuperacao_login {
 	
 	DAOFerramentas dao = new DAOFerramentas();
 	
+	public String loginAntigo(HttpServletRequest request) {
+		return request.getParameter("loginAntigo");
+	}
+	
+	public String loginAntigoRepetido(HttpServletRequest request) {
+		return request.getParameter("loginAntigoRepetido");
+	}
+	
+	public String loginNovo(HttpServletRequest request) {
+		return request.getParameter("loginNovo");
+	}
+	
+	public String loginNovoRepetido(HttpServletRequest request) {
+		return request.getParameter("loginNovoRepetido");
+	}
+	
 	public String acao(HttpServletRequest request) {
 		return request.getParameter("acao");
 	}
