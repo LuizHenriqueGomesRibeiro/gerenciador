@@ -102,7 +102,7 @@
 					<jsp:include page="includes/listar/formularioNovoFornecedor.jsp"></jsp:include>
 					<jsp:include page="includes/listar/formularioNovoPedido.jsp"></jsp:include>
 				</div>
-				<div id="tabelaFornecedorUnitario" style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;" 
+				<div id="tabelaFornecedorUnitario" style="width: calc(100% - 400px); overflow-y: scroll; overflow-x: none; height: 250px; position: relative;"
 				class="sunken-panel">
 					<table style="width: 100%;" class="interactive" id="listaFornecedores">
 						<thead>
@@ -124,7 +124,6 @@
 						<thead>
 							<tr>
 								<th>Nome</th>
-								<th>Configurações</th>
 								<th>Selecionar</th>
 							</tr>
 						</thead>

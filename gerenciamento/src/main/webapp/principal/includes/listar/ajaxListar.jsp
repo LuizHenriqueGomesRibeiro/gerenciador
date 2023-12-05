@@ -35,12 +35,11 @@
 						parseFloat(fornecedores[p].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL'}));
 					jQuery('#listaTodosFornecedores > tbody').append(
 						'<tr>' + 
-							'<td>' + fornecedor.nome + '</td>' + 
-							'<td style="color: red;>' + 
-								'<a style="color: red;" href="#" onclick="funcoes3(' + fornecedor.id + ')">Deletar fornecedor</a>' + 
+							'<td>' + 
+								fornecedor.nome + 
 							'</td>' + 
 							'<td>' + 
-							'<a href="#" onclick="abrirFornecedorAntigo(' + "'" + fornecedor.nome + "'" + ')">Selecionar</a>' + 
+								'<a href="#" onclick="abrirFornecedorAntigo(' + "'" + fornecedor.nome + "'" + ')">Selecionar</a>' + 
 							'</td>' + 
 						'</tr>'
 					);
@@ -52,6 +51,7 @@
 	function abrirFornecedorAntigo(nome){
 		jQuery("#nomeFornecedor").val(nome);
 		jQuery("#fornecedorNovoOuNao").val("antigo");
+		jQuery("#alterouNomeFornecedor").val("naoAlterou");
 	}
 	
 	function mudarValorNomeFornecedor(){

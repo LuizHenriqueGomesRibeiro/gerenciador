@@ -16,9 +16,9 @@
 			<input style="width: 222px;" type="text" id="valor" name="valor" placeholder="valor">
 		</div>
 		<input type="hidden" id="configuracoesId" name="id">
-		<input type="hidden" name="fornecedorNovoOuNao" id="fornecedorNovoOuNao" value="novo">
-		<input type="hidden" name="haNomeFornecedor" id="haNomeFornecedor" value="naoHaNome">
-		<input type="hidden" name="alterouNomeFornecedor" id="alterouNomeFornecedor" value="naoAlterou">
+		<input name="fornecedorNovoOuNao" id="fornecedorNovoOuNao" value="novo">
+		<input name="haNomeFornecedor" id="haNomeFornecedor" value="naoHaNome">
+		<input name="alterouNomeFornecedor" id="alterouNomeFornecedor" value="naoAlterou">
 		<div style="width: 100%;">
 			<div style="width: 134px; margin: auto; position: relative; top: 10px; display: inline;">
 				<button onclick="funcoes2()" class="btn btn-primary" type="button">Criar fornecedor</button>

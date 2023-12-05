@@ -19,7 +19,7 @@ public class SQLFornecimento {
 	}
 	
 	public String listaTodosFornecedores(int id, Long produtos_pai_id) {
-		String sql = "SELECT * FROM fornecimento WHERE usuario_pai_id = " + id + " AND NOT produtos_pai_id = " + produtos_pai_id 
+		String sql = "SELECT DISTINCT nome FROM fornecimento WHERE usuario_pai_id = " + id + " AND NOT produtos_pai_id = " + produtos_pai_id 
 			+ " AND nome NOT IN (SELECT nome FROM fornecimento WHERE produtos_pai_id = " + produtos_pai_id + ")";
 		return sql;
 	}

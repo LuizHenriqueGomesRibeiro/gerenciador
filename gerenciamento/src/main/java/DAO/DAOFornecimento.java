@@ -45,6 +45,22 @@ public class DAOFornecimento extends DAOComum{
 		return modelFornecimento;
 	}
 	
+	public List<ModelFornecimento> listarNomeFornecedores(String sql) throws Exception {
+		PreparedStatement statement = connection.prepareStatement(sql);
+		ResultSet resultado = statement.executeQuery();
+		return lerResultadoListarNomeFornecedores(resultado);
+	}
+	
+	public List<ModelFornecimento> lerResultadoListarNomeFornecedores(ResultSet resultado) throws Exception{
+		List<ModelFornecimento> retorno = new ArrayList<ModelFornecimento>();
+		while(resultado.next()){
+			ModelFornecimento modelFornecimento = new ModelFornecimento();
+			modelFornecimento.setNome(nome(resultado));
+			retorno.add(modelFornecimento);
+		}
+		return retorno;
+	}
+	
 	public List<ModelFornecimento> listarFornecedores(String sql) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		ResultSet resultado = statement.executeQuery();
